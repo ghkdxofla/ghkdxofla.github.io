@@ -35,6 +35,33 @@ class ClassExample(AbstractClassExample):
     def do_something(self, data):
         print(data)
 ```
+정적 타입
+```
+def typing_example(param_1: int, param_2: str="default") -> str:
+    return "example"
+```
+String Formatting
+```
+## 전체 자리수=8, 소수점은 2자리까지 반올림
+print("num: {:8.2f}".format(num))
+
+## 왼쪽 정렬 및 빈 공간 0으로 채우기 
+print("num: {:0<8.2f}".format(num))
+
+## 오른쪽 정렬 및 빈 공간 0으로 채우기 
+print("num: {:0>8.2f}".format(num))
+
+## 오른쪽 정렬 및 빈 공간 *로 채우기 
+print("num: {:*>8.2f}".format(num))
+print("="*20)
+
+s = "Taelim Hwang"
+print(s)
+print("{:|>30s}".format(s))
+print("{:|<30s}".format(s))
+```
 참조 링크
 - [Python ABC(Abstract Base Class)](https://bluese05.tistory.com/61)
 - [Abstract Classes](https://www.python-course.eu/python3_abstract_classes.php)
+- [정적 타입 선언](http://blog.naver.com/passion053/221070020739)
+- [Python 출력 시 formatting](https://frhyme.github.io/python-basic/python_string_format/)
