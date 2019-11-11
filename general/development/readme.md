@@ -1,5 +1,4 @@
 # Code Review
----
 
 코드 리뷰의 주요 포인트
 - 하루 안으로 Reviewer가 진행
