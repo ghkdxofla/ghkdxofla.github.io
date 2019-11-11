@@ -1,4 +1,5 @@
 # Database
+---
 
 SELECT COUNT(*)를 빠르게 하는 방법
 
