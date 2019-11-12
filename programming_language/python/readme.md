@@ -35,12 +35,12 @@ class ClassExample(AbstractClassExample):
     def do_something(self, data):
         print(data)
 ```
-정적 타입
+# 정적 타입
 ```
 def typing_example(param_1: int, param_2: str="default") -> str:
     return "example"
 ```
-String Formatting
+# String Formatting
 ```
 ## 전체 자리수=8, 소수점은 2자리까지 반올림
 print("num: {:8.2f}".format(num))
@@ -60,8 +60,13 @@ print(s)
 print("{:|>30s}".format(s))
 print("{:|<30s}".format(s))
 ```
-참조 링크
-- [Python ABC(Abstract Base Class)](https://bluese05.tistory.com/61)
-- [Abstract Classes](https://www.python-course.eu/python3_abstract_classes.php)
-- [정적 타입 선언](http://blog.naver.com/passion053/221070020739)
-- [Python 출력 시 formatting](https://frhyme.github.io/python-basic/python_string_format/)
+
+# 프로젝트의 구조
+내용 추가 필요
+
+# 참조 링크
+[Python ABC(Abstract Base Class)](https://bluese05.tistory.com/61)
+[Abstract Classes](https://www.python-course.eu/python3_abstract_classes.php)
+[정적 타입 선언](http://blog.naver.com/passion053/221070020739)
+[Python 출력 시 formatting](https://frhyme.github.io/python-basic/python_string_format/)
+[파이썬 프로젝트의 구조](https://www.holaxprogramming.com/2017/06/28/python-project-structures/)

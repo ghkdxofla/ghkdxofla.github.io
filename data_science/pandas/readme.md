@@ -1,10 +1,8 @@
-# Pandas
-
-Module Import
+# Module Import
 ```
 import pandas as pd
 ```
-기본적인 Dataframe 형성 및 출력(from MSSQL record 객체)
+# 기본적인 Dataframe 형성 및 출력(from MSSQL record 객체)
 ```
 # Dataframe 형성
 mssql_data = get_record() # Record를 가져오는 것으로 가정
@@ -13,11 +11,11 @@ df = pd.DataFrame.from_records(mssql_data, columns=['id', 'pwd']) # Column을 �
 # Datafrmae 출력(n -> 항목 개수))
 df.tail(n=10)
 ```
-Column 목록 가져오기
+# Column 목록 가져오기
 ```
 columns = [column[0] for column in cursor.description]
 ```
-Count 후, 해당 항목 Column에 추가하기
+# Count 후, 해당 항목 Column에 추가하기
 ```
 df.groupby(['A','B']).B.agg('count').to_frame('c').reset_index()
 #df.groupby(['A','B']).size().to_frame('c').reset_index()
@@ -28,7 +26,7 @@ Out[593]:
 1  y  q  1
 2  z  r  2
 ```
-row의 특정 column에서 key가 같을 경우, 다른 column의 값 합치기
+# row의 특정 column에서 key가 같을 경우, 다른 column의 값 합치기
 ```
 # Example
 7-1-2016 | 4
@@ -45,3 +43,19 @@ df.groupby('datecol').sum()['Hourcol']
 df.index = pd.to_datetime(df['datecol'].astype(str) + ' ' + df['Hourcol'].astype(str), format='%Y-%m-%d %H')
 df = df.resample('1d', how='sum') # defaults to mean 
 ```
+# 결측값 있는 행, 열 제거
+```
+# 결측값 있는 행 전체 제거
+df_dop_row = df.dropna(axis=0)
+
+# 결측값 있는 열 전체 제거
+df_drop_column = df.dropna(axis=1)
+
+# 특정 행 또는 열을 대상으로 결측값이 들어있으면 제거
+df[['C1', 'C2', 'C3']].dropna(axis=0) # 행
+df[['C1', 'C2', 'C3']].dropna(axis=1) # 열
+df.ix[[2, 4], ['C1', 'C2', 'C3']].dropna(axis=0) # 행, 열 통합
+```
+
+# 참조 링크
+[결측값 있는 행, 열 제거](https://rfriend.tistory.com/263)

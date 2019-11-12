@@ -1,6 +1,4 @@
-# Database
-
-SELECT COUNT(*)를 빠르게 하는 방법
+# SELECT COUNT(*)를 빠르게 하는 방법
 
 |<center>Index</center>|<center>Query</center>|<center>Comment</center>|
 |:--------------------:|:--------------------:|:----------------------:|
@@ -9,13 +7,13 @@ SELECT COUNT(*)를 빠르게 하는 방법
 |3|SELECT CAST(p.rows AS float) FROM sys.tables AS tbl INNER JOIN sys.indexes AS idx ON idx.object_id = tbl.object_id and idx.index_id < 2 INNER JOIN sys.partitions AS p ON p.object_id=CAST(tbl.object_id AS int) AND p.index_id=idx.index_id WHERE ((tbl.name=N'Transactions' AND SCHEMA_NAME(tbl.schema_id)='dbo'))|The way the SQL management studio counts rows (look at table properties, storage, row count). Very fast, but still an approximate number of rows.|
 |4|SELECT SUM (row_count) FROM sys.dm_db_partition_stats WHERE object_id=OBJECT_ID('Transactions') AND (index_id=0 or index_id=1);|Quick (although not as fast as method 2) operation and equally important, reliable.|
 
-JOIN의 종류와 사용법
-- 두 개 이상의 테이블이나 데이터베이스를 연결하여 데이터를 검색하는 방법
-- INNER JOIN
-  * 교집합
-  * 기준 테이블과 JOIN한 테이블의 중복된 값
-  * 결과값은 A의 테이블과 B 테이블이 모두 가지고 있는 데이터만 검색
-  * (  A  ( R )  B  )
+# JOIN의 종류와 사용법
+두 개 이상의 테이블이나 데이터베이스를 연결하여 데이터를 검색하는 방법
+INNER JOIN
+- 교집합
+- 기준 테이블과 JOIN한 테이블의 중복된 값
+- 결과값은 A의 테이블과 B 테이블이 모두 가지고 있는 데이터만 검색
+- (  A  ( R )  B  )
 ```
 --문법--
 SELECT
@@ -31,9 +29,9 @@ B.AGE --B테이블의 AGE조회
 FROM EX_TABLE A
 INNER JOIN JOIN_TABLE B ON A.NO_EMP = B.NO_EMP AND A.DEPT = B.DEPT
 ```
-- LEFT OUTER JOIN
-  * 기준 테이블의 값 + 테이블과 기준 테이블의 중복된 값
-  * (  A R  ( R )  B  )
+LEFT OUTER JOIN
+- 기준 테이블의 값 + 테이블과 기준 테이블의 중복된 값
+- (  A R  ( R )  B  )
 ```
 --문법--
 SELECT
@@ -49,8 +47,8 @@ B.AGE --B테이블의 AGE조회
 FROM EX_TABLE A
 LEFT OUTER JOIN JOIN_TABLE B ON A.NO_EMP = B.NO_EMP AND A.DEPT = B.DEPT
 ```
-- RIGHT OUTER JOIN
-  * (  A  ( R )  B R  )
+RIGHT OUTER JOIN
+- (  A  ( R )  B R  )
 ```
 --문법--
 SELECT
@@ -66,8 +64,8 @@ B.AGE --B테이블의 AGE조회
 FROM EX_TABLE A
 RIGHT OUTER JOIN JOIN_TABLE B ON A.NO_EMP = B.NO_EMP AND A.DEPT = B.DEPT
 ```
-- FULL OUTER JOIN
-  * (  A R  ( R )  B R  )
+FULL OUTER JOIN
+- (  A R  ( R )  B R  )
 ```
 --문법--
 SELECT
@@ -83,8 +81,8 @@ B.AGE --B테이블의 AGE조회
 FROM EX_TABLE A
 FULL OUTER JOIN JOIN_TABLE B ON A.NO_EMP = B.NO_EMP AND A.DEPT = B.DEPT
 ```
-- CROSS JOIN
-  * A의 데이터 * B의 데이터
+CROSS JOIN
+- A의 데이터 * B의 데이터
 ```
 --문법(첫번째방식)--
 SELECT
@@ -114,7 +112,7 @@ A.NAME, --A테이블의 NAME조회
 B.AGE --B테이블의 AGE조회
 FROM EX_TABLE A,JOIN_TABLE B
 ```
-- SELF JOIN
+SELF JOIN
 ```
 --문법--
 SELECT
@@ -129,5 +127,11 @@ B.AGE --B테이블의 AGE조회
 FROM EX_TABLE A,EX_TABLE B
 ```
 
-참조 링크
-- [select count(*) 를 빠르게 하는 방법](https://paulus78.tistory.com/entry/select-count-를-빠르게-하는-방법)
+# Row Number를 매기는 방법(MSSQL)
+```
+SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY idx) rownum, * FROM page_table ) page_table WHERE rownum BETWEEN 1 AND 20
+```
+
+# 참조 링크
+[select count(*) 를 빠르게 하는 방법](https://paulus78.tistory.com/entry/select-count-를-빠르게-하는-방법)
+[페이징 쿼리](https://roqkffhwk.tistory.com/146)
