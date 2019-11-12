@@ -9,5 +9,125 @@ SELECT COUNT(*)를 빠르게 하는 방법
 |3|SELECT CAST(p.rows AS float) FROM sys.tables AS tbl INNER JOIN sys.indexes AS idx ON idx.object_id = tbl.object_id and idx.index_id < 2 INNER JOIN sys.partitions AS p ON p.object_id=CAST(tbl.object_id AS int) AND p.index_id=idx.index_id WHERE ((tbl.name=N'Transactions' AND SCHEMA_NAME(tbl.schema_id)='dbo'))|The way the SQL management studio counts rows (look at table properties, storage, row count). Very fast, but still an approximate number of rows.|
 |4|SELECT SUM (row_count) FROM sys.dm_db_partition_stats WHERE object_id=OBJECT_ID('Transactions') AND (index_id=0 or index_id=1);|Quick (although not as fast as method 2) operation and equally important, reliable.|
 
+JOIN의 종류와 사용법
+- 두 개 이상의 테이블이나 데이터베이스를 연결하여 데이터를 검색하는 방법
+- INNER JOIN
+  * 교집합
+  * 기준 테이블과 JOIN한 테이블의 중복된 값
+  * 결과값은 A의 테이블과 B 테이블이 모두 가지고 있는 데이터만 검색
+  * (  A  ( R )  B  )
+```
+--문법--
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 기준테이블 별칭
+INNER JOIN 조인테이블 별칭 ON 기준테이블별칭.기준키 = 조인테이블별칭.기준키....
+
+--예제--
+SELECT
+A.NAME, --A테이블의 NAME조회
+B.AGE --B테이블의 AGE조회
+FROM EX_TABLE A
+INNER JOIN JOIN_TABLE B ON A.NO_EMP = B.NO_EMP AND A.DEPT = B.DEPT
+```
+- LEFT OUTER JOIN
+  * 기준 테이블의 값 + 테이블과 기준 테이블의 중복된 값
+  * (  A R  ( R )  B  )
+```
+--문법--
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 기준테이블 별칭
+LEFT OUTER JOIN 조인테이블 별칭 ON 기준테이블별칭.기준키 = 조인테이블별칭.기준키 .....
+
+--예제--
+SELECT
+A.NAME, --A테이블의 NAME조회
+B.AGE --B테이블의 AGE조회
+FROM EX_TABLE A
+LEFT OUTER JOIN JOIN_TABLE B ON A.NO_EMP = B.NO_EMP AND A.DEPT = B.DEPT
+```
+- RIGHT OUTER JOIN
+  * (  A  ( R )  B R  )
+```
+--문법--
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 기준테이블 별칭
+RIGHT OUTER JOIN 조인테이블 별칭 ON 기준테이블별칭.기준키 = 조인테이블별칭.기준키 .....
+
+--예제--
+SELECT
+A.NAME, --A테이블의 NAME조회
+B.AGE --B테이블의 AGE조회
+FROM EX_TABLE A
+RIGHT OUTER JOIN JOIN_TABLE B ON A.NO_EMP = B.NO_EMP AND A.DEPT = B.DEPT
+```
+- FULL OUTER JOIN
+  * (  A R  ( R )  B R  )
+```
+--문법--
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 기준테이블 별칭
+FULL OUTER JOIN 조인테이블 별칭 ON 기준테이블별칭.기준키 = 조인테이블별칭.기준키 .....
+
+--예제--
+SELECT
+A.NAME, --A테이블의 NAME조회
+B.AGE --B테이블의 AGE조회
+FROM EX_TABLE A
+FULL OUTER JOIN JOIN_TABLE B ON A.NO_EMP = B.NO_EMP AND A.DEPT = B.DEPT
+```
+- CROSS JOIN
+  * A의 데이터 * B의 데이터
+```
+--문법(첫번째방식)--
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 기준테이블 별칭
+CROSS JOIN 조인테이블 별칭
+
+--예제(첫번째방식)--
+SELECT
+A.NAME, --A테이블의 NAME조회
+B.AGE --B테이블의 AGE조회
+FROM EX_TABLE A
+CROSS JOIN JOIN_TABLE B
+
+=====================================================================================
+
+--문법(두번째방식)--
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 기준테이블 별칭,조인테이블 별칭
+
+--예제(두번째방식)--
+SELECT
+A.NAME, --A테이블의 NAME조회
+B.AGE --B테이블의 AGE조회
+FROM EX_TABLE A,JOIN_TABLE B
+```
+- SELF JOIN
+```
+--문법--
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 테이블 별칭,테이블 별칭2
+
+--예제--
+SELECT
+A.NAME, --A테이블의 NAME조회
+B.AGE --B테이블의 AGE조회
+FROM EX_TABLE A,EX_TABLE B
+```
+
 참조 링크
 - [select count(*) 를 빠르게 하는 방법](https://paulus78.tistory.com/entry/select-count-를-빠르게-하는-방법)

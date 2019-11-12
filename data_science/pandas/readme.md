@@ -28,3 +28,20 @@ Out[593]:
 1  y  q  1
 2  z  r  2
 ```
+row의 특정 column에서 key가 같을 경우, 다른 column의 값 합치기
+```
+# Example
+7-1-2016 | 4
+7-1-2016 | 2
+4-1-2016 | 5
+# Into this
+7-1-2016 | 6
+4-1-2016 | 5
+
+# Code 1)
+df.groupby('datecol').sum()['Hourcol']
+
+# Code 2)
+df.index = pd.to_datetime(df['datecol'].astype(str) + ' ' + df['Hourcol'].astype(str), format='%Y-%m-%d %H')
+df = df.resample('1d', how='sum') # defaults to mean 
+```
