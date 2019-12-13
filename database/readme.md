@@ -132,6 +132,18 @@ FROM EX_TABLE A,EX_TABLE B
 SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY idx) rownum, * FROM page_table ) page_table WHERE rownum BETWEEN 1 AND 20
 ```
 
+# pyodbc에서 Stored Procedure가 제대로 실행 또는 반영이 안될 경우
+```
+with engine.connect() as con:
+    # 아래의 설정을 추가
+    con.execution_options(autocommit=True, isolation_level='READ UNCOMMITTED')
+    # SET NOCOUNT ON을 선으로 실행
+    # 추가적으로 @muted = 1을 넣는지 여부는 분석 중
+    con.execute('SET NOCOUNT ON; {your procedure code here} @param_1 = 'variable')
+```
+
 # 참조 링크
 [select count(*) 를 빠르게 하는 방법](https://paulus78.tistory.com/entry/select-count-를-빠르게-하는-방법)
 [페이징 쿼리](https://roqkffhwk.tistory.com/146)
+[sqlalchemy - Stored Procedure](https://docs.sqlalchemy.org/en/13/core/connections.html)
+[sqlalchemy - SET NOCOUNT ON](https://stackoverflow.com/questions/24458430/make-python-wait-for-stored-procedure-to-finish-executing)
