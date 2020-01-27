@@ -1,7 +1,7 @@
 # Markdown
 
 표 만들기
-```
+```markdown
 |  <center>Header1</center> |  <center>Header2</center> |  <center>Header3</center> |
 |:--------|:--------:|--------:|
 |**cell 1x1** | <center>cell 1x2 </center> |*cell 1x3* |

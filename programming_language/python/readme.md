@@ -1,14 +1,14 @@
 # Abstract Class
 
 필요 Module을 Import
-```
+```python
 import abc
 
 # 사용성을 위해 다음의 코드가 추천됨
 from abc import ABC, abstractmethod, ABCMeta
 ```
 Abstract Class 구현
-```
+```python
 class AbstractClassExample(ABC):
 
     __metaclass__ = ABCMeta
@@ -22,7 +22,7 @@ class AbstractClassExample(ABC):
         pass
 ```
 구현된 Abstract Class 사용
-```
+```python
 class ClassExample(AbstractClassExample):
     def __init(self):
         super().__init__()
@@ -36,12 +36,12 @@ class ClassExample(AbstractClassExample):
         print(data)
 ```
 # 정적 타입
-```
+```python
 def typing_example(param_1: int, param_2: str="default") -> str:
     return "example"
 ```
 # String Formatting
-```
+```python
 ## 전체 자리수=8, 소수점은 2자리까지 반올림
 print("num: {:8.2f}".format(num))
 
@@ -64,7 +64,7 @@ print("{:|<30s}".format(s))
 # Hash 사용하기
 
 내장함수 hash의 경우, 3.4 버전 이상부터 Process에 따라 다른 Hash Value가 return 되므로 사용 지양
-```
+```bash
 python -c "print(hash('123'))"
 8180009514858937698
 python -c "print(hash('123'))"
@@ -73,7 +73,7 @@ python -c "print(hash('123'))"
 -5852881486981464238
 ```
 hashlib 사용
-```
+```python
 import hashlib
 
 # sha256, sha1, md5 등 hash algorithm 선택
@@ -83,7 +83,7 @@ hsahlib.sha256(input_value.encode()).hexdigest()
 ```
 
 # Class 및 Function name 확인하기
-```
+```python
 def my_function():
     pass
 
@@ -105,7 +105,7 @@ print(MyClass.method.__qualname__)  # gives "MyClass.method"
 ```
 
 추가로 표시하고 싶은 값이 있을 경우
-```
+```python
 FORMAT = '%(asctime)-15s %(clientip)s %(user)-8s %(message)s'
 logging.basicConfig(format=FORMAT)
 d = {'clientip': '192.168.0.1', 'user': 'fbloggs'}
@@ -119,7 +119,7 @@ https://iscinumpy.gitlab.io/post/a-simple-introduction-to-asyncio/
 ```
 
 # Integer to String 시 앞부분 0으로 채우기
-```
+```python
 str(1).zfill(2) # '01'
 ```
 

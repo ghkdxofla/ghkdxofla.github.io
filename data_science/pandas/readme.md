@@ -1,9 +1,9 @@
 # Module Import
-```
+```python
 import pandas as pd
 ```
 # 기본적인 Dataframe 형성 및 출력(from MSSQL record 객체)
-```
+```python
 # Dataframe 형성
 mssql_data = get_record() # Record를 가져오는 것으로 가정
 df = pd.DataFrame.from_records(mssql_data, columns=['id', 'pwd']) # Column을 잘 맞추는게 중요
@@ -12,11 +12,11 @@ df = pd.DataFrame.from_records(mssql_data, columns=['id', 'pwd']) # Column을 �
 df.tail(n=10)
 ```
 # Column 목록 가져오기
-```
+```python
 columns = [column[0] for column in cursor.description]
 ```
 # Count 후, 해당 항목 Column에 추가하기
-```
+```python
 df.groupby(['A','B']).B.agg('count').to_frame('c').reset_index()
 #df.groupby(['A','B']).size().to_frame('c').reset_index()
 
@@ -27,7 +27,7 @@ Out[593]:
 2  z  r  2
 ```
 # row의 특정 column에서 key가 같을 경우, 다른 column의 값 합치기
-```
+```python
 # Example
 7-1-2016 | 4
 7-1-2016 | 2
@@ -44,7 +44,7 @@ df.index = pd.to_datetime(df['datecol'].astype(str) + ' ' + df['Hourcol'].astype
 df = df.resample('1d', how='sum') # defaults to mean 
 ```
 # 결측값 있는 행, 열 제거
-```
+```python
 # 결측값 있는 행 전체 제거
 df_dop_row = df.dropna(axis=0)
 

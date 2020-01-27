@@ -5,7 +5,7 @@ Promise? 비동기?
 - 특정 코드의 연산이 끝날 때까지 코드의 실행을 멈추지 않고 다음 코드를 먼저 실행
 
 비동기 코드의 예
-```
+```javascript
 // #1
 console.log('Hello');
 // #2
@@ -25,7 +25,7 @@ Callback?
 - 데이터가 준비된 시점에서만 원하는 동작을 수행
 
 콜백 함수를 통한 비동기 처리 해결
-```
+```javascript
 function getData(callbackFunc) {
 	$.get('https://domain.com/products/1', function(response) {
 		callbackFunc(response); // 서버에서 받은 데이터 response를 callbackFunc() 함수에 넘겨줌
@@ -40,7 +40,7 @@ getData(function(tableData) {
 Callback Hell 해결
 - Promise나 Async 사용
 - Coding Pattern 사용
-```
+```javascript
 function parseValueDone(id) {
 	auth(id, authDone);
 }
