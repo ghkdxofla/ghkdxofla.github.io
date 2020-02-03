@@ -82,6 +82,30 @@ import hashlib
 hsahlib.sha256(input_value.encode()).hexdigest()
 ```
 
+# String split 시, 뒤의 1개만 분리하고 싶을 경우
+```python
+"a b c,d,e,f".rsplit(',', 1)
+
+# Return value
+['a b c,d,e', 'f']
+```
+
+# Function을 argument로 전달하면서 해당 function의 argument 또한 넘기고 싶을 경우
+```python
+def a(x, y):
+    print x, y
+
+def b(other, function, *args, **kwargs):
+    function(*args, **kwargs)
+    print other
+
+b('world', a, 'hello', 'dude')
+
+# Return value : 
+hello dude
+world
+```
+
 # Class 및 Function name 확인하기
 ```python
 def my_function():
