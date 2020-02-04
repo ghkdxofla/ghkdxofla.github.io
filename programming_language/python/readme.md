@@ -153,6 +153,31 @@ str(1).zfill(2) # '01'
 # 파이썬이 느린 이유
 http://jakevdp.github.io/blog/2014/05/09/why-python-is-slow/
 
+# list1에 있는 요소가 다른 list2에 있는지 확인하기
+```python
+# List of string 
+list1 = ['Hi' ,  'hello', 'at', 'this', 'there', 'from']
+ 
+# List of string
+list2 = ['there' , 'hello', 'Hi']
+
+# check if list1 contains all elements in list2
+result =  all(elem in list1  for elem in list2)
+ 
+if result:
+    print("Yes, list1 contains all elements in list2")    
+else :
+    print("No, list1 does not contains all elements in list2"
+
+# check if list1 contains any elements of list2
+result =  any(elem in list1  for elem in list2)
+ 
+if result:
+    print("Yes, list1 contains any elements of list2")    
+else :
+    print("No, list1 contains any elements of list2")
+```
+
 # 참조 링크
 [Python ABC(Abstract Base Class)](https://bluese05.tistory.com/61)
 [Abstract Classes](https://www.python-course.eu/python3_abstract_classes.php)
@@ -163,3 +188,4 @@ http://jakevdp.github.io/blog/2014/05/09/why-python-is-slow/
 [Logging](https://docs.python.org/ko/3/library/logging.html)
 [Get class and function name](https://stackoverflow.com/questions/251464/how-to-get-a-function-name-as-a-string)
 [Asyncio](https://iscinumpy.gitlab.io/post/a-simple-introduction-to-asyncio/)
+[list a에 있는 요소가 다른 list b에 있는지 확인하기](https://thispointer.com/python-check-if-a-list-contains-all-the-elements-of-another-list/)

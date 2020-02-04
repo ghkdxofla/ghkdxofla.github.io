@@ -57,5 +57,19 @@ df[['C1', 'C2', 'C3']].dropna(axis=1) # 열
 df.ix[[2, 4], ['C1', 'C2', 'C3']].dropna(axis=0) # 행, 열 통합
 ```
 
+# Correlation 후 항목 간 상관계수 순으로 정렬된 표가 필요할 때
+```python
+df.corr().unstack().sort_values().drop_duplicates()
+
+# 더 깔끔하게 보고 싶을 경우
+
+```
+
+# Index, column에 있는 name 없애기
+```python
+del df.index.name
+del df.columns.names
+```
+
 # 참조 링크
 [결측값 있는 행, 열 제거](https://rfriend.tistory.com/263)
