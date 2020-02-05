@@ -43,6 +43,7 @@ df.groupby('datecol').sum()['Hourcol']
 df.index = pd.to_datetime(df['datecol'].astype(str) + ' ' + df['Hourcol'].astype(str), format='%Y-%m-%d %H')
 df = df.resample('1d', how='sum') # defaults to mean 
 ```
+
 # 결측값 있는 행, 열 제거
 ```python
 # 결측값 있는 행 전체 제거
@@ -69,6 +70,15 @@ df.corr().unstack().sort_values().drop_duplicates()
 ```python
 del df.index.name
 del df.columns.names
+```
+
+# Dataframe to JSON 할 때 어떻게 저장할지 선택하기 (정리 필요)
+https://datatofish.com/export-pandas-dataframe-json/
+```python
+# 실행
+```
+```json
+결과
 ```
 
 # 참조 링크

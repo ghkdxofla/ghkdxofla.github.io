@@ -1,3 +1,19 @@
+# 파일 크기 확인하는 법
+```python
+# Simple way
+import os
+b = os.path.getsize("/path/aaa.txt")
+
+# Another way 1
+import os
+statinfo = os.stat("somefile.txt")
+statinfo.st_size
+
+# Another way 2
+import os
+with open("somefile.txt", 'r') as f:
+    f.seek(0, os.SEEK_END)
+    size = f.tell()
 # Abstract Class
 
 필요 Module을 Import
