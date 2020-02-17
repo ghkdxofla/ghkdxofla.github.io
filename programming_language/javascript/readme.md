@@ -55,6 +55,25 @@ $.get('url', function(response) {
 });
 ```
 
+# Exception handling에서 finally 사용하기
+```javascript
+axios.get('/user')
+  .then(function (response) {
+    console.log(response);
+  })
+  .catch(function (error) {
+    console.log(error);
+  })
+  .then(function () {
+	// always executed
+	// this means it can be 'finally' function
+  }); 
+```
+
+# axios
+
+Axios란?
+
 # 내용 추가 필요
 https://joshua1988.github.io/web-development/javascript/promise-for-beginners/
 https://hyunseob.github.io/2016/03/10/javascript-this/

@@ -194,6 +194,15 @@ else :
     print("No, list1 contains any elements of list2")
 ```
 
+# Traceback 사용을 통한 exception handling
+```python
+import traceback
+try:
+    <blah>
+except IndexError:
+    traceback.print_exc()
+```
+
 # 참조 링크
 [Python ABC(Abstract Base Class)](https://bluese05.tistory.com/61)
 [Abstract Classes](https://www.python-course.eu/python3_abstract_classes.php)

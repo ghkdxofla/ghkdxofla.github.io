@@ -127,11 +127,6 @@ B.AGE --B테이블의 AGE조회
 FROM EX_TABLE A,EX_TABLE B
 ```
 
-# Row Number를 매기는 방법(MSSQL)
-```sql
-SELECT * FROM ( SELECT ROW_NUMBER() OVER(ORDER BY idx) rownum, * FROM page_table ) page_table WHERE rownum BETWEEN 1 AND 20
-```
-
 # pyodbc에서 Stored Procedure가 제대로 실행 또는 반영이 안될 경우
 ```sql
 with engine.connect() as con:
