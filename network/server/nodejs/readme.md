@@ -42,8 +42,13 @@ pm2 logs <id|name>
 pm2 monit
 ```
 
+python app 실행하기
+```bash
+pm2 start {app_file_name} --interpreter=python
+```
+
 # npm
-```ㅡbash
+```bash
 # prefix 붙여서 npm 실행(child directory 내 npm 실행 시)
 npm start --prefix path/to/your/app
 ```
