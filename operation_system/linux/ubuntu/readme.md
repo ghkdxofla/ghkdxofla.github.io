@@ -147,6 +147,21 @@ tar -(z)xvf aaa.tar(.gz)
 setfacl -bn {directory}
 ```
 
+# 파일 생성하기
+```bash
+# touch
+touch {file_name}
+
+# cat
+# cat은 파일을 생성하면서 데이터를 입력할 때 사용한다
+cat > {file_name}
+```
+
+# 디렉토리 생성하기
+```bash
+mkdir {dir_name}
+```
+
 # 참조 링크
 [Service 등록](https://chhanz.github.io/linux/2019/01/18/linux-how-to-create-custom-systemd-service/)
 [Access Control List](https://dgblog.tistory.com/156)
