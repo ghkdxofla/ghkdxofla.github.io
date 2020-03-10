@@ -203,6 +203,20 @@ except IndexError:
     traceback.print_exc()
 ```
 
+# Super class 변수 참조
+```python
+class PostgreSQLConnector(MSSQLConnector):
+    # MSSQLConnector 클래스 상속 후 사용한다
+    def __init__(self, db_config_dir: str="configuration/postgresql_config.json", region: str="kr"):
+        super().__init__(db_config_dir=db_config_dir, region=region, driver='{PostgreSQL Unicode}')
+        if self.conn_obj is None:
+            raise InitConnectorError(PostgreSQLConnector)
+
+# 위의 예제에서 conn_obj attribute는 Super class에서 생성 시 할당되는 부분이다
+# 이를 하위 child class에서 사용하려면 super().conn_obj 가 아니라
+# self.conn_obj로 참조하면 된다
+```
+
 # 참조 링크
 [Python ABC(Abstract Base Class)](https://bluese05.tistory.com/61)
 [Abstract Classes](https://www.python-course.eu/python3_abstract_classes.php)
@@ -214,3 +228,5 @@ except IndexError:
 [Get class and function name](https://stackoverflow.com/questions/251464/how-to-get-a-function-name-as-a-string)
 [Asyncio](https://iscinumpy.gitlab.io/post/a-simple-introduction-to-asyncio/)
 [list a에 있는 요소가 다른 list b에 있는지 확인하기](https://thispointer.com/python-check-if-a-list-contains-all-the-elements-of-another-list/)
+[Super class attribute 참조](https://stackoverflow.com/questions/6075758/python-super-object-has-no-attribute-attribute-name)
+[Default arguments with *args and **kwargs](https://stackoverflow.com/questions/15301999/default-arguments-with-args-and-kwargs)

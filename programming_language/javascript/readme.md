@@ -78,5 +78,48 @@ Axios란?
 https://joshua1988.github.io/web-development/javascript/promise-for-beginners/
 https://hyunseob.github.io/2016/03/10/javascript-this/
 
+# forEach에 break 말고 some 사용하기
+
+왜?
+- javascript는 break 문이 존재하지 않는다
+
+break가 없으면?
+- 불필요한 순회를 없애고 싶을 때 문제 발생
+
+대안은?
+- 커스텀 오류 객체 사용 : 코드 품질 저하
+- some 사용 : some은 컬렉션의 요소 중 최소 1개라도 조건을 만족시키는지 검사하는 Method
+
+예제
+```javascript
+// 예시 : 2에서 탈출하고 싶다면...?
+[1,2,3,4,5].forEach(function(v) {
+  if (v==2) console.log(v)
+});
+
+// 커스텀 오류 객체 사용 예시
+// 코드가 지저분하다...!
+var Break = new Error('Break');
+
+try {
+  [1,2,3,4,5].forEach(function(v) {
+    if (v==2) {
+      console.log('v: ', v)
+      throw Break;
+    }
+  });
+} catch (e) {
+  if (e!= Break) throw Break; 
+}
+
+// some 사용
+// 가독성도 높고 훨신 깔끔하다
+[1,2,3,4,5].some(function(v) {
+   if(v == 2) console.log(v);
+   return (v ==2);
+});
+```
+
 # 참조 링크
 [자바스크립트 비동기 처리와 콜백 함수](https://joshua1988.github.io/web-development/javascript/javascript-asynchronous-operation/#%EC%BD%9C%EB%B0%B1-%EC%A7%80%EC%98%A5-callback-hell)
+[forEach에 break문 대신 some 사용하기](https://blog.outsider.ne.kr/847)
