@@ -162,8 +162,28 @@ cat > {file_name}
 mkdir {dir_name}
 ```
 
+# File descriptor
+
+설명
+- A file descriptor is a number that uniquely identifies an open file in a computer's operating system
+- When a program asks to open a file — or another data resource, like a network socket — the kernel:
+  - Grants access
+  - Creates an entry in the global file table
+  - Provides the software with the location of that entry
+
+Linux에서의 default file descriptor(3개)
+
+|<center>Name</center>|<center>File descriptor</center>|<center>Description</center>|<center>Abbreviation</center>|
+|:-------------------:|:------------------------------:|:--------------------------:|:---------------------------:|
+|Standard input	      |0	                           |The default data stream for input, for example in a command pipeline. In the terminal, this defaults to keyboard input from the user.	|stdin |
+|Standard output	  |1	                           |The default data stream for output, for example when a command prints text. In the terminal, this defaults to the user's screen.	    |stdout|
+|Standard error	      |2	                           |The default data stream for output that relates to an error occurring. In the terminal, this defaults to the user's screen.	            |stderr|
+
+descriptor 관련해서 grep 등 내용은 추가 예정
+
 # 참조 링크
 [Service 등록](https://chhanz.github.io/linux/2019/01/18/linux-how-to-create-custom-systemd-service/)
 [Access Control List](https://dgblog.tistory.com/156)
 [방화벽 설정(iptables)](https://server-engineer.tistory.com/418)
 [방화벽 설정(ufw)](https://happist.com/561474/%EC%9A%B0%EB%B6%84%ED%88%AC-18-04%EB%A1%9C-%EC%84%9C%EB%B2%84-%EC%9A%B4%EC%98%81-ufw%EB%A1%9C-%EB%B0%A9%ED%99%94%EB%B2%BD-%EC%84%A4%EC%A0%95/)
+[File descriptor](https://www.computerhope.com/jargon/f/file-descriptor.htm)
