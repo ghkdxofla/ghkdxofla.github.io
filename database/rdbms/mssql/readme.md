@@ -9,6 +9,70 @@ SELECT CHARINDEX('찾을문자열A','지정문자열B')
 SELECT CHARINDEX('찾을문자열A','지정문자열B',숫자C) -- 이건 C 위치에서부터 B에서 A를 찾으라는 뜻
 ```
 
+# DML Trigger
+
+설명
+- Data Manipulation Language (DML) Triggers are special kind of Stored Procedure or an operation that gets executed automatically when a DML operation like INSERT, UPDATE OR DELETE is fired on a Table or View
+
+예시
+```sql
+--Create Demo Database
+CREATE DATABASE SqlHintsDMLTriggerDemo
+GO
+USE SqlHintsDMLTriggerDemo
+GO
+
+--Create Customer Table
+CREATE TABLE Customer 
+( CustomerId INT IDENTITY (1, 1) NOT NULL ,
+  FirstName NVARCHAR(50), LastName NVARCHAR(50))
+GO
+
+--Create Customer Trigger
+CREATE TRIGGER ExampleTrigger
+ON Customer
+FOR INSERT
+AS
+BEGIN
+     PRINT 'AFTER Trigger ExampleTrigger executed!'
+END
+```
+
+Trigger의 종류
+
+1. AFTER Triggers
+- AFTER Triggers are executed after the DML statement completes but before it is committed to the database
+- AFTER Triggers if required can rollback it’s actions and source DML statement which invoked it
+- On a Table with a AFTER trigger, the trigger will be executed once the triggering DML action completes and before it is committed
+- A table can multiple AFTER triggers and for the same trigger action too we can have multiple triggers
+- 예시
+```sql
+--Create an AFTER Trigger AfterTriggerExample1 for the DML INSERT, UPDATE and DELETE OPERATION on the Customer table by executing the following script
+CREATE TRIGGER AfterTriggerExample1
+ON Customer
+FOR INSERT, UPDATE, DELETE
+AS
+BEGIN
+     PRINT 'AFTER Trigger AfterTriggerExample1 executed!'
+END
+```
+
+2. INSTEAD OF Triggers
+- INSTEAD OF Triggers are the triggers which gets executed automatically in place of triggering DML (i.e. INSERT, UPDATE and DELETE) action
+- If we are inserting a record and we have a INSTEAD OF trigger for INSERT then instead of INSERT whatever action is defined in the trigger that gets executed
+- **A table can have one INSTEAD of Trigger for each Triggering DML actions INSERT, UPDATE and DELETE**
+- 예시
+```sql
+--Create an INSTEAD OF Trigger on the Customer Table for the INSERT DML operation by executing the following script
+CREATE TRIGGER INSTEADOFTriggerExample 
+ON Customer
+INSTEAD OF INSERT
+AS
+BEGIN
+    PRINT('Instead of trigger is Executed!')
+END
+```
+
 # MSSQL Stored procedure의 각종 함수 예시
 
 선언과 초기화
@@ -117,7 +181,28 @@ SELECT STUFF('abcdef', 2, 3, 'XXX');
 --> aXXXef
 ```
 
+JSON 객체 불러온 후, 해당 value의 값에 따라 다른 값 출력하기(UPDATE의 SET 안에서 쓸 때 유용함)
+```sql
+((SELECT CASE WHEN EXISTS (SELECT 1 FROM (SELECT * FROM OPENJSON(JSON_QUERY(dpd.dpc_led, '$.ledctrl_error'))
+    WITH (signal1 NVARCHAR(MAX) '$.info.signal1', signal2 NVARCHAR(MAX) '$.info.signal2') 
+    WHERE (
+        (signal1 = 'ERROR' OR signal2 = 'ERROR')
+        )) AS SIG_WARN) THEN 1 ELSE 0 END)
+        +
+        (SELECT CASE WHEN EXISTS (SELECT 1 FROM (SELECT * FROM OPENJSON(JSON_QUERY(dpd.dpc_led, '$.ledctrl_error'))
+    WITH (signal1 NVARCHAR(MAX) '$.info.signal1', signal2 NVARCHAR(MAX) '$.info.signal2') 
+    WHERE (
+        (signal1 = 'ERROR' AND signal2 = 'ERROR') 
+        OR (signal1 = 'NONE' AND signal2 = 'ERROR') 
+        OR (signal1 = 'ERROR' AND signal2 = 'NONE')
+        )) as SIG_ERR) THEN 1 ELSE 0 END))
+```
+
 # 참조 링크
 [문자열의 시작 위치 찾기](https://kmj1107.tistory.com/entry/MSSQL-CharIndex-%EB%AC%B8%EC%9E%90%EC%97%B4%EC%9D%98-%EC%8B%9C%EC%9E%91-%EC%9C%84%EC%B9%98-%EC%B0%BE%EA%B8%B0)
+
 [Procedure 간단한 명령어들](https://hklovecw.tistory.com/7)
+
 [CASE...WHEN...THEN, DECODE](https://devbox.tistory.com/entry/DBMS-CASEWHENTHEN)
+
+[DML Triggers](https://sqlhints.com/tag/cannot-create-trigger-because-an-instead-of-insert-trigger-already-exists-on-this-object/)
