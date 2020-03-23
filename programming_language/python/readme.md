@@ -122,6 +122,30 @@ hello dude
 world
 ```
 
+# Time check하는 decorator 짜기
+```python
+# 정의
+def check_time(function):
+    def wrapper_func(*args, **kwargs):
+        start_time = datetime.datetime.now()
+        result = function(*args, **kwargs)
+        end_time = datetime.datetime.now()
+        logger.set_log('DEBUG', "Time elapsed {check_time}".format(check_time=end_time - start_time), extra={'classAndFunc': function.__qualname__})
+        return result
+    return wrapper_func
+
+# 사용법 1 : With decorator
+@check_time
+def func():
+    mssql_conn = MSSQLConnector(region='qv25')
+    mssql_conn.get_data_query("SELECT * FROM displays_history")
+
+func()
+
+# 사용법 2 : 정의된 함수를 측정하고 싶을 경우
+check_time(func())
+```
+
 # Class 및 Function name 확인하기
 ```python
 def my_function():

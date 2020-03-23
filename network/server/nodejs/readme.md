@@ -1,3 +1,37 @@
+# node.js
+
+특징
+- javascript 기반(V8 엔진) 런타임
+- Event 기반
+- Non-blocking I/O 모델(libuv)
+- npm을 통한 라이브러리 제공
+- Single thread 기반
+
+Event 기반?
+- Event listener에 callback 함수를 등록해 놓음
+- Event 발생 시 callback 함수가 호출됨
+- 여러 event가 동시 발생 시, event loop가 순서 판단
+
+event loop?
+- event 발생 시 호출할 callback 함수들을 관리
+- 호출된 callback 함수의 실행 순서를 결정
+- Node.js가 종료될 때 까지 실행됨
+
+Task queue?
+- callback 함수들이 대기중인 공간
+- callback queue
+
+Background?
+- 타이머, I/O 작업 callback, event listener가 대기하는 공간
+
+Non-blocking I/O?
+- 비동기가 이와 유사함
+- 함수를 background로 보내는 것
+- Background ---> Task queue --[이 때, 다른 함수들은 동작]-> Call stack
+- setTimeout(function, 0)을 통해 코드를 Non-blocking화 가능
+  0초로 두긴 했으나, browser 4ms, Node.js 1ms의 지연 시간 존재함
+
+
 # pm2
 
 설치

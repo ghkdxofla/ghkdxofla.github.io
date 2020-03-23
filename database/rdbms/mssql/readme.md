@@ -198,6 +198,19 @@ JSON 객체 불러온 후, 해당 value의 값에 따라 다른 값 출력하기
         )) as SIG_ERR) THEN 1 ELSE 0 END))
 ```
 
+트랜잭션 레벨 확인
+```sql
+SELECT CASE transaction_isolation_level 
+WHEN 0 THEN 'Unspecified' 
+WHEN 1 THEN 'ReadUncommitted' 
+WHEN 2 THEN 'ReadCommitted' 
+WHEN 3 THEN 'Repeatable' 
+WHEN 4 THEN 'Serializable' 
+WHEN 5 THEN 'Snapshot' END AS TRANSACTION_ISOLATION_LEVEL 
+FROM sys.dm_exec_sessions 
+where session_id = @@SPID
+```
+
 # 참조 링크
 [문자열의 시작 위치 찾기](https://kmj1107.tistory.com/entry/MSSQL-CharIndex-%EB%AC%B8%EC%9E%90%EC%97%B4%EC%9D%98-%EC%8B%9C%EC%9E%91-%EC%9C%84%EC%B9%98-%EC%B0%BE%EA%B8%B0)
 
