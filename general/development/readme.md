@@ -6,7 +6,7 @@
 - Prototyping code 등 중요도가 낮은 코드는 느슨한 리뷰도 필요
   * 단, 이 경우에는 Repository를 분리
 - 스타일 가이드는 반드시 지키기
-   * Lint로 대부분 거르기
+  * Lint로 대부분 거르기
 - 불필요한 공백줄 제거
   * Editor에서 Extra Whitespace 없애는 옵션을 키면 된다
 - 코드 리뷰의 중요한 요소
@@ -27,15 +27,20 @@
 ```
 
 좋지 않은 코드 리뷰의 경험
-  * 오프라인 코드 리뷰
-  * 프로젝터로 볼 때 눈아픔
-  * 분위기 타는 리뷰
-  * 도구의 부실함
-  * 담당 서비스가 모두 다를 때
-  * 주니어 코드의 리뷰 대상
-    | 일방적인 가이드가 되는 경우가 많다
-    | 시니어들에겐 도움이 잘 안됨
+- 오프라인 코드 리뷰
+- 프로젝터로 볼 때 눈아픔
+- 분위기 타는 리뷰
+- 도구의 부실함
+- 담당 서비스가 모두 다를 때
+- 주니어 코드의 리뷰 대상
+  * 일방적인 가이드가 되는 경우가 많다
+  * 시니어들에겐 도움이 잘 안됨
 
+# Boilerplate 목록
+
+추천 목록 모음 페이지
+- [Node.js](https://medium.com/better-programming/best-node-js-boilerplate-to-speed-up-your-project-development-a9eca7b07f90)
+- [Django](https://dev.to/sm0ke/django-boilerplate-code-open-source-and-free-2aa5)
 
 # 참조 링크
 

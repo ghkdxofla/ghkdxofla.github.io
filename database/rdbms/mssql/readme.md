@@ -198,7 +198,14 @@ JSON 객체 불러온 후, 해당 value의 값에 따라 다른 값 출력하기
         )) as SIG_ERR) THEN 1 ELSE 0 END))
 ```
 
-트랜잭션 레벨 확인
+ISNULL 함수
+```sql
+-- ISNULL(칼럼,칼럼이 NULL일경우 대체할 값)
+ISNULL(Column,0)
+(ISNULL(@PARAMETER,'')='')
+```
+
+# 트랜잭션 레벨 확인
 ```sql
 SELECT CASE transaction_isolation_level 
 WHEN 0 THEN 'Unspecified' 
@@ -219,3 +226,5 @@ where session_id = @@SPID
 [CASE...WHEN...THEN, DECODE](https://devbox.tistory.com/entry/DBMS-CASEWHENTHEN)
 
 [DML Triggers](https://sqlhints.com/tag/cannot-create-trigger-because-an-instead-of-insert-trigger-already-exists-on-this-object/)
+
+[NULL값 함수 체크](https://coding-factory.tistory.com/98)
