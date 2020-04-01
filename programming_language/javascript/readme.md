@@ -120,6 +120,18 @@ try {
 });
 ```
 
+# 리스트 내부의 값이 존재하는지 확인이 필요할 때
+```javascript
+// 리스트 내부 1 depth 값의 경우
+arr.includes('apple');
+
+
+// 리스트 내부 객체의 경우
+arr.find(el => el[0] === color);
+
+
+```
 # 참조 링크
 [자바스크립트 비동기 처리와 콜백 함수](https://joshua1988.github.io/web-development/javascript/javascript-asynchronous-operation/#%EC%BD%9C%EB%B0%B1-%EC%A7%80%EC%98%A5-callback-hell)
+
 [forEach에 break문 대신 some 사용하기](https://blog.outsider.ne.kr/847)
