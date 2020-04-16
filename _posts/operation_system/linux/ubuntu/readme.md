@@ -41,6 +41,9 @@ sudo umount /{disk_path}
 
 # Mount(Auto) - 추가 및 포멧 후 자동 마운트
 sudo blkid
+
+# 특정 위치로 Auto mount 하기
+링크 참조
 ```
 
 
@@ -184,6 +187,11 @@ descriptor 관련해서 grep 등 내용은 추가 예정
 # 참조 링크
 [Service 등록](https://chhanz.github.io/linux/2019/01/18/linux-how-to-create-custom-systemd-service/)
 [Access Control List](https://dgblog.tistory.com/156)
+
 [방화벽 설정(iptables)](https://server-engineer.tistory.com/418)
+
 [방화벽 설정(ufw)](https://happist.com/561474/%EC%9A%B0%EB%B6%84%ED%88%AC-18-04%EB%A1%9C-%EC%84%9C%EB%B2%84-%EC%9A%B4%EC%98%81-ufw%EB%A1%9C-%EB%B0%A9%ED%99%94%EB%B2%BD-%EC%84%A4%EC%A0%95/)
+
 [File descriptor](https://www.computerhope.com/jargon/f/file-descriptor.htm)
+
+[Auto mount 하기](https://www.fosslinux.com/4216/how-to-automount-hard-disk-partitions-in-ubuntu.htm)
