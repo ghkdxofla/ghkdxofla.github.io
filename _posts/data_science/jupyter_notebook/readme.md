@@ -80,5 +80,7 @@ https://markhneedham.com/blog/2019/05/10/jupyter-runtimeerror-this-event-loop-is
 
 # 참조 링크
 [Jupyter notebook server 설정 방법-1](https://yongbeomkim.github.io/jupyter-server/)
+
 [Jupyter notebook server 설정 방법-2](https://goodtogreate.tistory.com/entry/IPython-Notebook-%EC%84%A4%EC%B9%98%EB%B0%A9%EB%B2%95)
+
 [Jupyter notebook server 설정 방법-3](https://medium.com/@GuruAtWork/jupyter-notebook-adding-certificates-for-ease-of-use-447f476b9112)

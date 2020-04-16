@@ -241,16 +241,37 @@ class PostgreSQLConnector(MSSQLConnector):
 # self.conn_obj로 참조하면 된다
 ```
 
+# Package 만드는 법
+
+내용 추가
+
 # 참조 링크
 [Python ABC(Abstract Base Class)](https://bluese05.tistory.com/61)
+
 [Abstract Classes](https://www.python-course.eu/python3_abstract_classes.php)
+
 [정적 타입 선언](http://blog.naver.com/passion053/221070020739)
+
 [Python 출력 시 formatting](https://frhyme.github.io/python-basic/python_string_format/)
+
 [파이썬 프로젝트의 구조](https://www.holaxprogramming.com/2017/06/28/python-project-structures/)
+
 [프로세스에 따른 hash 결과가 다르다](https://charsyam.wordpress.com/2018/01/29/%EC%9E%85-%EA%B0%9C%EB%B0%9C-python-3-3-%EB%B6%80%ED%84%B0%EB%8A%94-hash-%EA%B2%B0%EA%B3%BC%EA%B0%80-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4-%EB%A7%88%EB%8B%A4-%EB%8B%AC%EB%9D%BC%EC%9A%94/)
+
 [Logging](https://docs.python.org/ko/3/library/logging.html)
+
 [Get class and function name](https://stackoverflow.com/questions/251464/how-to-get-a-function-name-as-a-string)
+
 [Asyncio](https://iscinumpy.gitlab.io/post/a-simple-introduction-to-asyncio/)
+
 [list a에 있는 요소가 다른 list b에 있는지 확인하기](https://thispointer.com/python-check-if-a-list-contains-all-the-elements-of-another-list/)
+
 [Super class attribute 참조](https://stackoverflow.com/questions/6075758/python-super-object-has-no-attribute-attribute-name)
+
 [Default arguments with *args and **kwargs](https://stackoverflow.com/questions/15301999/default-arguments-with-args-and-kwargs)
+
+[나만의 Python Package 만들기 - 1](https://code.tutsplus.com/ko/tutorials/how-to-write-your-own-python-packages--cms-26076)
+
+[나만의 Python Package 만들기 - 1](https://medium.com/@onlytojay/%ED%8C%8C%EC%9D%B4%EC%8D%AC-pip-install-%ED%8C%A8%ED%82%A4%EC%A7%80-%EB%A7%8C%EB%93%A4%EC%96%B4%EB%B3%B4%EA%B8%B0-42ea68f4fabd)
+
+[Package 만들 때 주의사항](https://stackoverflow.com/questions/50585246/pip-install-creates-only-the-dist-info-not-the-package/54357929)
