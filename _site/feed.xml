@@ -8,9 +8,7 @@
 		
 			<item>
 				<title>개발이란</title>
-				<description>&lt;p&gt;프로그래밍을 할 때 알면 좋을 기본적인 내용이 포함되어 있습니다.&lt;/p&gt;
-
-&lt;h1 id=&quot;code-review&quot;&gt;Code Review&lt;/h1&gt;
+				<description>&lt;h1 id=&quot;code-review&quot;&gt;Code Review&lt;/h1&gt;
 
 &lt;p&gt;코드 리뷰의 주요 포인트&lt;/p&gt;
 &lt;ul&gt;
@@ -87,9 +85,7 @@
 		
 			<item>
 				<title>SQL Server</title>
-				<description>&lt;p&gt;SQL Server에 관한 내용이 포함되어 있습니다.&lt;/p&gt;
-
-&lt;h1 id=&quot;row-number를-매기는-방법&quot;&gt;Row Number를 매기는 방법&lt;/h1&gt;
+				<description>&lt;h1 id=&quot;row-number를-매기는-방법&quot;&gt;Row Number를 매기는 방법&lt;/h1&gt;
 &lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ROW_NUMBER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;OVER&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;ORDER&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;BY&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rownum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;page_table&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;page_table&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;WHERE&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rownum&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;BETWEEN&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;AND&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;20&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 

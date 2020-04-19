@@ -1,6 +1,4 @@
-I"^<p>SQL Server에 관한 내용이 포함되어 있습니다.</p>
-
-<h1 id="row-number를-매기는-방법">Row Number를 매기는 방법</h1>
+I"�]<h1 id="row-number를-매기는-방법">Row Number를 매기는 방법</h1>
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="p">(</span> <span class="k">SELECT</span> <span class="n">ROW_NUMBER</span><span class="p">()</span> <span class="n">OVER</span><span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="n">idx</span><span class="p">)</span> <span class="n">rownum</span><span class="p">,</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">page_table</span> <span class="p">)</span> <span class="n">page_table</span> <span class="k">WHERE</span> <span class="n">rownum</span> <span class="k">BETWEEN</span> <span class="mi">1</span> <span class="k">AND</span> <span class="mi">20</span>
 </code></pre></div></div>
 

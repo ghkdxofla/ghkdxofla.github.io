@@ -86,7 +86,7 @@
 		</ul>
 	</div>
 
-	<div class="col-sm-3 sidebar hidden-xs" style="">
+	<div class="col-sm-3 sidebar hidden-xs" style="background: url(https://images.pexels.com/photos/1137525/pexels-photo-1137525.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260) no-repeat !important;">
 		<!-- sidebar.html -->
 <header class="sidebar-header" role="banner">
 	<a href="/">
@@ -169,9 +169,7 @@
 	   2020
 	 </span>
 	  <div class="article_body">
-	  <p>SQL Server에 관한 내용이 포함되어 있습니다.</p>
-
-<h1 id="row-number를-매기는-방법">Row Number를 매기는 방법</h1>
+	  <h1 id="row-number를-매기는-방법">Row Number를 매기는 방법</h1>
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="p">(</span> <span class="k">SELECT</span> <span class="n">ROW_NUMBER</span><span class="p">()</span> <span class="n">OVER</span><span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="n">idx</span><span class="p">)</span> <span class="n">rownum</span><span class="p">,</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">page_table</span> <span class="p">)</span> <span class="n">page_table</span> <span class="k">WHERE</span> <span class="n">rownum</span> <span class="k">BETWEEN</span> <span class="mi">1</span> <span class="k">AND</span> <span class="mi">20</span>
 </code></pre></div></div>
 
@@ -418,6 +416,43 @@
 		</ul>
 		  
 
+		
+		<ul class="list-inline">
+		  <li><i class="fa fa-tags"></i></li>
+		  
+		  
+			 
+				<li>
+					<a href="/tags.html#RDBMS-ref">
+					RDBMS <span>(1)</span>
+					,
+					</a>
+				</li>
+			 
+				<li>
+					<a href="/tags.html#Database-ref">
+					Database <span>(1)</span>
+					,
+					</a>
+				</li>
+			 
+				<li>
+					<a href="/tags.html#MSSQL-ref">
+					MSSQL <span>(1)</span>
+					,
+					</a>
+				</li>
+			 
+				<li>
+					<a href="/tags.html#SQL Server-ref">
+					SQL Server <span>(1)</span>
+					
+					</a>
+				</li>
+			
+		  
+		  
+		</ul>
 		  
 
 		<hr>
