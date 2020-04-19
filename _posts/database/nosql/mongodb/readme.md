@@ -87,9 +87,28 @@ Sudo service mongod start
 # 2. rm /new/disk/mongodb/mongod.lock 해보기
 ```
 
+# MongoDB client 명령어
+Query 구조는 기본적으로 Javascript 문법을 따른다
+
+```javascript
+// 특정 Collection 검색 및 삭제(정규식 사용)
+regExp = /test/;
+db.getCollectionNames().filter(function(name){
+  return name.match(regExp)
+}).forEach(function(name){
+  db.getCollection(name).drop()
+});
+```
+
 # 참조 링크
 [How to install mongodb on debian 9 - 1](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-debian-9)
+
 [How to install mongodb on debian 9 - 2](https://linuxize.com/post/how-to-install-mongodb-on-debian-9/)
+
 [MongoDB 샤딩 적용하기](https://sudarlife.tistory.com/entry/mongodb-Sharding-%EB%AA%BD%EA%B3%A0%EB%94%94%EB%B9%84-%EC%83%A4%EB%94%A9-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0-config-sever-replica-set)
+
 [Sharding methods](https://docs.mongodb.com/manual/reference/method/js-sharding/)
+
 [데이터 위치 변경하기](http://jewonagency.com/ubuntu-%EC%9A%B0%EB%B6%84%ED%88%AC%EC%97%90%EC%84%9C-mongodb-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%9C%84%EC%B9%98-directory-%EB%B3%80%EA%B2%BD%ED%95%98%EA%B8%B0/)
+
+[Database/Collection/Document 생성 및 제거](https://velopert.com/457)
