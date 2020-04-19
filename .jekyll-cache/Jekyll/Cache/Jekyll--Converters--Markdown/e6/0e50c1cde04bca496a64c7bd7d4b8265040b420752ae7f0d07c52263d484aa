@@ -1,0 +1,232 @@
+I"^<p>SQL Server에 관한 내용이 포함되어 있습니다.</p>
+
+<h1 id="row-number를-매기는-방법">Row Number를 매기는 방법</h1>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="p">(</span> <span class="k">SELECT</span> <span class="n">ROW_NUMBER</span><span class="p">()</span> <span class="n">OVER</span><span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="n">idx</span><span class="p">)</span> <span class="n">rownum</span><span class="p">,</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">page_table</span> <span class="p">)</span> <span class="n">page_table</span> <span class="k">WHERE</span> <span class="n">rownum</span> <span class="k">BETWEEN</span> <span class="mi">1</span> <span class="k">AND</span> <span class="mi">20</span>
+</code></pre></div></div>
+
+<h1 id="문자열의-시작-위치-찾기">문자열의 시작 위치 찾기</h1>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">CHARINDEX</span><span class="p">(</span><span class="s1">'찾을문자열A'</span><span class="p">,</span><span class="s1">'지정문자열B'</span><span class="p">)</span>
+<span class="k">SELECT</span> <span class="n">CHARINDEX</span><span class="p">(</span><span class="s1">'찾을문자열A'</span><span class="p">,</span><span class="s1">'지정문자열B'</span><span class="p">,</span><span class="err">숫자</span><span class="k">C</span><span class="p">)</span> <span class="c1">-- 이건 C 위치에서부터 B에서 A를 찾으라는 뜻</span>
+</code></pre></div></div>
+
+<h1 id="dml-trigger">DML Trigger</h1>
+
+<p>설명</p>
+<ul>
+  <li>Data Manipulation Language (DML) Triggers are special kind of Stored Procedure or an operation that gets executed automatically when a DML operation like INSERT, UPDATE OR DELETE is fired on a Table or View</li>
+</ul>
+
+<p>예시</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">--Create Demo Database</span>
+<span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">SqlHintsDMLTriggerDemo</span>
+<span class="k">GO</span>
+<span class="n">USE</span> <span class="n">SqlHintsDMLTriggerDemo</span>
+<span class="k">GO</span>
+
+<span class="c1">--Create Customer Table</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">Customer</span> 
+<span class="p">(</span> <span class="n">CustomerId</span> <span class="nb">INT</span> <span class="k">IDENTITY</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="p">,</span>
+  <span class="n">FirstName</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">LastName</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+<span class="k">GO</span>
+
+<span class="c1">--Create Customer Trigger</span>
+<span class="k">CREATE</span> <span class="k">TRIGGER</span> <span class="n">ExampleTrigger</span>
+<span class="k">ON</span> <span class="n">Customer</span>
+<span class="k">FOR</span> <span class="k">INSERT</span>
+<span class="k">AS</span>
+<span class="k">BEGIN</span>
+     <span class="n">PRINT</span> <span class="s1">'AFTER Trigger ExampleTrigger executed!'</span>
+<span class="k">END</span>
+</code></pre></div></div>
+
+<p>Trigger의 종류</p>
+
+<ol>
+  <li>AFTER Triggers
+    <ul>
+      <li>AFTER Triggers are executed after the DML statement completes but before it is committed to the database</li>
+      <li>AFTER Triggers if required can rollback it’s actions and source DML statement which invoked it</li>
+      <li>On a Table with a AFTER trigger, the trigger will be executed once the triggering DML action completes and before it is committed</li>
+      <li>A table can multiple AFTER triggers and for the same trigger action too we can have multiple triggers</li>
+      <li>예시
+        <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">--Create an AFTER Trigger AfterTriggerExample1 for the DML INSERT, UPDATE and DELETE OPERATION on the Customer table by executing the following script</span>
+<span class="k">CREATE</span> <span class="k">TRIGGER</span> <span class="n">AfterTriggerExample1</span>
+<span class="k">ON</span> <span class="n">Customer</span>
+<span class="k">FOR</span> <span class="k">INSERT</span><span class="p">,</span> <span class="k">UPDATE</span><span class="p">,</span> <span class="k">DELETE</span>
+<span class="k">AS</span>
+<span class="k">BEGIN</span>
+<span class="n">PRINT</span> <span class="s1">'AFTER Trigger AfterTriggerExample1 executed!'</span>
+<span class="k">END</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>INSTEAD OF Triggers
+    <ul>
+      <li>INSTEAD OF Triggers are the triggers which gets executed automatically in place of triggering DML (i.e. INSERT, UPDATE and DELETE) action</li>
+      <li>If we are inserting a record and we have a INSTEAD OF trigger for INSERT then instead of INSERT whatever action is defined in the trigger that gets executed</li>
+      <li><strong>A table can have one INSTEAD of Trigger for each Triggering DML actions INSERT, UPDATE and DELETE</strong></li>
+      <li>예시
+        <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">--Create an INSTEAD OF Trigger on the Customer Table for the INSERT DML operation by executing the following script</span>
+<span class="k">CREATE</span> <span class="k">TRIGGER</span> <span class="n">INSTEADOFTriggerExample</span> 
+<span class="k">ON</span> <span class="n">Customer</span>
+<span class="k">INSTEAD</span> <span class="k">OF</span> <span class="k">INSERT</span>
+<span class="k">AS</span>
+<span class="k">BEGIN</span>
+ <span class="n">PRINT</span><span class="p">(</span><span class="s1">'Instead of trigger is Executed!'</span><span class="p">)</span>
+<span class="k">END</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<h1 id="mssql-stored-procedure의-각종-함수-예시">MSSQL Stored procedure의 각종 함수 예시</h1>
+
+<p>선언과 초기화</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 선언</span>
+<span class="k">DECLARE</span> <span class="o">@</span><span class="n">HTL</span> <span class="nb">DATETIME</span>
+
+<span class="c1">-- 초기화</span>
+<span class="k">SET</span> <span class="o">@</span><span class="n">HTL</span><span class="o">=</span><span class="n">GETDATE</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>조건문 관련</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 조건문</span>
+<span class="n">IF</span> <span class="err">조건</span>
+    <span class="err">실행문</span>
+<span class="k">ELSE</span>
+    <span class="err">실행문</span>
+
+<span class="c1">-- 실행문이 2개 이상인 조건문</span>
+<span class="n">IF</span> <span class="err">조건</span>
+    <span class="k">BEGIN</span>
+        <span class="err">실행문</span> <span class="mi">1</span>
+        <span class="err">실행문</span> <span class="mi">2</span>
+        <span class="p">...</span>
+    <span class="k">END</span>
+
+<span class="c1">-- 조건문의 조건</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="p">[</span><span class="err">테이블명</span><span class="p">]</span> <span class="k">WHERE</span> <span class="p">[</span><span class="err">칼럼명</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="err">조건</span><span class="p">]</span> <span class="k">OR</span> <span class="err">칼럼명</span> <span class="o">=</span> <span class="p">[</span><span class="err">조건</span><span class="mi">1</span><span class="p">]</span> <span class="k">OR</span> <span class="err">칼럼명</span> <span class="o">=</span> <span class="p">[</span><span class="err">조건</span><span class="mi">2</span><span class="p">]</span> <span class="k">OR</span> <span class="err">칼럼명</span> <span class="o">=</span> <span class="p">[</span><span class="err">조건</span><span class="mi">3</span><span class="p">]</span> <span class="c1">--OR</span>
+<span class="c1">-- IN을 통해 여러 OR 조건이 있는 sql 문장을 OR와 동일하게 사용 가능하다</span>
+<span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="p">[</span><span class="err">테이블명</span><span class="p">]</span> <span class="k">WHERE</span> <span class="p">[</span><span class="err">칼럼명</span><span class="p">]</span> <span class="k">IN</span> <span class="o">=</span><span class="p">(</span> <span class="p">[</span><span class="err">조건</span><span class="mi">1</span><span class="p">],[</span><span class="err">조건</span><span class="mi">2</span><span class="p">],[</span><span class="err">조건</span><span class="mi">3</span><span class="p">]</span> <span class="p">)</span> <span class="c1">--IN</span>
+
+<span class="c1">-- case문(JOIN한 것과 같은 결과)</span>
+<span class="k">SELECT</span> <span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="k">C</span><span class="p">,</span> <span class="p">(</span>
+    <span class="k">CASE</span>
+        <span class="k">WHEN</span> <span class="n">B</span><span class="o">=</span><span class="mi">10</span>
+            <span class="k">THEN</span> <span class="s1">'b'</span>
+        <span class="k">WHEN</span> <span class="n">B</span><span class="o">=</span><span class="mi">20</span>
+            <span class="k">THEN</span> <span class="s1">'c'</span>
+        <span class="k">ELSE</span>
+            <span class="s1">'d'</span>
+    <span class="k">END</span><span class="p">)</span> <span class="k">AS</span> <span class="n">K</span>
+    <span class="k">FROM</span> <span class="n">ALPHA</span>
+
+<span class="c1">-- 중첩 case문 예시</span>
+<span class="k">SELECT</span>  <span class="n">T1</span><span class="p">.</span><span class="n">STORE_ID</span>
+        <span class="p">,</span><span class="n">T1</span><span class="p">.</span><span class="n">STORE_ADDR</span>
+        <span class="p">,</span><span class="k">CASE</span> <span class="k">WHEN</span> <span class="n">T1</span><span class="p">.</span><span class="n">STORE_SIZE</span> <span class="o">&gt;=</span> <span class="mi">100</span> <span class="k">THEN</span>
+                <span class="k">CASE</span> <span class="k">WHEN</span> <span class="n">T2</span><span class="p">.</span><span class="n">REGION_GD</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">'S'</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'High grade'</span>
+                     <span class="k">WHEN</span> <span class="n">T2</span><span class="p">.</span><span class="n">REGION_GD</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">'A'</span><span class="p">,</span><span class="s1">'B'</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Mid Grade'</span>
+                     <span class="k">ELSE</span> <span class="s1">'Low Grade'</span>
+                <span class="k">END</span>
+              <span class="k">WHEN</span> <span class="n">T1</span><span class="p">.</span><span class="n">STORE_SIZE</span> <span class="o">&gt;=</span> <span class="mi">50</span> <span class="k">THEN</span>
+                <span class="k">CASE</span> <span class="k">WHEN</span> <span class="n">T2</span><span class="p">.</span><span class="n">REGION_GD</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">'S'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'High Grade'</span>
+                     <span class="k">WHEN</span> <span class="n">T2</span><span class="p">.</span><span class="n">REGION_GD</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">'B'</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'Mid Grade'</span>
+                     <span class="k">ELSE</span> <span class="s1">'Low Grade'</span>
+                <span class="k">END</span>
+             <span class="k">ELSE</span>
+                <span class="k">CASE</span> <span class="k">WHEN</span> <span class="n">T2</span><span class="p">.</span><span class="n">REGION_GD</span> <span class="k">IN</span> <span class="p">(</span><span class="s1">'S'</span><span class="p">,</span> <span class="s1">'A'</span><span class="p">,</span> <span class="s1">'B'</span><span class="p">)</span> <span class="k">THEN</span> <span class="s1">'High Grade'</span>
+                     <span class="k">ELSE</span> <span class="s1">'Low Grade'</span>
+                <span class="k">END</span>
+        <span class="k">END</span> <span class="n">STORE_SIZE_GD</span>
+<span class="k">FROM</span>    <span class="n">SQL_TEST</span><span class="p">.</span><span class="n">MA_STORE</span> <span class="n">T1</span>
+        <span class="p">,</span><span class="n">SQL_TEST</span><span class="p">.</span><span class="n">CD_REGION</span> <span class="n">T2</span>
+<span class="k">WHERE</span>   <span class="n">T1</span><span class="p">.</span><span class="n">REGION_CD</span> <span class="o">=</span> <span class="n">T2</span><span class="p">.</span><span class="n">REGION_CD</span>
+
+<span class="c1">-- DECODE</span>
+<span class="c1">-- 조건에 따라 데이터를 다른 값이나 컬럼값으로 추출 할 수 있다</span>
+<span class="c1">-- DECODE(VALUE, IF1, THEN1, IF2, THEN2...) 형태로 사용 할 수 있다</span>
+<span class="c1">-- VALUE 값이 IF1일 경우에 THEN1 값을 반환하고, VALUE 값이 IF2일 경우에는 THEN2 값을 반환한다</span>
+<span class="c1">-- DECODE 함수 안에 DECODE함수를 중첩으로 사용 할 수 있다</span>
+<span class="k">SELECT</span> <span class="n">deptno</span><span class="p">,</span> <span class="n">DECODE</span><span class="p">(</span><span class="n">deptno</span><span class="p">,</span> <span class="mi">10</span> <span class="p">,</span> <span class="s1">'ACCOUNTING'</span> <span class="p">,</span>
+                              <span class="mi">20</span> <span class="p">,</span> <span class="s1">'RESEARCH'</span> <span class="p">,</span>
+                              <span class="mi">30</span> <span class="p">,</span> <span class="s1">'SALES'</span><span class="p">,</span> <span class="s1">'OPERATIONS'</span><span class="p">)</span> <span class="n">name</span>
+<span class="k">FROM</span> <span class="n">dept</span><span class="p">;</span>
+
+<span class="c1">-- 결과</span>
+<span class="n">DEPTNO</span>   <span class="n">NAME</span>
+<span class="c1">------    ----------</span>
+    <span class="mi">10</span>    <span class="n">ACCOUNTING</span>
+    <span class="mi">20</span>    <span class="n">RESEARCH</span>
+    <span class="mi">30</span>    <span class="n">SALES</span>
+    <span class="mi">40</span>    <span class="n">OPERATIONS</span>
+</code></pre></div></div>
+
+<p>반복문</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 반복문</span>
+<span class="n">WHILE</span> <span class="o">@</span><span class="n">A</span> <span class="o">&lt;</span> <span class="mi">100</span>
+    <span class="k">BEGIN</span>
+        <span class="err">실행문</span>
+    <span class="k">END</span>
+</code></pre></div></div>
+
+<p>문자열 치환</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- 문자열 치환</span>
+<span class="c1">-- REPLACE</span>
+<span class="c1">-- REPLACE(대상, 바꿀 문자, 바뀔 문자);</span>
+<span class="k">SELECT</span> <span class="k">REPLACE</span><span class="p">(</span><span class="s1">'abc123abc'</span><span class="p">,</span> <span class="s1">'abc'</span><span class="p">,</span> <span class="s1">'321'</span><span class="p">);</span>
+<span class="c1">--&gt; 321123321</span>
+
+<span class="c1">-- STUFF</span>
+<span class="c1">-- STUFF(대상, 치환 시작 위치, 치환 문자 수, 바뀔 문자);</span>
+<span class="k">SELECT</span> <span class="n">STUFF</span><span class="p">(</span><span class="s1">'abcdef'</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">'XXX'</span><span class="p">);</span>
+<span class="c1">--&gt; aXXXef</span>
+</code></pre></div></div>
+
+<p>JSON 객체 불러온 후, 해당 value의 값에 따라 다른 값 출력하기(UPDATE의 SET 안에서 쓸 때 유용함)</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">((</span><span class="k">SELECT</span> <span class="k">CASE</span> <span class="k">WHEN</span> <span class="k">EXISTS</span> <span class="p">(</span><span class="k">SELECT</span> <span class="mi">1</span> <span class="k">FROM</span> <span class="p">(</span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">OPENJSON</span><span class="p">(</span><span class="n">JSON_QUERY</span><span class="p">(</span><span class="n">dpd</span><span class="p">.</span><span class="n">dpc_led</span><span class="p">,</span> <span class="s1">'$.ledctrl_error'</span><span class="p">))</span>
+    <span class="k">WITH</span> <span class="p">(</span><span class="n">signal1</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="k">MAX</span><span class="p">)</span> <span class="s1">'$.info.signal1'</span><span class="p">,</span> <span class="n">signal2</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="k">MAX</span><span class="p">)</span> <span class="s1">'$.info.signal2'</span><span class="p">)</span> 
+    <span class="k">WHERE</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">signal1</span> <span class="o">=</span> <span class="s1">'ERROR'</span> <span class="k">OR</span> <span class="n">signal2</span> <span class="o">=</span> <span class="s1">'ERROR'</span><span class="p">)</span>
+        <span class="p">))</span> <span class="k">AS</span> <span class="n">SIG_WARN</span><span class="p">)</span> <span class="k">THEN</span> <span class="mi">1</span> <span class="k">ELSE</span> <span class="mi">0</span> <span class="k">END</span><span class="p">)</span>
+        <span class="o">+</span>
+        <span class="p">(</span><span class="k">SELECT</span> <span class="k">CASE</span> <span class="k">WHEN</span> <span class="k">EXISTS</span> <span class="p">(</span><span class="k">SELECT</span> <span class="mi">1</span> <span class="k">FROM</span> <span class="p">(</span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">OPENJSON</span><span class="p">(</span><span class="n">JSON_QUERY</span><span class="p">(</span><span class="n">dpd</span><span class="p">.</span><span class="n">dpc_led</span><span class="p">,</span> <span class="s1">'$.ledctrl_error'</span><span class="p">))</span>
+    <span class="k">WITH</span> <span class="p">(</span><span class="n">signal1</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="k">MAX</span><span class="p">)</span> <span class="s1">'$.info.signal1'</span><span class="p">,</span> <span class="n">signal2</span> <span class="n">NVARCHAR</span><span class="p">(</span><span class="k">MAX</span><span class="p">)</span> <span class="s1">'$.info.signal2'</span><span class="p">)</span> 
+    <span class="k">WHERE</span> <span class="p">(</span>
+        <span class="p">(</span><span class="n">signal1</span> <span class="o">=</span> <span class="s1">'ERROR'</span> <span class="k">AND</span> <span class="n">signal2</span> <span class="o">=</span> <span class="s1">'ERROR'</span><span class="p">)</span> 
+        <span class="k">OR</span> <span class="p">(</span><span class="n">signal1</span> <span class="o">=</span> <span class="s1">'NONE'</span> <span class="k">AND</span> <span class="n">signal2</span> <span class="o">=</span> <span class="s1">'ERROR'</span><span class="p">)</span> 
+        <span class="k">OR</span> <span class="p">(</span><span class="n">signal1</span> <span class="o">=</span> <span class="s1">'ERROR'</span> <span class="k">AND</span> <span class="n">signal2</span> <span class="o">=</span> <span class="s1">'NONE'</span><span class="p">)</span>
+        <span class="p">))</span> <span class="k">as</span> <span class="n">SIG_ERR</span><span class="p">)</span> <span class="k">THEN</span> <span class="mi">1</span> <span class="k">ELSE</span> <span class="mi">0</span> <span class="k">END</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>ISNULL 함수</p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">-- ISNULL(칼럼,칼럼이 NULL일경우 대체할 값)</span>
+<span class="k">ISNULL</span><span class="p">(</span><span class="k">Column</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="k">ISNULL</span><span class="p">(</span><span class="o">@</span><span class="k">PARAMETER</span><span class="p">,</span><span class="s1">''</span><span class="p">)</span><span class="o">=</span><span class="s1">''</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h1 id="트랜잭션-레벨-확인">트랜잭션 레벨 확인</h1>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="k">CASE</span> <span class="n">transaction_isolation_level</span> 
+<span class="k">WHEN</span> <span class="mi">0</span> <span class="k">THEN</span> <span class="s1">'Unspecified'</span> 
+<span class="k">WHEN</span> <span class="mi">1</span> <span class="k">THEN</span> <span class="s1">'ReadUncommitted'</span> 
+<span class="k">WHEN</span> <span class="mi">2</span> <span class="k">THEN</span> <span class="s1">'ReadCommitted'</span> 
+<span class="k">WHEN</span> <span class="mi">3</span> <span class="k">THEN</span> <span class="s1">'Repeatable'</span> 
+<span class="k">WHEN</span> <span class="mi">4</span> <span class="k">THEN</span> <span class="s1">'Serializable'</span> 
+<span class="k">WHEN</span> <span class="mi">5</span> <span class="k">THEN</span> <span class="s1">'Snapshot'</span> <span class="k">END</span> <span class="k">AS</span> <span class="n">TRANSACTION_ISOLATION_LEVEL</span> 
+<span class="k">FROM</span> <span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_sessions</span> 
+<span class="k">where</span> <span class="n">session_id</span> <span class="o">=</span> <span class="o">@@</span><span class="n">SPID</span>
+</code></pre></div></div>
+
+<h1 id="참조-링크">참조 링크</h1>
+<p><a href="https://kmj1107.tistory.com/entry/MSSQL-CharIndex-%EB%AC%B8%EC%9E%90%EC%97%B4%EC%9D%98-%EC%8B%9C%EC%9E%91-%EC%9C%84%EC%B9%98-%EC%B0%BE%EA%B8%B0">문자열의 시작 위치 찾기</a></p>
+
+<p><a href="https://hklovecw.tistory.com/7">Procedure 간단한 명령어들</a></p>
+
+<p><a href="https://devbox.tistory.com/entry/DBMS-CASEWHENTHEN">CASE…WHEN…THEN, DECODE</a></p>
+
+<p><a href="https://sqlhints.com/tag/cannot-create-trigger-because-an-instead-of-insert-trigger-already-exists-on-this-object/">DML Triggers</a></p>
+
+<p><a href="https://coding-factory.tistory.com/98">NULL값 함수 체크</a></p>
+:ET
