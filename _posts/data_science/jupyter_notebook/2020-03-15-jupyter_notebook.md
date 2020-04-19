@@ -2,9 +2,9 @@
 layout: post
 title:  "Jupyter notebook 설치 및 사용법"
 comments: true
-categories: [Data Science, Bokeh]
+categories: [Data Science, Jupyter Notebook]
 shortinfo: "Jupyter notebook에 관한 내용이 포함되어 있습니다."
-tags: [Data Science, Data Analysis, Jupyter notebook, Python]
+tags: [Data Science, Data Analysis, Jupyter Notebook, Python]
 ---
 
 # 최초 접속 경로 변경법
