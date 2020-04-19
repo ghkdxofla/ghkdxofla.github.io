@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "개발이란"
-categories: [general-development]
+categories: [General, Development]
 shortinfo: "프로그래밍을 할 때 알면 좋을 기본적인 내용이 포함되어 있습니다."
 tags: [개발, 일반]
 comments: true
