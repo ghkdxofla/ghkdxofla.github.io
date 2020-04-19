@@ -1,3 +1,12 @@
+---
+layout: post
+title:  "Jupyter notebook 설치 및 사용법"
+comments: true
+categories: [Data Science, Jupyter Notebook]
+shortinfo: "Jupyter notebook에 관한 내용이 포함되어 있습니다."
+tags: [Data Science, Data Analysis, Jupyter Notebook, Python]
+---
+
 # 최초 접속 경로 변경법
 
 다음의 Command 입력
@@ -79,6 +88,7 @@ systemctl start jupyter.service
 https://markhneedham.com/blog/2019/05/10/jupyter-runtimeerror-this-event-loop-is-already-running/
 
 # 참조 링크
+
 [Jupyter notebook server 설정 방법-1](https://yongbeomkim.github.io/jupyter-server/)
 
 [Jupyter notebook server 설정 방법-2](https://goodtogreate.tistory.com/entry/IPython-Notebook-%EC%84%A4%EC%B9%98%EB%B0%A9%EB%B2%95)

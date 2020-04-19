@@ -1,0 +1,16 @@
+I"�<h1 id="anaconda3-설치ubuntu">Anaconda3 설치(Ubuntu)</h1>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Anaconda3 bash script 실행</span>
+<span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install </span>curl
+<span class="nb">cd</span> /tmp
+curl –O https://repo.anaconda.com/archive/Anaconda3-<span class="o">{</span><span class="k">select </span>version by <span class="nb">date </span>ex<span class="o">)</span>2019.07<span class="o">}</span><span class="nt">-Linux-x86_64</span>.sh
+bash Anaconda3-2019.07-Linux-x86_64.sh
+
+<span class="c"># Activate installation</span>
+<span class="nb">source</span> ~/.bashrc
+</code></pre></div></div>
+
+<h1 id="참조-링크">참조 링크</h1>
+<p><a href="https://phoenixnap.com/kb/how-to-install-anaconda-ubuntu-18-04">Install Anaconda3 in Ubuntu</a></p>
+:ET

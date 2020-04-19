@@ -2,9 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Sample 2</title>
-	
-	<meta name="description" content="Sample placeholder post.">
+	<title>Jupyter notebook 설치 및 사용법</title>
 	
 	<meta name="author" content="Taelim Hwang">
 
@@ -157,7 +155,7 @@
 
 	<div class="col-sm-9 col-sm-offset-3">
 		<div class="page-header">
-  <h1>Sample 2 </h1>
+  <h1>Jupyter notebook 설치 및 사용법 </h1>
 </div>
 	
 <article>
@@ -165,15 +163,94 @@
 	<div class="col-sm-10">
 	 <span class="post-date">
 	   
-	    
-	   0th,
+	   March 
+	   15th,
 	   
-	   
+	   2020
 	 </span>
 	  <div class="article_body">
-	  <p>Lorem ipsum dolor sit amet,  consectetur adipisicing elit,  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,  sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+	  <h1 id="최초-접속-경로-변경법">최초 접속 경로 변경법</h1>
 
-<p>Lorem ipsum dolor sit amet,  consectetur adipisicing elit,  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,  sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+<p>다음의 Command 입력</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">(</span>base<span class="o">)</span> C:<span class="se">\U</span>sers<span class="se">\U</span>ser&gt;jupyter notebook <span class="nt">--generate-config</span>
+Writing default config to: C:<span class="se">\U</span>sers<span class="se">\U</span>ser<span class="se">\.</span>jupyter<span class="se">\j</span>upyter_notebook_config.py
+
+<span class="o">(</span>base<span class="o">)</span> C:<span class="se">\U</span>sers<span class="se">\U</span>ser&gt;
+</code></pre></div></div>
+<p>위의 결과로, jupyter_notebook_config.py 수정하면 된다</p>
+
+<p>아래의 설정 코드를 입력</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">## The directory to use for notebooks and kernels.</span>
+c.NotebookApp.notebook_dir <span class="o">=</span> <span class="s1">'D:\Python_Project'</span>
+</code></pre></div></div>
+
+<h1 id="화면-width-조정">화면 width 조정</h1>
+
+<p>custom.css 직접 수정</p>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">/* 아래 경로 중 한 곳에 custom.css로 파일 생성 후 저장 */</span>
+<span class="c">/* ~/.ipython/profile_default/static/custom/custom.css (IPython) */</span>
+<span class="c">/* ~/.jupyter/custom/custom.css (Jupyter) */</span>
+<span class="nc">.container</span> <span class="p">{</span> <span class="nl">width</span><span class="p">:</span><span class="m">100%</span> <span class="cp">!important</span><span class="p">;</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>실행 cell에서 수정</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">HTML</span>
+<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="s">"&lt;style&gt;.container { width:100</span><span class="si">% </span><span class="s">!important; }&lt;/style&gt;"</span><span class="p">))</span>
+</code></pre></div></div>
+
+<h1 id="server-설정">Server 설정</h1>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Secure notebook server</span>
+jupyter notebook <span class="nt">--generate-config</span>
+
+<span class="c"># Prepare hashed password</span>
+<span class="c"># In IPython mode</span>
+In <span class="o">[</span>1]: from notebook.auth import passwd 
+In <span class="o">[</span>2]: passwd<span class="o">()</span> Enter password: Verify password: 
+Out[2]: <span class="s1">'sha1:f24baff49ac5:863dd2ae747212ede58125302d227f0ca7b12bb3'</span>
+
+<span class="c"># Create OpenSSL certification</span>
+openssl req <span class="nt">-x509</span> <span class="nt">-nodes</span> <span class="nt">-days</span> 365 <span class="nt">-newkey</span> rsa:1024 <span class="nt">-keyout</span> mycert.pem <span class="nt">-out</span> mycert.pem
+
+<span class="c"># Modify configure file</span>
+vi /root/.jupyter/jupyter_notebook_config.py
+<span class="c"># In vi editor</span>
+c.NotebookApp.password <span class="o">=</span> u<span class="s1">'sha1:f24baff....'</span> 
+c.NotebookApp.certfile <span class="o">=</span> u<span class="s1">'/home/사용자/mycert.pem'</span>
+c.NotebookApp.open_browser <span class="o">=</span> False
+c.NotebookApp.notebook_dir <span class="o">=</span> u<span class="s1">'/home/사용자/자료폴더/'</span>
+c.NotebookApp.ip <span class="o">=</span> <span class="s1">'*'</span>
+c.NotebookApp.port_retries <span class="o">=</span> 8888
+
+<span class="c"># Make service for initializing after boot</span>
+<span class="nb">sudo </span>vi /etc/systemd/system/jupyter.service
+<span class="c"># In vi editor</span>
+<span class="o">[</span>Unit] <span class="nv">Description</span><span class="o">=</span>Jupyter Notebook Server
+
+<span class="o">[</span>Service]
+<span class="nv">Type</span><span class="o">=</span>simple
+<span class="nv">PIDFile</span><span class="o">=</span>/run/jupyter.pid
+<span class="nv">User</span><span class="o">=</span>&lt;username&gt;
+<span class="nv">ExecStart</span><span class="o">=</span>/home/&lt;username&gt;/.local/bin/jupyter-notebook
+<span class="nv">WorkingDirectory</span><span class="o">=</span>/your/working/dir
+
+<span class="o">[</span>Install]WantedBy<span class="o">=</span>multi-user.target
+
+<span class="c"># Enable service</span>
+systemctl daemon-reload
+systemctl <span class="nb">enable </span>jupyter.service
+systemctl start jupyter.service
+</code></pre></div></div>
+<h1 id="asyncio-사용-시-발생하는-문제-해결법only-in-jupyter-notebook">Asyncio 사용 시 발생하는 문제 해결법(Only in jupyter notebook)</h1>
+<p>https://markhneedham.com/blog/2019/05/10/jupyter-runtimeerror-this-event-loop-is-already-running/</p>
+
+<h1 id="참조-링크">참조 링크</h1>
+
+<p><a href="https://yongbeomkim.github.io/jupyter-server/">Jupyter notebook server 설정 방법-1</a></p>
+
+<p><a href="https://goodtogreate.tistory.com/entry/IPython-Notebook-%EC%84%A4%EC%B9%98%EB%B0%A9%EB%B2%95">Jupyter notebook server 설정 방법-2</a></p>
+
+<p><a href="https://medium.com/@GuruAtWork/jupyter-notebook-adding-certificates-for-ease-of-use-447f476b9112">Jupyter notebook server 설정 방법-3</a></p>
 
 	  </div>
 
@@ -183,18 +260,13 @@
 		  
 		  
 			 
-				<li><a href="/categories.html#general-ref">
-					general <span>()</span>
+				<li><a href="/categories.html#Data Science-ref">
+					Data Science <span>(3)</span>
 					,
 				</a></li>
 			 
-				<li><a href="/categories.html#demo-ref">
-					demo <span>()</span>
-					,
-				</a></li>
-			 
-				<li><a href="/categories.html#sample-ref">
-					sample <span>()</span>
+				<li><a href="/categories.html#Jupyter Notebook-ref">
+					Jupyter Notebook <span>(1)</span>
 					
 				</a></li>
 			
@@ -209,29 +281,29 @@
 		  
 			 
 				<li>
-					<a href="/tags.html#demo-ref">
-					demo <span>()</span>
+					<a href="/tags.html#Data Science-ref">
+					Data Science <span>(3)</span>
 					,
 					</a>
 				</li>
 			 
 				<li>
-					<a href="/tags.html#dbyll-ref">
-					dbyll <span>()</span>
+					<a href="/tags.html#Data Analysis-ref">
+					Data Analysis <span>(3)</span>
 					,
 					</a>
 				</li>
 			 
 				<li>
-					<a href="/tags.html#dbtek-ref">
-					dbtek <span>()</span>
+					<a href="/tags.html#Jupyter Notebook-ref">
+					Jupyter Notebook <span>(1)</span>
 					,
 					</a>
 				</li>
 			 
 				<li>
-					<a href="/tags.html#sample2-ref">
-					sample2 <span>()</span>
+					<a href="/tags.html#Python-ref">
+					Python <span>(4)</span>
 					
 					</a>
 				</li>
@@ -246,7 +318,7 @@
 		<div>
       <section class="share col-sm-6">
         <h4 class="section-title">Share Post</h4>
-        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=Sample 2&via=ghkdxofla"
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=Jupyter notebook 설치 및 사용법&via=ghkdxofla"
            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
           <i class="fa fa-twitter fa-lg"></i>
           Twitter
@@ -274,10 +346,10 @@
 
 		<ul class="pager">
 		  
-		  <li class="previous disabled"><a>&larr; Previous</a></li>
+		  <li class="previous"><a href="/programming%20language/python/2020/02/19/python.html" title="Python">&larr; Previous</a></li>
 		  
 		  
-			<li class="next disabled"><a>Next &rarr;</a>
+		  <li class="next"><a href="/data%20science/anaconda/2020/03/28/anacomda.html" title="Anaconda 설치 및 사용법">Next &rarr;</a></li>
 		  
 		</ul>
 
@@ -289,6 +361,23 @@
 	</div>
 </article>
 <div class="clearfix"></div>
+
+
+
+    
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'Taelim's blog';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
 
 

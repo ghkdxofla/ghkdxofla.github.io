@@ -5,20 +5,20 @@ paginate_path: "page:num"
 exclude: ["README.md"] # files to exclude
 highlighter: rouge
 markdown: kramdown
-disqus: taelim
+disqus: Taelim's blog
 google_analytics: taelim
-title: taelim
+title: Taelim's blog
 
 defaults:
   -
     scope:
       path: "" # empty string for all files
     values:
-      title: taelim
+      title: Taelim's blog
 
 description: Taelim's blog
 author:
-  name: taelim
+  name: Taelim Hwang
   email: ghkdxofla@gmail.com
   github: ghkdxofla
   twitter: ghkdxofla
@@ -32,9 +32,10 @@ categories_path: categories.html
 tags_path: tags.html
 
 # set it as url of an image
-# sidebar_background_image: https://www.dropbox.com/s/g9h23zrycedxtk5/sky.png?raw=1
+# sidebar_background_image: https://images.pexels.com/photos/1137525/pexels-photo-1137525.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260
 
 BASE_PATH:
 
 plugins:
   - jekyll-paginate
+  - jekyll-admin
