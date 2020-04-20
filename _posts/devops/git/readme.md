@@ -11,6 +11,12 @@ git pull
 git config --global core.autocrlf false
 ```
 
+# Git 에러 bad signature index file corrupt 해결방법
+```bash
+rm -f .git/index
+git reset
+```
+
 # 특정 폴더나 파일 무시하기(.GITIGNORE)
 ```bash
 # .git 폴더가 있는 동일 위치에 생성
@@ -43,4 +49,5 @@ git commit -m "Remove ingnored file"
 
 # 참조 링크
 [Git ignore-1](https://kcmschool.com/194)
+
 [Git ignore-2](https://gmlwjd9405.github.io/2017/10/06/make-gitignore-file.html)

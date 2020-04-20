@@ -1,3 +1,12 @@
+---
+layout: post
+title:  "PostgreSQL 설치 및 사용법"
+categories: [Database, RDBMS, PostgreSQL]
+shortinfo: "RDBMS의 한 종류인 PostgreSQL에 대한 설치 및 사용법이 기록되어 있습니다"
+tags: [개발, Database, RDBMS, PostgreSQL, 환경 구축]
+comments: true
+---
+
 # 설치(Ubuntu)
 ```bash
 # postgresql 설치
@@ -48,5 +57,7 @@ Password   = dbpassword
 
 
 # 참조 링크
+
 [Ubuntu에 PostgreSQL 설치하기](https://dejavuqa.tistory.com/16)
+
 [Connect to PostgreSQL from Linux with ODBC](https://help.interfaceware.com/v6/connect-to-postgresql-from-linux-or-mac-with-odbc)

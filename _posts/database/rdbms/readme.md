@@ -139,6 +139,9 @@ with engine.connect() as con:
 
 # 참조 링크
 [select count(*) 를 빠르게 하는 방법](https://paulus78.tistory.com/entry/select-count-를-빠르게-하는-방법)
+
 [페이징 쿼리](https://roqkffhwk.tistory.com/146)
+
 [sqlalchemy - Stored Procedure](https://docs.sqlalchemy.org/en/13/core/connections.html)
+
 [sqlalchemy - SET NOCOUNT ON](https://stackoverflow.com/questions/24458430/make-python-wait-for-stored-procedure-to-finish-executing)
