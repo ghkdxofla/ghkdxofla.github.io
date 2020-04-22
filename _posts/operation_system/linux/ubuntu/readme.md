@@ -1,3 +1,12 @@
+---
+layout: post
+title:  "Linux(Ubuntu) 사용법"
+categories: [OS, Linux, Ubuntu]
+shortinfo: "Linux 계열의 대표 OS인 Ubuntu 사용 관련한 내용이 기재되어 있습니다"
+tags: [개발, OS, Linux, Ubuntu, Library, 환경 구축]
+comments: true
+---
+
 # NTFS disk(Windows용 format)를 mount하여 사용하기
 ```bash
 # Install package: ntfs-3g
@@ -184,8 +193,22 @@ Linux에서의 default file descriptor(3개)
 
 descriptor 관련해서 grep 등 내용은 추가 예정
 
+# 프로세스 상태 확인(메모리, CPU 사용량 등)
+```bash
+# 설치
+sudo apt-get install htop
+
+# 실행
+htop
+```
+
+실행화면은 다음과 같으며, 주요 특징은 클릭을 통한 항목 정렬, 선택이 가능한 점이다
+![htop 실행 화면](/assets/media/20200423_084203.png)
+
 # 참조 링크
+
 [Service 등록](https://chhanz.github.io/linux/2019/01/18/linux-how-to-create-custom-systemd-service/)
+
 [Access Control List](https://dgblog.tistory.com/156)
 
 [방화벽 설정(iptables)](https://server-engineer.tistory.com/418)
