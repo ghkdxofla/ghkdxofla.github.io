@@ -16,3 +16,7 @@ https://yahwang.github.io/posts/81 - param을 설정에 넣을 때
 # 0은 false인가 true인가?
 
 https://stackoverflow.com/questions/6475181/1-false-and-0-true
+
+# MongoDB Cache mem 설정
+
+https://stackoverflow.com/questions/6861184/is-there-any-option-to-limit-mongodb-memory-usage
