@@ -1,4 +1,4 @@
-# Github
+### Github
 
 Github Markdown 사용법
 ---------------------

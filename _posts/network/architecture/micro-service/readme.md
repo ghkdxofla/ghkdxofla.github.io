@@ -1,6 +1,6 @@
-# Micro-service
+### Micro-service
 
-# Whitebase
+### Whitebase
 
 MSA로 개발 시, UI에서 발생할 수 있는 문제점 존재
 - UI에서 여러 개의 Micro-Service와 통신을 할 때 Single-Endpoint를 제공해야 하는 것

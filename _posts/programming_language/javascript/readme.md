@@ -1,4 +1,4 @@
-# 자바스크립트 비동기 처리와 콜백 함수
+### 자바스크립트 비동기 처리와 콜백 함수
 
 Promise? 비동기?
 - Promise는 자바스크립트 비동기 처리에 사용되는 객체
@@ -55,7 +55,7 @@ $.get('url', function(response) {
 });
 ```
 
-# Exception handling에서 finally 사용하기
+### Exception handling에서 finally 사용하기
 ```javascript
 axios.get('/user')
   .then(function (response) {
@@ -70,15 +70,15 @@ axios.get('/user')
   }); 
 ```
 
-# axios
+### axios
 
 Axios란?
 
-# 내용 추가 필요
+### 내용 추가 필요
 https://joshua1988.github.io/web-development/javascript/promise-for-beginners/
 https://hyunseob.github.io/2016/03/10/javascript-this/
 
-# forEach에 break 말고 some 사용하기
+### forEach에 break 말고 some 사용하기
 
 왜?
 - javascript는 break 문이 존재하지 않는다
@@ -120,7 +120,7 @@ try {
 });
 ```
 
-# 리스트 내부의 값이 존재하는지 확인이 필요할 때
+### 리스트 내부의 값이 존재하는지 확인이 필요할 때
 ```javascript
 // 리스트 내부 1 depth 값의 경우
 arr.includes('apple');
@@ -131,7 +131,7 @@ arr.find(el => el[0] === color);
 
 
 ```
-# 참조 링크
+### 참조 링크
 [자바스크립트 비동기 처리와 콜백 함수](https://joshua1988.github.io/web-development/javascript/javascript-asynchronous-operation/#%EC%BD%9C%EB%B0%B1-%EC%A7%80%EC%98%A5-callback-hell)
 
 [forEach에 break문 대신 some 사용하기](https://blog.outsider.ne.kr/847)
