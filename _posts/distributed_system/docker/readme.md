@@ -1,11 +1,11 @@
-# Docker란?
+### Docker란?
 
-# 설치
+### 설치
 ```bash
-# Update repository
+### Update repository
 $ sudo apt-get update
 
-# Install requirements
+### Install requirements
 $ sudo apt-get install \
     apt-transport-https \
     ca-certificates \
@@ -13,35 +13,35 @@ $ sudo apt-get install \
     gnupg-agent \
     software-properties-common
 
-# Download apt-key
+### Download apt-key
 $ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
-# Verificate apt-key
+### Verificate apt-key
 $ sudo apt-key fingerprint 0EBFCD88
 
-# Add repository to local environment
+### Add repository to local environment
 $ sudo add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
    stable"
 
-# Install docker
+### Install docker
 $ sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
 
-# docker-compose란?
+### docker-compose란?
 
-# docker-compose.yml 작성 예시
+### docker-compose.yml 작성 예시
 
-# docker-comppose에 여러 개의 image를 설치하는 법
+### docker-comppose에 여러 개의 image를 설치하는 법
 ```yaml
-# build is your actual build spec
+### build is your actual build spec
 build:
   image: myrepo/myimage
   build:
   ...
   ...
-# these extend from build and just add new tags statically or from environment variables or 
+### these extend from build and just add new tags statically or from environment variables or 
 version_tag:
   extends: build
   image: myrepo/myimage:v1.0
@@ -50,64 +50,64 @@ some_other_tag:
   image: myrepo/myimage:${SOME_OTHER_TAG}
 ```
 
-# dockerfile 예시
+### dockerfile 예시
 ```dockerfile
-# Install base image(node.js)
+### Install base image(node.js)
 FROM node:12
 MAINTAINER taelim.hwang@lge.com
 
-# Set work directory
+### Set work directory
 WORKDIR /usr/src/app
 
-# Update repository
+### Update repository
 RUN apt-get -y update
 
-# Upgrade repository
+### Upgrade repository
 RUN apt-get -y dist-upgrade
 
-# Install sudo
+### Install sudo
 RUN apt-get -y install sudo
 
-# Install nvm
+### Install nvm
 RUN apt-get -y install build-essential libssl-dev
 RUN curl -sL https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh -o install_nvm.sh
 RUN bash install_nvm.sh
 #RUN . ~/.profile
 #RUN nvm install 10.15.3
 
-# Install mongodb
+### Install mongodb
 RUN wget -qO - https://www.mongodb.org/static/pgp/server-4.0.asc | apt-key add -
 RUN echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list
 RUN apt-get update
 RUN apt-get -y install mongodb-org
 
-# Install mariadb
+### Install mariadb
 RUN apt-get -y install mariadb-server
 
-# Install imagemagick
+### Install imagemagick
 RUN apt-get -y install imagemagick
 
-# Install ffmpeg
+### Install ffmpeg
 RUN apt-get -y install ffmpeg
 
-# Install bower
+### Install bower
 RUN npm install -g bower
 
-# Install gulp
+### Install gulp
 RUN npm install -g gulp
 
-# Install ruby
+### Install ruby
 RUN apt-get -y install ruby-full build-essential
 RUN gem install sass
 
-# Install pm2
+### Install pm2
 RUN npm install -g pm2
 RUN apt-get -y dist-upgrade
 
-# Install python2.7
+### Install python2.7
 RUN npm install --python=python2.7
 
-# Copy sources
+### Copy sources
 ADD maple-cms-api ./maple-cms-api
 ADD maple-cms-api-gateway ./maple-cms-api-gateway
 ADD maple-cms-apps ./maple-cms-apps
@@ -118,7 +118,7 @@ ADD maple-cms-player ./maple-cms-player
 ADD maple-cms-display ./maple-cms-display
 ADD maple-cms-frontend ./maple-cms-frontend
 
-# Install node packages
+### Install node packages
 RUN npm install --prefix ./maple-cms-api
 RUN npm install --prefix ./maple-cms-api-gateway
 RUN npm install --prefix ./maple-cms-content
@@ -127,11 +127,11 @@ RUN npm install --prefix ./maple-cms-player
 RUN npm install --prefix ./maple-cms-display
 RUN npm install --prefix ./maple-cms-frontend
 
-# Set environment
+### Set environment
 ENV PYTHONPATH "${PYTHONPATH}:/usr/local/bin"
 ENV PATH "${PATH}:/usr/local/bin"
 
-# Set port
+### Set port
 EXPOSE 80
 EXPOSE 443
 EXPOSE 1337
@@ -141,7 +141,7 @@ EXPOSE 9010
 EXPOSE 9020
 EXPOSE 9030
 
-# Run API
+### Run API
 CMD cp ./maple-cms-db/config/mongod.conf /etc/ && \
 mongod --fork --config /etc/mongod.conf && \
 service mysql start && \
@@ -163,62 +163,62 @@ pm2 start \
 /bin/bash
 ```
 
-# dockerfile에서 파일 내부 수정하기
+### dockerfile에서 파일 내부 수정하기
 ```dockerfile
-# 추가하기
+### 추가하기
 RUN   echo "Some line to add to a file" >> /etc/sysctl.conf
 
-# 수정하기
+### 수정하기
 RUN   sed -i "s|some-original-string|the-new-string |g" /etc/sysctl.conf
 ```
 
-# docker container에서 pm2 실행 시
+### docker container에서 pm2 실행 시
 ```dockerfile
-# ENTRYPOINT 설정: docker container에서 pm2를 실행시킬 때는 pm2-docker를 통해서 실행
+### ENTRYPOINT 설정: docker container에서 pm2를 실행시킬 때는 pm2-docker를 통해서 실행
 ENTRYPOINT [ "pm2-docker" ]
-# CMD 설정: parameter가 없는 경우, default 값을 지정
+### CMD 설정: parameter가 없는 경우, default 값을 지정
 CMD ["pm2/dev-system.json"]
 
 ```
 
-# docker 내 mongodb service가 restart되지 않는 경우 또는 mongodb가 service에 등록되지 않는 상태에서 restart를 원할 경우
+### docker 내 mongodb service가 restart되지 않는 경우 또는 mongodb가 service에 등록되지 않는 상태에서 restart를 원할 경우
 ```bash
-# mongodb 종료
+### mongodb 종료
 mongod -f /etc/mongod.conf --shutdown
-# mongodb 시작
+### mongodb 시작
 mongod --fork --config /etc/mongod.conf
 ```
 
-# docker 내 mysql service가 restart되지 않는 경우
+### docker 내 mysql service가 restart되지 않는 경우
 ```bash
-# mysql service 종료
+### mysql service 종료
 mysqladmin -u"id" -pPassword shutdown
-# mysql service 시작
+### mysql service 시작
 service mysql start
 ```
 
-# docker container 접속
+### docker container 접속
 ```bash
-# 실행된 image의 container ID(c456623003b1) 릂 통한 접속
+### 실행된 image의 container ID(c456623003b1) 릂 통한 접속
 docker exec -it c456623003b1 /bin/bash
-# 또는 Dockerfile 내 CMD의 마지막에 /bin/bash 실행
+### 또는 Dockerfile 내 CMD의 마지막에 /bin/bash 실행
 ```
 
-# docker volume의 사용방법과 차이점
+### docker volume의 사용방법과 차이점
 ```bash
 https://darkrasid.github.io/docker/container/volume/2017/05/10/docker-volumes.html
 ```
 
-# docker 명령어들
+### docker 명령어들
 ```bash
-# 모든 Container 제거
+### 모든 Container 제거
 docker rm -vf $(docker ps -a -q)
 
-# 모든 imnage 제거
+### 모든 imnage 제거
 docker rmi -f $(docker images -a -q)
 ```
 
-# 참조 링크
+### 참조 링크
 
 [Dockerfile의 자주 쓰는 instruction들](https://rampart81.github.io/post/dockerfile_instructions/)
 

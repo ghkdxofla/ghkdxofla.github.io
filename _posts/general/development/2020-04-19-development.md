@@ -7,7 +7,7 @@ tags: [개발, 일반]
 comments: true
 ---
 
-# Code Review
+### Code Review
 
 코드 리뷰의 주요 포인트
 - 하루 안으로 Reviewer가 진행
@@ -45,13 +45,13 @@ comments: true
   * 일방적인 가이드가 되는 경우가 많다
   * 시니어들에겐 도움이 잘 안됨
 
-# Boilerplate 목록
+### Boilerplate 목록
 
 추천 목록 모음 페이지
 - [Node.js](https://medium.com/better-programming/best-node-js-boilerplate-to-speed-up-your-project-development-a9eca7b07f90)
 - [Django](https://dev.to/sm0ke/django-boilerplate-code-open-source-and-free-2aa5)
 
-# 참조 링크
+### 참조 링크
 
 [실리콘 벨리 회사의 코드리뷰 이야기](https://xyz37.blog.me/221147928687)
 

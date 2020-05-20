@@ -1,4 +1,4 @@
-# Apscheduler
+### Apscheduler
 
 Apscheduler란?
 - Python code에 대한 Scheduling을 구성해주는 library
@@ -59,7 +59,7 @@ class Scheduler(object):
             hour=hour, minute=minute, second=second, 
             id=job_id, args=(type, job_id, function, sleep_time) + args, kwargs=kwargs)
         #elif type == 'cron_current':
-        #    self.sched.add_job(self.run_job, type, day_of_week='mon-fri', hour='9-15', second='*/5', id=job_id, args=(type, job_id, code, postfix, sleep_time))
+        ###    self.sched.add_job(self.run_job, type, day_of_week='mon-fri', hour='9-15', second='*/5', id=job_id, args=(type, job_id, code, postfix, sleep_time))
 if __name__=="__main__":
     def hello(name):
         print(name)
@@ -75,7 +75,7 @@ if __name__=="__main__":
 
 *args, **kwargs를 넘기려면?
 ```python
-# add_job method에 parameter 넘길 시, args는 tuple 합연산으로, kwargs는 kwargs 변수로 넘기면(또는 다른 kwargs 변수와 합친 상태로) 된다
+### add_job method에 parameter 넘길 시, args는 tuple 합연산으로, kwargs는 kwargs 변수로 넘기면(또는 다른 kwargs 변수와 합친 상태로) 된다
 self.sched.add_job(self.run_job, type, 
             year=year, month=month, day=day, week=week, 
             day_of_week=day_of_week, 
@@ -83,5 +83,5 @@ self.sched.add_job(self.run_job, type,
             id=job_id, args=(type, job_id, function, sleep_time) + args, kwargs=kwargs)
 ```
 
-# 참조 링크
+### 참조 링크
 [Apscheduler란](https://tomining.tistory.com/138)
