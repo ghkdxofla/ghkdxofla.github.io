@@ -25,6 +25,8 @@ https://stackoverflow.com/questions/6861184/is-there-any-option-to-limit-mongodb
 
 https://meetup.toast.com/posts/92
 
+https://deview.kr/2017/schedule/212
+
 # async & await
 
 https://joshua1988.github.io/web-development/javascript/js-async-await/
@@ -63,3 +65,8 @@ https://brunch.co.kr/@jowlee/44
 # PG 결제 모듈
 
 https://docs.iamport.kr/tech/webhook
+
+# JWT, OAuth2.0
+
+https://tansfil.tistory.com/58?category=255594
+
