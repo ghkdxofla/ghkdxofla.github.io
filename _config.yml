@@ -9,6 +9,8 @@ disqus: Taelim's blog
 google_analytics: taelim
 title: Taelim's blog
 
+google_fonts: "Nanum+Gothic:400,700"
+
 defaults:
   -
     scope:
