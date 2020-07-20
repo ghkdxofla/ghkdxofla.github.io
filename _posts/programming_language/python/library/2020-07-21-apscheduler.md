@@ -1,3 +1,12 @@
+---
+layout: post
+title:  "Apscheduler(Python 스케쥴링 라이브러리)"
+comments: true
+categories: [Programming Language, Python, Library, Apscheduler]
+shortinfo: "스케쥴링이 필요한 어플리케이션을 제작할 경우, 가장 유용하게 사용하는 라이브러리이다."
+tags: [Programming Language, Python, Scheduler, Library, Apscheduler]
+---
+
 ### Apscheduler
 
 Apscheduler란?
