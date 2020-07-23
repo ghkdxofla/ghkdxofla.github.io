@@ -22,7 +22,7 @@ tags: [Network, Architecture, Microservice]
 서비스를 충분히 작은 크기로 나누어 개발하되 상호 연계를 통해 좀 더 복잡하고 거대한 시스템을 만들어 갈 수 있음   
 스케일링에도 높은 자유도 -> 클라우드 컴퓨팅이나 고확장성 시스템의 요구조건에 정확하게 부합
 
-##### Monolithic Architecture와 비교
+#### Monolithic Architecture와 비교
 
 `Monolithic 장점`
 - 하나의 애플리케이션만 개발하면 되기때문에 배포 및 테스트가 편리함
@@ -53,12 +53,12 @@ tags: [Network, Architecture, Microservice]
 
 ### Microservice 도입 시 고려사항
 
-##### Performance
+#### Performance
 
 서비스 간의 호출이 통신을 통해서 이루어지기 때문에 네트워크 전송 오버헤드가 발생   
 성능에 민감한 서비스에서는 Microservice 도입이 어렵거나 `Monolithic을 혼합하여 디자인`
 
-##### Transaction Processing
+#### Transaction Processing
 
 Monolithic에서는 RDB를 사용하면 하나의 애플리케이션 내에서 트랜잭션에 문제가 있으면 DB의 기능을 이용해서 Rollback   
 Microservice는 여러 서비스의 API 기반 트랜잭션을 묶는 것이 불가능
@@ -69,7 +69,7 @@ Microservice는 여러 서비스의 API 기반 트랜잭션을 묶는 것이 불
 3. 트랜잭션 실패시 보상 트랜잭션을 통한 예외처리 로직을 애플리케이션에서 처리
 4. 복합 서비스를 만들어서 트랜잭션을 묶어야 하는 두개의 시스템을 지원하는 네이티브 프로토콜을 이용해서 구현하여 하나의 API를 노출시키는 방법 (두개의 서비스가 tightly coupled되어 Microservice의 상호 독립성 사상에 위배되고 서비스 변경시 이 부분을 항상 고려해야 함)
 
-##### Code Duplication
+#### Code Duplication
 
 다양한 언어와 기술을 사용하여 개발될 수 있기때문에 다른 서비스와는 독립적으로 최적화된 언어/기술을 사용하여 개발할 수 있다는 장점   
 - 동일한 기능을 수행하는 코드를 서비스별로 중복 작성하게 될 수 있음
@@ -80,24 +80,24 @@ Microservice는 여러 서비스의 API 기반 트랜잭션을 묶는 것이 불
 API Gateway란 프록시 서버처럼 각 서비스의 API들 앞에서 EndPoint(API의 URL)를 통합하고, 공통 기능등의 추가 기능을 제공하는 미들웨어   
 SOA의 ESB(Enterprise Service Bus)의 경량화된 버전으로, API Gateway에서 무거운 로직을 수행하거나 잘못 설계되면 실패 가능성이 매우 높은 컴포넌트
 
-##### Data Duplication
+#### Data Duplication
 
 서비스별로 적절한 데이터 스토리지 솔루션을 사용하여 구성될 수 있기 때문에 이에따른 데이터 중복이 발생   
 - 사용하는 솔루션에 따라서 적당한 데이터 모델링으로 디자인하여 해결
 - 다양한 데이터 스토리지 솔루션 사용에 의한 비용/성능의 장점을 고려하여 데이터 중복을 허용할 수 있음
 
-##### Memory Duplication
+#### Memory Duplication
 
 서비스 별로 독립된 서버 또는 컨테이너에 분할 배치되기 때문에 동일한 모듈이 중복으로 메모리에 올라갈 수 있음
 
-##### Operation Overhead
+#### Operation Overhead
 
 서비스 개수가 증가함에 따라서 많은 양의 배포 및 릴리즈 작업이 수반   
 각 서비스들이 서로 다른 기술을 사용할 수 있기때문에 필요한 기술도 늘어남   
 - 배포 및 릴리즈에 수반되는 모든 작업들이 철저하게 자동화
 - DevOps의 도입이 필수적
 
-##### Testing Challenges
+#### Testing Challenges
 
 각 서비스가 분리되어 비동기적으로 동작하기 때문에 런타임 환경에서의 상호작용을 테스트하기 어려움   
 - 각 서비스의 테스트 초기단계에서 최대한 Coverage를 높여서 End-to-end 테스트를 최소화하는 전략[Testing Strategies in a Microservice Architecture](http://martinfowler.com/articles/microservice-testing/)
@@ -105,7 +105,7 @@ SOA의 ESB(Enterprise Service Bus)의 경량화된 버전으로, API Gateway에�
 
 ![Microservice Testing Summary](/assets/media/20200723_microservice_2.png)
 
-##### Team Management
+#### Team Management
 
 도메인 단위의 서비스가 독립적으로 개발/배포되기 때문에 팀 운영에 있어서도 중앙집권적 체계를 벗어나 각 팀이 독립적으로 운영(self-organized team)
 - 최적화된 팀 규모: 의사소통이 효율적이고 의사결정 속도가 빨라져서 생산성이 향상되고 변화에 대한 수용과 대응에서 큰 장점을 지님
