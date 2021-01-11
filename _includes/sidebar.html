@@ -1,63 +1,96 @@
-<!-- sidebar.html -->
-<header class="sidebar-header" role="banner">
-	<a href="{{ site.BASE_PATH }}/">
-		<img src="//www.gravatar.com/avatar/{{site.author.email_md5}}?s=150" class="img-circle" />
-	</a>
-	<h3 class="title">
-        <a href="{{ site.BASE_PATH }}/">{{ site.title }}</a>
-    </h3>
-</header>
+<!--
+  The Side Bar
+  v2.0
+  https://github.com/cotes2020/jekyll-theme-chirpy
+  © 2017-2019 Cotes Chung
+  MIT License
+-->
 
-{% if site.author.bio %}
-<div id="bio" class="text-center">
-	{{ site.author.bio }}
-</div>
-{% endif %}
+<div id="sidebar" class="d-flex flex-column align-items-end">
 
-<div id="contact-list" class="text-center">
-	<ul class="list-unstyled list-inline">
-		{% if site.author.github %}
-		<li>
-			<a class="btn btn-default btn-sm" href="https://github.com/{{ site.author.github }}">
-				<i class="fa fa-github-alt fa-lg"></i>
-			</a>
-		</li>
-		{% endif %}
-		{% if site.author.twitter %}
-		<li>
-			<a class="btn btn-default btn-sm" href="https://twitter.com/{{ site.author.twitter }}">
-				<i class="fa fa-twitter fa-lg"></i>
-			</a>
-		</li>
-		{% endif %}
-		{% if site.author.email %}
-		<li>
-			<a class="btn btn-default btn-sm" href="mailto:{{ site.author.email }}">
-				<i class="fa fa-envelope fa-lg"></i>
-			</a>
-		</li>
-		{% endif %}
-	</ul>
-	<ul id="contact-list-secondary" class="list-unstyled list-inline">
-		{% if site.author.pinterest %}
-		<li>
-			<a class="btn btn-default btn-sm" href="https://pinterest.com/{{ site.author.pinterest }}">
-				<i class="fa fa-pinterest fa-lg"></i>
-			</a>
-		</li>
-		{% endif %}
-		{% if site.author.linkedin %}
-		<li>
-			<a class="btn btn-default btn-sm" href="https://linkedin.com/in/{{ site.author.linkedin }}">
-				<i class="fa fa-linkedin fa-lg"></i>
-			</a>
-		</li>
-		{% endif %}
-		<li>
-			<a class="btn btn-default btn-sm" href="{{ site.BASE_PATH }}/{{ site.rss_path }}">
-				<i class="fa fa-rss fa-lg"></i>
-			</a>
-		</li>
-	</ul>
-</div>
-<!-- sidebar.html end -->
+  <div class="profile-wrapper text-center">
+    <div id="avatar">
+      <a href="{{ site.baseurl }}/" alt="avatar" class="mx-auto">
+        {% assign avatar_url = site.avatar %}
+
+        {% unless avatar_url contains '://' %}
+          {% if site.img_cdn %}
+            {% assign avatar_url = avatar_url | prepend: site.img_cdn %}
+          {% else %}
+            {% assign avatar_url = avatar_url | relative_url %}
+          {% endif %}
+        {% endunless %}
+
+        <img src="{{ avatar_url }}" alt="avatar" onerror="this.style.display='none'">
+      </a>
+    </div>
+
+    <div class="site-title mt-3">
+      <a href="{{ '/' | relative_url }}">{{- site.title -}}</a>
+    </div>
+
+    <div class="site-subtitle font-italic">{{- site.tagline -}}</div>
+
+  </div><!-- .profile-wrapper -->
+
+  <ul class="w-100">
+    <!-- home -->
+    <li class="nav-item{% if page.layout == 'home' %}{{ " active" }}{% endif %}">
+      <a href="{{ '/' | relative_url }}" class="nav-link">
+        <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i>
+        <span>{{ "HOME" }}</span>
+      </a>
+    </li>
+    <!-- the real tabs -->
+    {% for tab in site.tabs %}
+    <li class="nav-item{% if tab.url == page.url %}{{ " active" }}{% endif %}">
+      <a href="{{ tab.url | relative_url }}" class="nav-link">
+        <i class="fa-fw {{ tab.icon }} ml-xl-3 mr-xl-3 unloaded"></i>
+        <span>{{ tab.title | upcase }}</span>
+      </a>
+    </li> <!-- .nav-item -->
+    {% endfor %}
+
+  </ul> <!-- ul.nav.flex-column -->
+
+  <div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center">
+
+    {% for entry in site.data.contact %}
+      {% capture url %}
+        {%- if entry.type == 'github' -%}
+          https://github.com/{{ site.github.username }}
+        {%- elsif entry.type == 'twitter' -%}
+          https://twitter.com/{{ site.twitter.username }}
+        {%- elsif entry.type == 'email' -%}
+          {% assign email = site.social.email | split: '@' %}
+          javascript:location.href = 'mailto:' + ['{{ email[0] }}','{{ email[1] }}'].join('@')
+        {%- elsif entry.type == 'rss' -%}
+          {{ "/feed.xml" | relative_url }}
+        {%- else -%}
+          {{ entry.url }}
+        {%- endif -%}
+      {% endcapture %}
+
+      {% if url %}
+      <a href="{{ url }}" aria-label="{{ entry.type }}"
+        {% unless site.theme_mode %}class="order-{{ forloop.index | plus: 2 }}"{% endunless %}
+        {% unless entry.noblank %}target="_blank" rel="noopener"{% endunless %}>
+        <i class="{{ entry.icon }}"></i>
+      </a>
+      {% endif %}
+
+    {% endfor %}
+
+    {% unless site.theme_mode %}
+      {% if site.data.contact.size > 0 %}
+        <span class="icon-border order-2"></span>
+      {% endif %}
+
+      <span id="mode-toggle-wrapper" class="order-1">
+        {% include mode-toggle.html %}
+      </span>
+    {% endunless %}
+
+  </div> <!-- .sidebar-bottom -->
+
+</div><!-- #sidebar -->

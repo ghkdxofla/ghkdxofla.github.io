@@ -11,10 +11,8 @@ tags: [Data Science, Data Analysis, Jupyter Notebook, Python]
 
 다음의 Command 입력
 ```bash
-(base) C:\Users\User>jupyter notebook --generate-config
+(base) C:\Users\User>;jupyter notebook --generate-config
 Writing default config to: C:\Users\User\.jupyter\jupyter_notebook_config.py
-
-(base) C:\Users\User>
 ```
 위의 결과로, jupyter_notebook_config.py 수정하면 된다
 
