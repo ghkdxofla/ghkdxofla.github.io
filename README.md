@@ -85,7 +85,7 @@ What it does is:
 
     - `.travis.yml`
     - files under `_posts`
-    - folder `docs`
+    - folder `docs` 
 
 2. If you use the `--no-gh` option, the directory `.github` will be deleted. Otherwise, setup the GitHub Action workflow by removing extension `.hook` of `.github/workflows/pages-deploy.yml.hook`, and then remove the other files and directories in folder `.github`.
 
