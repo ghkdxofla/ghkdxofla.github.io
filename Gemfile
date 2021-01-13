@@ -1,7 +1,6 @@
 source "https://rubygems.org"
 
 gem "jekyll", ">= 4.1.0", "< 5.0"
-# gem "github-pages"
 
 # plugins
 group :jekyll_plugins do
