@@ -1,6 +1,0 @@
-I"�<h3 id="설치ubuntu">설치(Ubuntu)</h3>
-<p>```bash</p>
-<h3 id="postgresql-설치">postgresql 설치</h3>
-<p>sudo apt-get update
-sudo apt-get install postgresql postgresql-contrib</p>
-:ET

@@ -1,9 +1,0 @@
-I"�<h3 id="password-저장">Password 저장</h3>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
-2
-3
-</pre></td><td class="rouge-code"><pre>git config <span class="nt">--global</span> credential.helper store
-<span class="c">### 한 번 git pull을 해주면서 비밀번호를 입력하면 저장된다</span>
-git pull
-</pre></td></tr></tbody></table></code></pre></div></div>
-:ET
