@@ -1,0 +1,5 @@
+I"9<h3 id="row-number를-매기는-방법">Row Number를 매기는 방법</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="p">(</span> <span class="k">SELECT</span> <span class="n">ROW_NUMBER</span><span class="p">()</span> <span class="n">OVER</span><span class="p">(</span><span class="k">ORDER</span> <span class="k">BY</span> <span class="n">idx</span><span class="p">)</span> <span class="n">rownum</span><span class="p">,</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">page_table</span> <span class="p">)</span> <span class="n">page_table</span> <span class="k">WHERE</span> <span class="n">rownum</span> <span class="k">BETWEEN</span> <span class="mi">1</span> <span class="k">AND</span> <span class="mi">20</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+:ET

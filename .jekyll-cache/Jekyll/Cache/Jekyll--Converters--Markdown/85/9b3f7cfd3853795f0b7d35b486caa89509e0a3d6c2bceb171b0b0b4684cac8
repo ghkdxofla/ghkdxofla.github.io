@@ -1,0 +1,406 @@
+I"4C<h3 id="docker란">Docker란?</h3>
+
+<h3 id="설치">설치</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre></td><td class="rouge-code"><pre><span class="c">### Update repository</span>
+<span class="nv">$ </span><span class="nb">sudo </span>apt-get update
+
+<span class="c">### Install requirements</span>
+<span class="nv">$ </span><span class="nb">sudo </span>apt-get <span class="nb">install</span> <span class="se">\</span>
+    apt-transport-https <span class="se">\</span>
+    ca-certificates <span class="se">\</span>
+    curl <span class="se">\</span>
+    gnupg-agent <span class="se">\</span>
+    software-properties-common
+
+<span class="c">### Download apt-key</span>
+<span class="nv">$ </span>curl <span class="nt">-fsSL</span> https://download.docker.com/linux/ubuntu/gpg | <span class="nb">sudo </span>apt-key add -
+
+<span class="c">### Verificate apt-key</span>
+<span class="nv">$ </span><span class="nb">sudo </span>apt-key fingerprint 0EBFCD88
+
+<span class="c">### Add repository to local environment</span>
+<span class="nv">$ </span><span class="nb">sudo </span>add-apt-repository <span class="se">\</span>
+   <span class="s2">"deb [arch=amd64] https://download.docker.com/linux/ubuntu </span><span class="se">\</span><span class="s2">
+   </span><span class="si">$(</span>lsb_release <span class="nt">-cs</span><span class="si">)</span><span class="s2"> </span><span class="se">\</span><span class="s2">
+   stable"</span>
+
+<span class="c">### Install docker</span>
+<span class="nv">$ </span><span class="nb">sudo </span>apt-get <span class="nb">install </span>docker-ce docker-ce-cli containerd.io
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="docker-compose란">docker-compose란?</h3>
+
+<h3 id="docker-composeyml-작성-예시">docker-compose.yml 작성 예시</h3>
+
+<h3 id="docker-comppose에-여러-개의-image를-설치하는-법">docker-comppose에 여러 개의 image를 설치하는 법</h3>
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="rouge-code"><pre><span class="c1">### build is your actual build spec</span>
+<span class="na">build</span><span class="pi">:</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">myrepo/myimage</span>
+  <span class="na">build</span><span class="pi">:</span>
+  <span class="s">...</span>
+  <span class="s">...</span>
+<span class="c1">### these extend from build and just add new tags statically or from environment variables or </span>
+<span class="na">version_tag</span><span class="pi">:</span>
+  <span class="na">extends</span><span class="pi">:</span> <span class="s">build</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">myrepo/myimage:v1.0</span>
+<span class="na">some_other_tag</span><span class="pi">:</span>
+  <span class="na">extends</span><span class="pi">:</span> <span class="s">build</span>
+  <span class="na">image</span><span class="pi">:</span> <span class="s">myrepo/myimage:${SOME_OTHER_TAG}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="dockerfile-예시">dockerfile 예시</h3>
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+</pre></td><td class="rouge-code"><pre><span class="c">### Install base image(node.js)</span>
+<span class="k">FROM</span><span class="s"> node:12</span>
+<span class="k">MAINTAINER</span><span class="s"> taelim.hwang@lge.com</span>
+
+<span class="c">### Set work directory</span>
+<span class="k">WORKDIR</span><span class="s"> /usr/src/app</span>
+
+<span class="c">### Update repository</span>
+<span class="k">RUN </span>apt-get <span class="nt">-y</span> update
+
+<span class="c">### Upgrade repository</span>
+<span class="k">RUN </span>apt-get <span class="nt">-y</span> dist-upgrade
+
+<span class="c">### Install sudo</span>
+<span class="k">RUN </span>apt-get <span class="nt">-y</span> <span class="nb">install sudo</span>
+
+<span class="c">### Install nvm</span>
+<span class="k">RUN </span>apt-get <span class="nt">-y</span> <span class="nb">install </span>build-essential libssl-dev
+<span class="k">RUN </span>curl <span class="nt">-sL</span> https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh <span class="nt">-o</span> install_nvm.sh
+<span class="k">RUN </span>bash install_nvm.sh
+<span class="c">#RUN . ~/.profile</span>
+<span class="c">#RUN nvm install 10.15.3</span>
+
+<span class="c">### Install mongodb</span>
+<span class="k">RUN </span>wget <span class="nt">-qO</span> - https://www.mongodb.org/static/pgp/server-4.0.asc | apt-key add -
+<span class="k">RUN </span><span class="nb">echo</span> <span class="s2">"deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main"</span> | <span class="nb">tee</span> /etc/apt/sources.list.d/mongodb-org-4.0.list
+<span class="k">RUN </span>apt-get update
+<span class="k">RUN </span>apt-get <span class="nt">-y</span> <span class="nb">install </span>mongodb-org
+
+<span class="c">### Install mariadb</span>
+<span class="k">RUN </span>apt-get <span class="nt">-y</span> <span class="nb">install </span>mariadb-server
+
+<span class="c">### Install imagemagick</span>
+<span class="k">RUN </span>apt-get <span class="nt">-y</span> <span class="nb">install </span>imagemagick
+
+<span class="c">### Install ffmpeg</span>
+<span class="k">RUN </span>apt-get <span class="nt">-y</span> <span class="nb">install </span>ffmpeg
+
+<span class="c">### Install bower</span>
+<span class="k">RUN </span>npm <span class="nb">install</span> <span class="nt">-g</span> bower
+
+<span class="c">### Install gulp</span>
+<span class="k">RUN </span>npm <span class="nb">install</span> <span class="nt">-g</span> gulp
+
+<span class="c">### Install ruby</span>
+<span class="k">RUN </span>apt-get <span class="nt">-y</span> <span class="nb">install </span>ruby-full build-essential
+<span class="k">RUN </span>gem <span class="nb">install </span>sass
+
+<span class="c">### Install pm2</span>
+<span class="k">RUN </span>npm <span class="nb">install</span> <span class="nt">-g</span> pm2
+<span class="k">RUN </span>apt-get <span class="nt">-y</span> dist-upgrade
+
+<span class="c">### Install python2.7</span>
+<span class="k">RUN </span>npm <span class="nb">install</span> <span class="nt">--python</span><span class="o">=</span>python2.7
+
+<span class="c">### Copy sources</span>
+<span class="k">ADD</span><span class="s"> maple-cms-api ./maple-cms-api</span>
+<span class="k">ADD</span><span class="s"> maple-cms-api-gateway ./maple-cms-api-gateway</span>
+<span class="k">ADD</span><span class="s"> maple-cms-apps ./maple-cms-apps</span>
+<span class="k">ADD</span><span class="s"> maple-cms-content ./maple-cms-content</span>
+<span class="k">ADD</span><span class="s"> maple-cms-db ./maple-cms-db</span>
+<span class="k">ADD</span><span class="s"> maple-cms-storage ./maple-cms-storage</span>
+<span class="k">ADD</span><span class="s"> maple-cms-player ./maple-cms-player</span>
+<span class="k">ADD</span><span class="s"> maple-cms-display ./maple-cms-display</span>
+<span class="k">ADD</span><span class="s"> maple-cms-frontend ./maple-cms-frontend</span>
+
+<span class="c">### Install node packages</span>
+<span class="k">RUN </span>npm <span class="nb">install</span> <span class="nt">--prefix</span> ./maple-cms-api
+<span class="k">RUN </span>npm <span class="nb">install</span> <span class="nt">--prefix</span> ./maple-cms-api-gateway
+<span class="k">RUN </span>npm <span class="nb">install</span> <span class="nt">--prefix</span> ./maple-cms-content
+<span class="k">RUN </span>npm <span class="nb">install</span> <span class="nt">--prefix</span> ./maple-cms-db
+<span class="k">RUN </span>npm <span class="nb">install</span> <span class="nt">--prefix</span> ./maple-cms-player
+<span class="k">RUN </span>npm <span class="nb">install</span> <span class="nt">--prefix</span> ./maple-cms-display
+<span class="k">RUN </span>npm <span class="nb">install</span> <span class="nt">--prefix</span> ./maple-cms-frontend
+
+<span class="c">### Set environment</span>
+<span class="k">ENV</span><span class="s"> PYTHONPATH "${PYTHONPATH}:/usr/local/bin"</span>
+<span class="k">ENV</span><span class="s"> PATH "${PATH}:/usr/local/bin"</span>
+
+<span class="c">### Set port</span>
+<span class="k">EXPOSE</span><span class="s"> 80</span>
+<span class="k">EXPOSE</span><span class="s"> 443</span>
+<span class="k">EXPOSE</span><span class="s"> 1337</span>
+<span class="k">EXPOSE</span><span class="s"> 1443</span>
+<span class="k">EXPOSE</span><span class="s"> 8055</span>
+<span class="k">EXPOSE</span><span class="s"> 9010</span>
+<span class="k">EXPOSE</span><span class="s"> 9020</span>
+<span class="k">EXPOSE</span><span class="s"> 9030</span>
+
+<span class="c">### Run API</span>
+<span class="k">CMD</span><span class="s"> cp ./maple-cms-db/config/mongod.conf /etc/ &amp;&amp; \</span>
+mongod --fork --config /etc/mongod.conf &amp;&amp; \
+service mysql start &amp;&amp; \
+#sed -i "s|bind_ip|#bind_ip|g" /etc/mongodb.conf &amp;&amp; \
+mongo --eval "db=db.getSiblingDB('admin');db.createUser({'user':'root','pwd':'lge123','roles':['userAdminAnyDatabase','dbAdminAnyDatabase','readWriteAnyDatabase']})" &amp;&amp; \
+mongod -f /etc/mongod.conf --shutdown &amp;&amp; \
+mongod --fork --config /etc/mongod.conf &amp;&amp; \
+mongo -u 'root' -p 'lge123' --authenticationDatabase 'admin' --eval "db=db.getSiblingDB('mapleLog');db.createUser({'user':'maple_user','pwd':'maple123','roles':['readWrite','dbAdmin']})" &amp;&amp; \
+mysql -u"root" -e"SET GLOBAL innodb_large_prefix = ON;SET GLOBAL innodb_file_format = BARRACUDA;DROP USER 'root'@'localhost';CREATE USER 'root'@'%' IDENTIFIED BY 'lge123';GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;FLUSH PRIVILEGES;" &amp;&amp; \
+mysqladmin -u"root" -plge123 shutdown &amp;&amp; \
+service mysql start &amp;&amp; \
+npm run initDb --prefix ./maple-cms-db &amp;&amp; \
+pm2 start \
+./maple-cms-api/maple-cms-api.js \
+./maple-cms-api-gateway/maple-cms-api-gateway.js \
+./maple-cms-content/maple-cms-content.js \
+./maple-cms-display/maple-cms-display.js \
+./maple-cms-frontend/server.js &amp;&amp; \
+/bin/bash
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="dockerfile에서-파일-내부-수정하기">dockerfile에서 파일 내부 수정하기</h3>
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="c">### 추가하기</span>
+<span class="k">RUN   </span><span class="nb">echo</span> <span class="s2">"Some line to add to a file"</span> <span class="o">&gt;&gt;</span> /etc/sysctl.conf
+
+<span class="c">### 수정하기</span>
+<span class="k">RUN   </span><span class="nb">sed</span> <span class="nt">-i</span> <span class="s2">"s|some-original-string|the-new-string |g"</span> /etc/sysctl.conf
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="docker-container에서-pm2-실행-시">docker container에서 pm2 실행 시</h3>
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="c">### ENTRYPOINT 설정: docker container에서 pm2를 실행시킬 때는 pm2-docker를 통해서 실행</span>
+<span class="k">ENTRYPOINT</span><span class="s"> [ "pm2-docker" ]</span>
+<span class="c">### CMD 설정: parameter가 없는 경우, default 값을 지정</span>
+<span class="k">CMD</span><span class="s"> ["pm2/dev-system.json"]</span>
+
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="docker-내-mongodb-service가-restart되지-않는-경우-또는-mongodb가-service에-등록되지-않는-상태에서-restart를-원할-경우">docker 내 mongodb service가 restart되지 않는 경우 또는 mongodb가 service에 등록되지 않는 상태에서 restart를 원할 경우</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="c">### mongodb 종료</span>
+mongod <span class="nt">-f</span> /etc/mongod.conf <span class="nt">--shutdown</span>
+<span class="c">### mongodb 시작</span>
+mongod <span class="nt">--fork</span> <span class="nt">--config</span> /etc/mongod.conf
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="docker-내-mysql-service가-restart되지-않는-경우">docker 내 mysql service가 restart되지 않는 경우</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="c">### mysql service 종료</span>
+mysqladmin <span class="nt">-u</span><span class="s2">"id"</span> <span class="nt">-pPassword</span> shutdown
+<span class="c">### mysql service 시작</span>
+service mysql start
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="docker-container-접속">docker container 접속</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre><span class="c">### 실행된 image의 container ID(c456623003b1) 릂 통한 접속</span>
+docker <span class="nb">exec</span> <span class="nt">-it</span> c456623003b1 /bin/bash
+<span class="c">### 또는 Dockerfile 내 CMD의 마지막에 /bin/bash 실행</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="docker-volume의-사용방법과-차이점">docker volume의 사용방법과 차이점</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>https://darkrasid.github.io/docker/container/volume/2017/05/10/docker-volumes.html
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="docker-명령어들">docker 명령어들</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="c">### 모든 Container 제거</span>
+docker <span class="nb">rm</span> <span class="nt">-vf</span> <span class="si">$(</span>docker ps <span class="nt">-a</span> <span class="nt">-q</span><span class="si">)</span>
+
+<span class="c">### 모든 imnage 제거</span>
+docker rmi <span class="nt">-f</span> <span class="si">$(</span>docker images <span class="nt">-a</span> <span class="nt">-q</span><span class="si">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="참조-링크">참조 링크</h3>
+
+<p><a href="https://rampart81.github.io/post/dockerfile_instructions/">Dockerfile의 자주 쓰는 instruction들</a></p>
+
+<p><a href="https://netframework.tistory.com/entry/nodejs-pm2-git%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-Dockfile-%EA%B5%AC%EC%84%B1">nodejs-pm2-git을 이용한 dockerfile 구성</a></p>
+
+<p><a href="https://stackoverflow.com/questions/11774887/how-to-stop-mongo-db-in-one-command/11777141">How to stop mongoDB in one command</a></p>
+
+<p><a href="https://darkrasid.github.io/docker/container/volume/2017/05/10/docker-volumes.html">Docker Volume의 사용방법과 차이점</a></p>
+
+<p><a href="https://gompro.postype.com/post/1735800">Dockerfile 및 Docker-compose를 이용한 세팅 예시</a></p>
+
+<p><a href="https://bluese05.tistory.com/77">Dockerfile Entrypoint와 CMD의 올바른 사용 방법</a></p>
+
+<p><a href="http://pyrasis.com/Docker/Docker-HOWTO">Docker 명령어 관련 (정리 필요)</a></p>
+
+<p><a href="http://pyrasis.com/book/DockerForTheReallyImpatient/Chapter06/02">Docker Container 연결하기 (정리 필요)</a></p>
+
+<p><a href="https://dololak.tistory.com/403">Docker directory 연결하기 (정리 필요)</a></p>
+
+<p><a href="https://www.44bits.io/ko/post/almost-perfect-development-environment-with-docker-and-docker-compose">Docker compose를 활용한 개발 (정리 필요)</a></p>
+:ET

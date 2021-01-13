@@ -1,0 +1,7 @@
+I"<h3 id="mongo-db란">Mongo DB란?</h3>
+<p>간단한 정의</p>
+<ul>
+  <li>NoSQL 데이터베이스로, 기존 RDBMS의 SQL을 사용하는 방식이 아님</li>
+  <li>테이블 간 관계가 RDBMS와 다르며, ACID 방식으로 작동하지 않음</li>
+</ul>
+:ET

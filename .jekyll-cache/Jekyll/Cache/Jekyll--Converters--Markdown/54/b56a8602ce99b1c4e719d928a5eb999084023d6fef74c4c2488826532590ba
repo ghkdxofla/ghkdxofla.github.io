@@ -1,0 +1,359 @@
+I"73<h3 id="ntfs-diskwindows용-format를-mount하여-사용하기">NTFS disk(Windows용 format)를 mount하여 사용하기</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="rouge-code"><pre><span class="c">### Install package: ntfs-3g</span>
+<span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install </span>ntfs-3g
+
+<span class="c">### Create mount point</span>
+<span class="nb">sudo mkdir</span> /media/windows
+
+<span class="c">### Check disk whether it is formatted NTFS file system</span>
+<span class="nb">sudo </span>fdisk <span class="nt">-l</span>
+
+<span class="c">### 기본적으로, 해당 Package를 설치 시, 자동을 /media 하위에서 mount된 disk를 확인 가능하다</span>
+
+<span class="c">### Link to mount point</span>
+<span class="nb">sudo </span>ntfs-3g /dev/sda1<span class="o">{</span>or other path<span class="o">}</span> /media/windows
+
+<span class="c">### Unmount</span>
+<span class="nb">sudo </span>umount /media/windows
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="disk-mount-하기">Disk mount 하기</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+</pre></td><td class="rouge-code"><pre><span class="c">### Check volume</span>
+<span class="nb">sudo </span>fdisk <span class="nt">-l</span>
+
+<span class="c">### Create file system</span>
+<span class="nb">sudo </span>mkfs.ext4 /dev/sdb
+
+<span class="c">### Create directory received mount</span>
+<span class="nb">sudo mkdir</span> /<span class="o">{</span>disk_path<span class="o">}</span> 
+
+<span class="c">### Mount</span>
+<span class="nb">sudo </span>mount /dev/sdb /<span class="o">{</span>disk_path<span class="o">}</span>
+
+<span class="c">### Check mount</span>
+<span class="nb">df</span> <span class="nt">-h</span>
+
+<span class="c">### Unmount</span>
+<span class="nb">sudo </span>umount /<span class="o">{</span>disk_path<span class="o">}</span>
+
+<span class="c">### Mount(Auto) - 추가 및 포멧 후 자동 마운트</span>
+<span class="nb">sudo </span>blkid
+
+<span class="c">### 특정 위치로 Auto mount 하기</span>
+링크 참조
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="포트-확인-열기-및-방화벽-확인">포트 확인, 열기 및 방화벽 확인</h3>
+
+<p>포트 확인</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre></td><td class="rouge-code"><pre><span class="c">### 열려있는 모든 포트 표시</span>
+netstat <span class="nt">-nap</span>
+<span class="nt">---------------------------------</span>
+<span class="nt">-n</span>: host명으로 표시 안함
+<span class="nt">-a</span>: 모든소켓 표시
+<span class="nt">-p</span>: 프로세스ID와 프로그램명 표시 
+<span class="nt">---------------------------------</span>
+
+<span class="c">### LISTEN 중인 포트 표시</span>
+netstat <span class="nt">-nap</span> | <span class="nb">grep </span>LISTEN
+
+<span class="c">### 확인하려는 포트번호 상태 확인</span>
+netstat <span class="nt">-nap</span> | <span class="nb">grep </span>포트번호
+
+<span class="c">### 특정 포트 상태 확인</span>
+nc <span class="nt">-z</span> www.google.com 80
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>방화벽은 iptables로 설정하는 방법과 ufw로 설정하는 방법이 있음</p>
+
+<p>방화벽 설정(iptables)</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+</pre></td><td class="rouge-code"><pre><span class="c">### 방화벽 설정 정보 확인</span>
+iptables <span class="nt">-nL</span>
+
+<span class="c">### 외부에서 접속하도록 열기</span>
+iptables <span class="nt">-I</span> INPUT 1 <span class="nt">-p</span> tcp <span class="nt">--dport</span> 12345 <span class="nt">-j</span> ACCEPT
+
+<span class="c">### 내부에서 외부로 나갈 수 있도록 포트 열기</span>
+iptables <span class="nt">-I</span> OUTPUT 1 <span class="nt">-p</span> udp <span class="nt">--dport</span> 9002 <span class="nt">-j</span> ACCEPT
+
+<span class="c">### 추가한 설정 조회</span>
+iptables <span class="nt">-L</span> <span class="nt">-v</span>
+
+<span class="c">### 추가한 설정 삭제</span>
+
+<span class="c">### a) 추가한 규칙의 번호로 삭제하는 방법 </span>
+iptables <span class="nt">-D</span> INPUT 1
+
+<span class="c">### b) 추가했을 때의 명령어에서 "-I"를 "-D"로 바꾸어 주는 방법</span>
+iptables <span class="nt">-D</span> INPUT <span class="nt">-p</span> tcp <span class="nt">--dport</span> 12345 <span class="nt">-j</span> ACCEPT
+
+<span class="c">### 변경사항 저장</span>
+service iptables save
+
+<span class="c">### 변경사항 재시작</span>
+/etc/init.d/iptables restart
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>방화벽 설정(ufw)</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+</pre></td><td class="rouge-code"><pre><span class="c">### default set으로 초기화</span>
+ufw default deny incoming
+ufw default allow outgoing
+
+<span class="c">### 포트 허용</span>
+ufw allow 80
+ufw allow 6000:6007/udp
+ufw allow from 203.203.203.203 to any port 22
+
+<span class="c">### 포트 불허</span>
+ufw deny 22
+
+<span class="c">### 룰 삭제</span>
+ufw delete allow 80
+ufw delete 3 <span class="c">### 번호로 지우는 방식</span>
+
+<span class="c">### 상태 확인</span>
+ufw status
+
+<span class="c">### 방화벽 시작</span>
+ufw <span class="nb">enable</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="tar-압축">tar 압축</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="rouge-code"><pre><span class="c">### tar(tar.gz)로 압축하기</span>
+<span class="nb">tar</span> -<span class="o">(</span>z<span class="o">)</span>cvf <span class="o">[</span>파일명.tar<span class="o">(</span>.gz<span class="o">)]</span> <span class="o">[</span>폴더명]
+
+<span class="c">### ex) abc라는 폴더를 aaa.tar로 압축하고자 한다면</span>
+<span class="nb">tar</span> -<span class="o">(</span>z<span class="o">)</span>cvf aaa.tar<span class="o">(</span>.gz<span class="o">)</span> abc
+
+<span class="c">### tar(tar.gz)로 압축풀기</span>
+<span class="nb">tar</span> -<span class="o">(</span>z<span class="o">)</span>xvf <span class="o">[</span>파일명.tar<span class="o">(</span>.gz<span class="o">)]</span>
+
+<span class="c">### ex) aaa.tar라는 tar파일 압축을 풀고자 한다면</span>
+<span class="nb">tar</span> -<span class="o">(</span>z<span class="o">)</span>xvf aaa.tar<span class="o">(</span>.gz<span class="o">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="acl-permission이란">ACL permission이란?</h3>
+<ul>
+  <li>linux에서 permission의 기존 3비트 * 3비트 * 3비트(ex : 775) 권한에 추가한 확장 권한</li>
+  <li>getfacl {directory} 로 full permission을 확인 가능</li>
+  <li>https://dgblog.tistory.com/156</li>
+</ul>
+
+<h3 id="acl-permission-지우기권한-맨-뒤에-">ACL permission 지우기(권한 맨 뒤에 +)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>setfacl <span class="nt">-bn</span> <span class="o">{</span>directory<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="파일-생성하기">파일 생성하기</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="c">### touch</span>
+<span class="nb">touch</span> <span class="o">{</span>file_name<span class="o">}</span>
+
+<span class="c">### cat</span>
+<span class="c">### cat은 파일을 생성하면서 데이터를 입력할 때 사용한다</span>
+<span class="nb">cat</span> <span class="o">&gt;</span> <span class="o">{</span>file_name<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="디렉토리-생성하기">디렉토리 생성하기</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="nb">mkdir</span> <span class="o">{</span>dir_name<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="file-descriptor">File descriptor</h3>
+
+<p>설명</p>
+<ul>
+  <li>A file descriptor is a number that uniquely identifies an open file in a computer’s operating system</li>
+  <li>When a program asks to open a file — or another data resource, like a network socket — the kernel:
+    <ul>
+      <li>Grants access</li>
+      <li>Creates an entry in the global file table</li>
+      <li>Provides the software with the location of that entry</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Linux에서의 default file descriptor(3개)</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><center>Name</center></th>
+      <th style="text-align: center"><center>File descriptor</center></th>
+      <th style="text-align: center"><center>Description</center></th>
+      <th style="text-align: center"><center>Abbreviation</center></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">Standard input</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">The default data stream for input, for example in a command pipeline. In the terminal, this defaults to keyboard input from the user.</td>
+      <td style="text-align: center">stdin</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Standard output</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">The default data stream for output, for example when a command prints text. In the terminal, this defaults to the user’s screen.</td>
+      <td style="text-align: center">stdout</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Standard error</td>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">The default data stream for output that relates to an error occurring. In the terminal, this defaults to the user’s screen.</td>
+      <td style="text-align: center">stderr</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>descriptor 관련해서 grep 등 내용은 추가 예정</p>
+
+<h3 id="프로세스-상태-확인메모리-cpu-사용량-등">프로세스 상태 확인(메모리, CPU 사용량 등)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="c">### 설치</span>
+<span class="nb">sudo </span>apt-get <span class="nb">install </span>htop
+
+<span class="c">### 실행</span>
+htop
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>실행화면은 다음과 같으며, 주요 특징은 클릭을 통한 항목 정렬, 선택이 가능한 점이다
+<img src="/assets/media/20200423_084203.png" alt="htop 실행 화면" /></p>
+
+<h3 id="참조-링크">참조 링크</h3>
+
+<p><a href="https://chhanz.github.io/linux/2019/01/18/linux-how-to-create-custom-systemd-service/">Service 등록</a></p>
+
+<p><a href="https://dgblog.tistory.com/156">Access Control List</a></p>
+
+<p><a href="https://server-engineer.tistory.com/418">방화벽 설정(iptables)</a></p>
+
+<p><a href="https://happist.com/561474/%EC%9A%B0%EB%B6%84%ED%88%AC-18-04%EB%A1%9C-%EC%84%9C%EB%B2%84-%EC%9A%B4%EC%98%81-ufw%EB%A1%9C-%EB%B0%A9%ED%99%94%EB%B2%BD-%EC%84%A4%EC%A0%95/">방화벽 설정(ufw)</a></p>
+
+<p><a href="https://www.computerhope.com/jargon/f/file-descriptor.htm">File descriptor</a></p>
+
+<p><a href="https://www.fosslinux.com/4216/how-to-automount-hard-disk-partitions-in-ubuntu.htm">Auto mount 하기</a></p>
+:ET

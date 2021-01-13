@@ -1,0 +1,125 @@
+I"x/<h3 id="module-import">Module Import</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="기본적인-dataframe-형성-및-출력from-mssql-record-객체">기본적인 Dataframe 형성 및 출력(from MSSQL record 객체)</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre><span class="c1">### Dataframe 형성
+</span><span class="n">mssql_data</span> <span class="o">=</span> <span class="n">get_record</span><span class="p">()</span> <span class="c1">### Record를 가져오는 것으로 가정
+</span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">.</span><span class="n">from_records</span><span class="p">(</span><span class="n">mssql_data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s">'id'</span><span class="p">,</span> <span class="s">'pwd'</span><span class="p">])</span> <span class="c1">### Column을 잘 맞추는게 중요
+</span>
+<span class="c1">### Datafrmae 출력(n -&gt; 항목 개수))
+</span><span class="n">df</span><span class="p">.</span><span class="n">tail</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="column-목록-가져오기">Column 목록 가져오기</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">column</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">cursor</span><span class="p">.</span><span class="n">description</span><span class="p">]</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="count-후-해당-항목-column에-추가하기">Count 후, 해당 항목 Column에 추가하기</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre><span class="n">df</span><span class="p">.</span><span class="n">groupby</span><span class="p">([</span><span class="s">'A'</span><span class="p">,</span><span class="s">'B'</span><span class="p">]).</span><span class="n">B</span><span class="p">.</span><span class="n">agg</span><span class="p">(</span><span class="s">'count'</span><span class="p">).</span><span class="n">to_frame</span><span class="p">(</span><span class="s">'c'</span><span class="p">).</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="c1">#df.groupby(['A','B']).size().to_frame('c').reset_index()
+</span>
+<span class="n">Out</span><span class="p">[</span><span class="mi">593</span><span class="p">]:</span> 
+   <span class="n">A</span>  <span class="n">B</span>  <span class="n">c</span>
+<span class="mi">0</span>  <span class="n">x</span>  <span class="n">p</span>  <span class="mi">2</span>
+<span class="mi">1</span>  <span class="n">y</span>  <span class="n">q</span>  <span class="mi">1</span>
+<span class="mi">2</span>  <span class="n">z</span>  <span class="n">r</span>  <span class="mi">2</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="row의-특정-column에서-key가-같을-경우-다른-column의-값-합치기">row의 특정 column에서 key가 같을 경우, 다른 column의 값 합치기</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre><span class="c1">### Example
+</span><span class="mi">7</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="mi">2016</span> <span class="o">|</span> <span class="mi">4</span>
+<span class="mi">7</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="mi">2016</span> <span class="o">|</span> <span class="mi">2</span>
+<span class="mi">4</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="mi">2016</span> <span class="o">|</span> <span class="mi">5</span>
+<span class="c1">### Into this
+</span><span class="mi">7</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="mi">2016</span> <span class="o">|</span> <span class="mi">6</span>
+<span class="mi">4</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="mi">2016</span> <span class="o">|</span> <span class="mi">5</span>
+
+<span class="c1">### Code 1)
+</span><span class="n">df</span><span class="p">.</span><span class="n">groupby</span><span class="p">(</span><span class="s">'datecol'</span><span class="p">).</span><span class="nb">sum</span><span class="p">()[</span><span class="s">'Hourcol'</span><span class="p">]</span>
+
+<span class="c1">### Code 2)
+</span><span class="n">df</span><span class="p">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'datecol'</span><span class="p">].</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s">' '</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="s">'Hourcol'</span><span class="p">].</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">),</span> <span class="nb">format</span><span class="o">=</span><span class="s">'%Y-%m-%d %H'</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">resample</span><span class="p">(</span><span class="s">'1d'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s">'sum'</span><span class="p">)</span> <span class="c1">### defaults to mean 
+</span></pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="결측값-있는-행-열-제거">결측값 있는 행, 열 제거</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+</pre></td><td class="rouge-code"><pre><span class="c1">### 결측값 있는 행 전체 제거
+</span><span class="n">df_dop_row</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1">### 결측값 있는 열 전체 제거
+</span><span class="n">df_drop_column</span> <span class="o">=</span> <span class="n">df</span><span class="p">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">### 특정 행 또는 열을 대상으로 결측값이 들어있으면 제거
+</span><span class="n">df</span><span class="p">[[</span><span class="s">'C1'</span><span class="p">,</span> <span class="s">'C2'</span><span class="p">,</span> <span class="s">'C3'</span><span class="p">]].</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">### 행
+</span><span class="n">df</span><span class="p">[[</span><span class="s">'C1'</span><span class="p">,</span> <span class="s">'C2'</span><span class="p">,</span> <span class="s">'C3'</span><span class="p">]].</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">### 열
+</span><span class="n">df</span><span class="p">.</span><span class="n">ix</span><span class="p">[[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="s">'C1'</span><span class="p">,</span> <span class="s">'C2'</span><span class="p">,</span> <span class="s">'C3'</span><span class="p">]].</span><span class="n">dropna</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">### 행, 열 통합
+</span></pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="correlation-후-항목-간-상관계수-순으로-정렬된-표가-필요할-때">Correlation 후 항목 간 상관계수 순으로 정렬된 표가 필요할 때</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="n">df</span><span class="p">.</span><span class="n">corr</span><span class="p">().</span><span class="n">unstack</span><span class="p">().</span><span class="n">sort_values</span><span class="p">().</span><span class="n">drop_duplicates</span><span class="p">()</span>
+
+<span class="c1">### 더 깔끔하게 보고 싶을 경우
+</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="index-column에-있는-name-없애기">Index, column에 있는 name 없애기</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="k">del</span> <span class="n">df</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="n">name</span>
+<span class="k">del</span> <span class="n">df</span><span class="p">.</span><span class="n">columns</span><span class="p">.</span><span class="n">names</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="dataframe-to-json-할-때-어떻게-저장할지-선택하기-정리-필요">Dataframe to JSON 할 때 어떻게 저장할지 선택하기 (정리 필요)</h3>
+<p>https://datatofish.com/export-pandas-dataframe-json/</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="c1">### 실행
+</span></pre></td></tr></tbody></table></code></pre></div></div>
+<div class="language-json highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre><span class="err">결과</span><span class="w">
+</span></pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="참조-링크">참조 링크</h3>
+
+<p><a href="https://rfriend.tistory.com/263">결측값 있는 행, 열 제거</a></p>
+:ET

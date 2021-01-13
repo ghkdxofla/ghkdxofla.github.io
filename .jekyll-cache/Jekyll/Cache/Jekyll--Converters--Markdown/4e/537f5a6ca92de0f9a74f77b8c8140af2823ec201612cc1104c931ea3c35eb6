@@ -1,0 +1,97 @@
+I"r<h3 id="설치ubuntu">설치(Ubuntu)</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+</pre></td><td class="rouge-code"><pre><span class="c">### postgresql 설치</span>
+<span class="nb">sudo </span>apt-get update
+<span class="nb">sudo </span>apt-get <span class="nb">install </span>postgresql postgresql-contrib
+
+<span class="c">### postgresql 계정 변경</span>
+<span class="nb">sudo</span> <span class="nt">-i</span> <span class="nt">-u</span> postgres
+
+<span class="c">### postgresql 접속</span>
+psql
+
+<span class="c">### sudo 계정으로 접속</span>
+<span class="nb">sudo</span> <span class="nt">-u</span> postgres psql
+
+<span class="c">### 새로운 계정 생성</span>
+<span class="nb">sudo</span> <span class="nt">-u</span> postgres
+createuser <span class="nt">--interactive</span>
+
+<span class="c">### 데이터베이스 생성</span>
+createdb <span class="o">{</span>db_name, ex: dejavu<span class="o">}</span>
+
+<span class="c">### postgresql은 데이터베이스 명과 동일한 linux 유저 계정이 필요하다</span>
+<span class="nb">sudo </span>adduser <span class="o">{</span>user_name, ex: dejavu<span class="o">}</span>
+
+<span class="c">### 생성한 데이터베이스에 접속</span>
+<span class="nb">sudo</span> <span class="nt">-u</span> <span class="o">{</span>user_name, ex: dejavu<span class="o">}</span> psql <span class="nt">-d</span> <span class="o">{</span>db_name, ex: dejavu<span class="o">}</span>
+
+<span class="c">### unixodbc 설치(pyodbc 등 사용 시)</span>
+<span class="nb">sudo </span>apt-get <span class="nb">install </span>unixodbc unixodbc-dev odbc-postgresql
+
+<span class="c">### 파일 확인</span>
+<span class="nb">ls</span> /usr/lib64/psqlodbcw<span class="k">*</span> <span class="nt">-l</span>
+
+<span class="c">### odbc.ini 위치 확인</span>
+odbcinst <span class="nt">-j</span>
+
+<span class="c">### odbc.ini 수정</span>
+<span class="o">[</span>My PostgreSQL ANSI Connection name]
+Driver     <span class="o">=</span> /usr/local/lib/psqlodbca.so
+Servername <span class="o">=</span> your_server_name &lt;network name or IP address <span class="k">for </span>the server&gt;
+Port       <span class="o">=</span> 5432 &lt;5432 <span class="o">=</span> default - a different port can be used&gt;
+Database   <span class="o">=</span> dbname &lt;<span class="k">if </span>omitted the default database will be used&gt;
+Username   <span class="o">=</span> dbusername &lt;<span class="k">if </span>omitted <span class="k">then </span>integrated security is used - needs kerberos&gt;
+Password   <span class="o">=</span> dbpassword
+
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="참조-링크">참조 링크</h3>
+
+<p><a href="https://dejavuqa.tistory.com/16">Ubuntu에 PostgreSQL 설치하기</a></p>
+
+<p><a href="https://help.interfaceware.com/v6/connect-to-postgresql-from-linux-or-mac-with-odbc">Connect to PostgreSQL from Linux with ODBC</a></p>
+:ET

@@ -1,0 +1,106 @@
+I"�-<h3 id="chart-예시">Chart 예시</h3>
+
+<p><strong>Line chart:</strong></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+</pre></td><td class="rouge-code"><pre><span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="kn">import</span> <span class="n">figure</span><span class="p">,</span> <span class="n">show</span>
+
+<span class="n">TOOLS</span><span class="o">=</span><span class="s">"hover,crosshair,wheel_zoom,zoom_in,zoom_out,box_zoom,undo,redo,reset,tap,save,box_select,poly_select"</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">x_axis_type</span><span class="o">=</span><span class="s">"datetime"</span><span class="p">,</span> <span class="n">plot_width</span><span class="o">=</span><span class="mi">1600</span><span class="p">,</span> <span class="n">plot_height</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s">"Line example"</span><span class="p">,</span> <span class="n">tools</span><span class="o">=</span><span class="n">TOOLS</span><span class="p">)</span>
+<span class="n">color_list</span> <span class="o">=</span> <span class="p">[</span><span class="s">'red'</span><span class="p">,</span> <span class="s">'green'</span><span class="p">,</span> <span class="s">'blue'</span><span class="p">,</span> <span class="s">'orange'</span><span class="p">,</span> <span class="s">'black'</span><span class="p">,</span> <span class="s">'purple'</span><span class="p">,</span> <span class="s">'pink'</span><span class="p">,</span> <span class="s">'gold'</span><span class="p">,</span> <span class="s">'yellowgreen'</span><span class="p">,</span> <span class="s">'cyan'</span><span class="p">,</span> <span class="s">'bisque'</span><span class="p">,</span> <span class="s">'brown'</span><span class="p">,</span> <span class="s">'coral'</span><span class="p">,</span> <span class="s">'crimson'</span><span class="p">,</span> <span class="s">'teal'</span><span class="p">,</span> <span class="s">'olive'</span><span class="p">]</span>
+<span class="n">p</span><span class="p">.</span><span class="n">y_range</span><span class="p">.</span><span class="n">start</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">p</span><span class="p">.</span><span class="n">y_range</span><span class="p">.</span><span class="n">end</span> <span class="o">=</span> <span class="mf">1.2</span>
+<span class="n">x_data</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="n">y_data</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="n">p</span><span class="p">.</span><span class="n">line</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">legend_label</span><span class="o">=</span><span class="s">'Line example series'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'green'</span><span class="p">)</span>
+
+<span class="n">show</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><strong>Line stacked chart:</strong></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td><td class="rouge-code"><pre><span class="kn">from</span> <span class="nn">bokeh.models</span> <span class="kn">import</span> <span class="n">ColumnDataSource</span>
+<span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="kn">import</span> <span class="n">figure</span><span class="p">,</span> <span class="n">show</span>
+
+<span class="n">source</span> <span class="o">=</span> <span class="n">ColumnDataSource</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+<span class="p">))</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">plot_width</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">plot_height</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+
+<span class="n">p</span><span class="p">.</span><span class="n">varea_stack</span><span class="p">([</span><span class="s">'y'</span><span class="p">],</span> <span class="n">x</span><span class="o">=</span><span class="s">'x'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">"red"</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">'gg'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="n">show</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="legend-click을-통한-showhide">Legend click을 통한 show/hide</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td><td class="rouge-code"><pre><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">from</span> <span class="nn">bokeh.palettes</span> <span class="kn">import</span> <span class="n">Spectral4</span>
+<span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="kn">import</span> <span class="n">figure</span><span class="p">,</span> <span class="n">show</span>
+<span class="kn">from</span> <span class="nn">bokeh.sampledata.stocks</span> <span class="kn">import</span> <span class="n">AAPL</span><span class="p">,</span> <span class="n">IBM</span><span class="p">,</span> <span class="n">MSFT</span><span class="p">,</span> <span class="n">GOOG</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">plot_width</span> <span class="o">=</span> <span class="mi">800</span><span class="p">,</span> <span class="n">plot_height</span> <span class="o">=</span> <span class="mi">250</span><span class="p">,</span> <span class="n">x_axis_type</span> <span class="o">=</span> <span class="s">"datetime"</span><span class="p">,</span> <span class="n">title</span> <span class="o">=</span> <span class="s">'Glyphs hidden by default'</span><span class="p">)</span>
+
+<span class="n">lines</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">data</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="n">AAPL</span><span class="p">,</span> <span class="n">IBM</span><span class="p">,</span> <span class="n">MSFT</span><span class="p">,</span> <span class="n">GOOG</span><span class="p">],</span> <span class="p">[</span><span class="s">"AAPL"</span><span class="p">,</span> <span class="s">"IBM"</span><span class="p">,</span> <span class="s">"MSFT"</span><span class="p">,</span> <span class="s">"GOOG"</span><span class="p">],</span> <span class="n">Spectral4</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s">'date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'date'</span><span class="p">])</span>
+    <span class="n">lines</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span><span class="p">.</span><span class="n">line</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s">'date'</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s">'close'</span><span class="p">],</span> <span class="n">line_width</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">legend</span> <span class="o">=</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">lines</span><span class="p">[</span><span class="n">name</span><span class="p">].</span><span class="n">visible</span> <span class="o">=</span> <span class="bp">True</span> <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s">"IBM"</span> <span class="k">else</span> <span class="bp">False</span>
+
+<span class="n">p</span><span class="p">.</span><span class="n">legend</span><span class="p">.</span><span class="n">location</span> <span class="o">=</span> <span class="s">"top_left"</span>
+<span class="n">p</span><span class="p">.</span><span class="n">legend</span><span class="p">.</span><span class="n">click_policy</span> <span class="o">=</span> <span class="s">"hide"</span>
+
+<span class="n">show</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="참조-링크">참조 링크</h3>
+
+<p><a href="https://docs.bokeh.org/en/latest/docs/reference.html">Bokeh Reference</a></p>
+
+<p><a href="https://stackoverflow.com/questions/55709766/python-bokeh-define-preselected-ones-in-legend-click-policy-hide-or-mute">Legend click policy hide or mute</a></p>
+:ET

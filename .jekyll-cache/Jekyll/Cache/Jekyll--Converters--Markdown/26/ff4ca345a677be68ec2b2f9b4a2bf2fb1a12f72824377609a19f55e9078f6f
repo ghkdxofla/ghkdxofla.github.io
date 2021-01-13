@@ -1,0 +1,135 @@
+I"�'<h3 id="string-비교">String 비교</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+</pre></td> --><td class="rouge-code"><pre><span class="c1">// equals 사용해야 정확한 비교가 가능</span>
+<span class="nc">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s">"hello"</span><span class="o">;</span>
+<span class="nc">String</span> <span class="n">b</span> <span class="o">=</span> <span class="s">"java"</span><span class="o">;</span>
+<span class="nc">String</span> <span class="n">c</span> <span class="o">=</span> <span class="s">"hello"</span><span class="o">;</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">b</span><span class="o">));</span> <span class="c1">// false</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">c</span><span class="o">));</span> <span class="c1">// true</span>
+
+<span class="c1">// 아래처럼 == 연산자 쓰면 잘못된 결과 도출(주소값 비교를 한다)</span>
+<span class="nc">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s">"hello"</span><span class="o">;</span>
+<span class="nc">String</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">String</span><span class="o">(</span><span class="s">"hello"</span><span class="o">);</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">b</span><span class="o">));</span> <span class="c1">// true</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span><span class="o">==</span><span class="n">b</span><span class="o">);</span> <span class="c1">// false</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="string-치환-추출">String 치환, 추출</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td> --><td class="rouge-code"><pre><span class="c1">// 치환</span>
+<span class="nc">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s">"Hello Java"</span><span class="o">;</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">"Java"</span><span class="o">,</span> <span class="s">"World"</span><span class="o">));</span>
+
+<span class="c1">// 추출</span>
+<span class="nc">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s">"Hello Java"</span><span class="o">;</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">4</span><span class="o">));</span> <span class="c1">// Hell</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="string-변환">String 변환</h3>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td> --><td class="rouge-code"><pre><span class="c1">// String to Int</span>
+<span class="nc">String</span> <span class="n">from</span> <span class="o">=</span> <span class="s">"123"</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">to</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">parseInt</span><span class="o">(</span><span class="n">from</span><span class="o">);</span>
+
+<span class="c1">// Int to String</span>
+<span class="kt">int</span> <span class="n">from</span> <span class="o">=</span> <span class="mi">123</span><span class="o">;</span>
+<span class="nc">String</span> <span class="n">to</span> <span class="o">=</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">from</span><span class="o">);</span>
+
+<span class="c1">// Uppercase</span>
+<span class="nc">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s">"Hello Java"</span><span class="o">;</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">toUpperCase</span><span class="o">());</span>
+
+<span class="c1">// reverse</span>
+<span class="nc">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s">"Hello Java"</span><span class="o">;</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">a</span><span class="o">.</span><span class="na">reverse</span><span class="o">());</span> <span class="c1">// avaJ olleH</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="stringbuffer">StringBuffer</h3>
+
+<p>String 추가, 변경 시 사용한다</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td> --><td class="rouge-code"><pre><span class="nc">StringBuffer</span> <span class="n">sb</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">StringBuffer</span><span class="o">();</span>
+<span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">"hello"</span><span class="o">);</span>
+<span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">" "</span><span class="o">);</span>
+<span class="n">sb</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">"jump to java"</span><span class="o">);</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">sb</span><span class="o">.</span><span class="na">toString</span><span class="o">());</span> <span class="c1">// 최종으로 변환하기</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>tringBuffer 자료형은 append 라는 메소드를 이용하여 계속해서 문자열을 추가해 나갈 수 있다.</p>
+
+<p>그리고 위 예제와 같이 toString() 메소드를 이용하면 String 자료형으로 변경할 수 있다.</p>
+
+<p>위 예제를 String 자료형만 가지고 표현하면 다음과 같이 작성할 수 있다.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td> --><td class="rouge-code"><pre><span class="nc">String</span> <span class="n">temp</span> <span class="o">=</span> <span class="s">""</span><span class="o">;</span>
+<span class="n">temp</span> <span class="o">+=</span> <span class="s">"hello"</span><span class="o">;</span>
+<span class="n">temp</span> <span class="o">+=</span> <span class="s">" "</span><span class="o">;</span>
+<span class="n">temp</span> <span class="o">+=</span> <span class="s">"jump to java"</span><span class="o">;</span>
+<span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">temp</span><span class="o">);</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>두 개의 예제 모두 결과는 동일하지만 내부적으로 객체가 생성되고 메모리가 사용되는 과정은 다르다.</p>
+
+<p>첫번 째 예제의 경우 StringBuffer 객체는 단 한번만 생성된다.</p>
+
+<p>두번 째 예제는 String 자료형에 + 연산이 있을 때마다 새로운 String 객체가 생성된다(문자열 간 + 연산이 있는 경우 자바는 자동으로 새로운 String 객체를 만들어 낸다).</p>
+
+<p>두번 째 예제에서는 총 4개의 String 자료형 객체가 만들어지게 된다.</p>
+
+<blockquote>
+  <p>※ String 자료형은 한번 값이 생성되면 그 값을 변경할 수가 없다.</p>
+
+  <p>이렇게 값을 변경할 수 없는 것을 immutable 하다고 한다.</p>
+
+  <p>trim, toUpperCase 등의 메소드를 보면 문자열이 변경되는 것 처럼 생각 될 수도 있겠지만</p>
+
+  <p>해당 메소드 수행 시 또 다른 String 객체를 생성하여 리턴할 뿐이다.</p>
+
+  <p>StringBuffer 는 이와 반대로 값을 변경할 수 있다(mutable 하다).</p>
+
+  <p>즉 한번 생성된 값을 언제든지 수정할 수 있다.</p>
+</blockquote>
+
+<h3 id="참조-링크">참조 링크</h3>
+<p><a href="https://wikidocs.net/book/31">점프 투 자바</a></p>
+:ET

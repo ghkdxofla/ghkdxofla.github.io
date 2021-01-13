@@ -1,0 +1,193 @@
+I"P!<h3 id="mongo-db란">Mongo DB란?</h3>
+<p>간단한 정의</p>
+<ul>
+  <li>NoSQL 데이터베이스로, 기존 RDBMS의 SQL을 사용하는 방식이 아님</li>
+  <li>테이블 간 관계가 RDBMS와 다르며, ACID 방식으로 작동하지 않음</li>
+</ul>
+
+<h3 id="local-환경의-mount된-disk를-활용한-sharding-구축">Local 환경의 mount된 disk를 활용한 sharding 구축</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+</pre></td><td class="rouge-code"><pre><span class="c">### 구성은 2개의 샤드 서버, 2개의 config 서버(1개는 replica)</span>
+<span class="c">### </span>
+
+<span class="c">### Shard server</span>
+mongod <span class="nt">--shardsvr</span> <span class="nt">--dbpath</span> <span class="o">{</span>path<span class="o">}</span> <span class="nt">--port</span> 30001
+mongod <span class="nt">--shardsvr</span> <span class="nt">--dbpath</span> <span class="o">{</span>path<span class="o">}</span> <span class="nt">--port</span> 30002
+
+<span class="c">### Config server</span>
+mongod <span class="nt">--configsvr</span> <span class="nt">--replSet</span> <span class="o">{</span>replica name<span class="o">}</span> <span class="nt">--dbpath</span> <span class="o">{</span>path/config<span class="o">}</span> <span class="nt">--port</span> 50001
+mongod <span class="nt">--configsvr</span> <span class="nt">--replSet</span> <span class="o">{</span>replica name<span class="o">}</span> <span class="nt">--dbpath</span> <span class="o">{</span>path/config<span class="o">}</span> <span class="nt">--port</span> 50002
+
+<span class="c">### Init mongos</span>
+mongos <span class="nt">--configdb</span> <span class="o">{</span>replica name<span class="o">}</span>/localhost:50001,localhost:50002 <span class="nt">--port</span> 27017
+
+<span class="c">### Add sharding server</span>
+<span class="c">### mongos 접속 후 입력</span>
+mongos&gt; sh.addShard<span class="o">(</span><span class="s2">"localhost:30001"</span><span class="o">)</span><span class="p">;</span>
+mongos&gt; sh.addShard<span class="o">(</span><span class="s2">"localhost:30002"</span><span class="o">)</span><span class="p">;</span>
+mongos&gt; sh.addShard<span class="o">(</span><span class="s2">"localhost:30003"</span><span class="o">)</span><span class="p">;</span>
+
+<span class="c">### Check sharding server's status</span>
+mongos&gt; sh.status<span class="o">()</span>
+
+<span class="c">### Enable database and collection at sharding server</span>
+mongos&gt; sh.enableSharding<span class="o">(</span><span class="s2">"{database}"</span><span class="o">)</span>
+mongos&gt; sh.shardCollection<span class="o">(</span><span class="s2">"{database}.{collection}"</span>, <span class="o">{</span>_id: <span class="s2">"hashed"</span><span class="o">})</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="mongodb-service가-system-boot-시-자동으로-시작하도록-변경">MongoDB Service가 system boot 시 자동으로 시작하도록 변경</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+</pre></td><td class="rouge-code"><pre>systemctl <span class="nb">enable </span>mongod.service
+<span class="c">### or</span>
+systemctl <span class="nb">enable </span>mongodb.service
+
+<span class="c">### 위의 두 개가 안될 경우</span>
+<span class="nb">sudo </span>vi /etc/systemd/system/mongodb.service
+
+<span class="c">### Edit service file</span>
+<span class="o">[</span>Unit]
+<span class="nv">Description</span><span class="o">=</span>MongoDB Database Service
+<span class="nv">Wants</span><span class="o">=</span>network.target
+<span class="nv">After</span><span class="o">=</span>network.target
+
+<span class="o">[</span>Service]
+<span class="nv">ExecStart</span><span class="o">=</span>/usr/bin/mongod <span class="nt">--config</span> /etc/mongod.conf
+<span class="nv">ExecReload</span><span class="o">=</span>/bin/kill <span class="nt">-HUP</span> <span class="nv">$MAINPID</span>
+<span class="nv">Restart</span><span class="o">=</span>always
+<span class="nv">User</span><span class="o">=</span>mongodb
+<span class="nv">Group</span><span class="o">=</span>mongodb
+<span class="nv">StandardOutput</span><span class="o">=</span>syslog
+<span class="nv">StandardError</span><span class="o">=</span>syslog
+
+<span class="c">### Restart mongod</span>
+<span class="nb">sudo </span>service mongod start|stop|restart
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="db-path-변경">DB path 변경</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+</pre></td><td class="rouge-code"><pre><span class="c">### Stop mongoDB</span>
+Sudo service mongod stop
+
+<span class="c">### Copy all data to new disk with permission</span>
+Sudo <span class="nb">cp</span> <span class="nt">-Rp</span> mongodb /new/disk/mongodb/
+
+<span class="c">### Add owner to new disk</span>
+Sudo <span class="nb">chown </span>mongodb:mongodb /new/disk/mongodb/
+
+<span class="c">### Edit config file</span>
+<span class="nb">sudo </span>vi /etc/mongod.conf
+<span class="nt">---</span>
+<span class="c">### 아래 부분 수정</span>
+dbpath: /new/disk/mongodb
+<span class="nt">---</span>
+
+<span class="c">### Restart mongoDB</span>
+Sudo service mongod start
+
+<span class="c">### 기동이 안될 경우</span>
+<span class="c">### 1. acl이 설정되어 있는지 확인(권한 체크)</span>
+<span class="c">### 2. rm /new/disk/mongodb/mongod.lock 해보기</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="mongodb-client-명령어">MongoDB client 명령어</h3>
+<p>Query 구조는 기본적으로 Javascript 문법을 따른다</p>
+
+<div class="language-javascript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+</pre></td><td class="rouge-code"><pre><span class="c1">// 특정 Collection 검색 및 삭제(정규식 사용)</span>
+<span class="nx">regExp</span> <span class="o">=</span> <span class="sr">/test/</span><span class="p">;</span>
+<span class="nx">db</span><span class="p">.</span><span class="nx">getCollectionNames</span><span class="p">().</span><span class="nx">filter</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">){</span>
+  <span class="k">return</span> <span class="nx">name</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="nx">regExp</span><span class="p">)</span>
+<span class="p">}).</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">){</span>
+  <span class="nx">db</span><span class="p">.</span><span class="nx">getCollection</span><span class="p">(</span><span class="nx">name</span><span class="p">).</span><span class="nx">drop</span><span class="p">()</span>
+<span class="p">});</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="참조-링크">참조 링크</h3>
+
+<p><a href="https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-debian-9">How to install mongodb on debian 9 - 1</a></p>
+
+<p><a href="https://linuxize.com/post/how-to-install-mongodb-on-debian-9/">How to install mongodb on debian 9 - 2</a></p>
+
+<p><a href="https://sudarlife.tistory.com/entry/mongodb-Sharding-%EB%AA%BD%EA%B3%A0%EB%94%94%EB%B9%84-%EC%83%A4%EB%94%A9-%EC%A0%81%EC%9A%A9%ED%95%98%EA%B8%B0-config-sever-replica-set">MongoDB 샤딩 적용하기</a></p>
+
+<p><a href="https://docs.mongodb.com/manual/reference/method/js-sharding/">Sharding methods</a></p>
+
+<p><a href="http://jewonagency.com/ubuntu-%EC%9A%B0%EB%B6%84%ED%88%AC%EC%97%90%EC%84%9C-mongodb-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%9C%84%EC%B9%98-directory-%EB%B3%80%EA%B2%BD%ED%95%98%EA%B8%B0/">데이터 위치 변경하기</a></p>
+
+<p><a href="https://velopert.com/457">Database/Collection/Document 생성 및 제거</a></p>
+:ET

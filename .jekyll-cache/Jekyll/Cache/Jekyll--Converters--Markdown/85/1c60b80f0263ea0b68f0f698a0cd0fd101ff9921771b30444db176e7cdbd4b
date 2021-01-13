@@ -1,0 +1,129 @@
+I"<h3 id="nodejs">node.js</h3>
+
+<p>특징</p>
+<ul>
+  <li>javascript 기반(V8 엔진) 런타임</li>
+  <li>Event 기반</li>
+  <li>Non-blocking I/O 모델(libuv)</li>
+  <li>npm을 통한 라이브러리 제공</li>
+  <li>Single thread 기반</li>
+</ul>
+
+<p>Event 기반?</p>
+<ul>
+  <li>Event listener에 callback 함수를 등록해 놓음</li>
+  <li>Event 발생 시 callback 함수가 호출됨</li>
+  <li>여러 event가 동시 발생 시, event loop가 순서 판단</li>
+</ul>
+
+<p>event loop?</p>
+<ul>
+  <li>event 발생 시 호출할 callback 함수들을 관리</li>
+  <li>호출된 callback 함수의 실행 순서를 결정</li>
+  <li>Node.js가 종료될 때 까지 실행됨</li>
+</ul>
+
+<p>Task queue?</p>
+<ul>
+  <li>callback 함수들이 대기중인 공간</li>
+  <li>callback queue</li>
+</ul>
+
+<p>Background?</p>
+<ul>
+  <li>타이머, I/O 작업 callback, event listener가 대기하는 공간</li>
+</ul>
+
+<p>Non-blocking I/O?</p>
+<ul>
+  <li>비동기가 이와 유사함</li>
+  <li>함수를 background로 보내는 것</li>
+  <li>Background —&gt; Task queue –[이 때, 다른 함수들은 동작]-&gt; Call stack</li>
+  <li>setTimeout(function, 0)을 통해 코드를 Non-blocking화 가능
+0초로 두긴 했으나, browser 4ms, Node.js 1ms의 지연 시간 존재함</li>
+</ul>
+
+<h3 id="pm2">pm2</h3>
+
+<p>설치</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>npm <span class="nb">install </span>pm2 <span class="nt">-g</span>
+pm2 version
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>Node.js Server를 pm2로 실행</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="c">### 다음과 같이 할 경우, example이란 이름으로 app이 실행된다</span>
+pm2 start app.js <span class="nt">--name</span> <span class="s2">"example"</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>정지</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>pm2 stop &lt;<span class="nb">id</span>|name&gt;
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>목록 보기</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="c">### 전체 리스트 보기</span>
+pm2 list
+<span class="c">### 상세 내역 확인</span>
+pm2 show &lt;<span class="nb">id</span>|name&gt;
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>재부팅</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>pm2 restart &lt;<span class="nb">id</span>|name&gt;
+<span class="c">### 전체 재부팅</span>
+pm2 restart all
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>로그 확인</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>pm2 logs &lt;<span class="nb">id</span>|name&gt;
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>모니터링</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>pm2 monit
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>python app 실행하기</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>pm2 start <span class="o">{</span>app_file_name<span class="o">}</span> <span class="nt">--interpreter</span><span class="o">=</span>python
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>재부팅 했을 때, list가 저장이 안됐을 경우</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>pm2 update
+pm2 dump
+pm2 save
+pm2 resurrect
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="npm">npm</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="c">### prefix 붙여서 npm 실행(child directory 내 npm 실행 시)</span>
+npm start <span class="nt">--prefix</span> path/to/your/app
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="socketio">Socket.io?</h3>
+
+<p>내용 추가</p>
+
+<h3 id="참조-링크">참조 링크</h3>
+
+<p><a href="https://blog.outsider.ne.kr/1197">PM2로 프로세스 관리</a></p>
+
+<p><a href="https://poiemaweb.com/nodejs-socketio">Socket.io</a></p>
+:ET

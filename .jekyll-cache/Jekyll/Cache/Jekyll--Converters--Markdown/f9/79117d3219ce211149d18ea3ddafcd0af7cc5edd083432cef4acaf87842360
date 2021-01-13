@@ -1,0 +1,227 @@
+I"i"<h3 id="select-count를-빠르게-하는-방법">SELECT COUNT(*)를 빠르게 하는 방법</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><center>Index</center></th>
+      <th style="text-align: center"><center>Query</center></th>
+      <th style="text-align: center"><center>Comment</center></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">SELECT COUNT(*) FROM Transactions</td>
+      <td style="text-align: center">Performs a full table scan. Slow on large tables.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">SELECT CONVERT(bigint, rows) FROM sysindexes WHERE id = OBJECT_ID(‘Transactions’) AND indid &lt; 2</td>
+      <td style="text-align: center">Fast way to retrieve row count. Depends on statistics and is inaccurate. Run DBCC UPDATEUSAGE(Database) WITH COUNT_ROWS, which can take significant time for large tables.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">SELECT CAST(p.rows AS float) FROM sys.tables AS tbl INNER JOIN sys.indexes AS idx ON idx.object_id = tbl.object_id and idx.index_id &lt; 2 INNER JOIN sys.partitions AS p ON p.object_id=CAST(tbl.object_id AS int) AND p.index_id=idx.index_id WHERE ((tbl.name=N’Transactions’ AND SCHEMA_NAME(tbl.schema_id)=’dbo’))</td>
+      <td style="text-align: center">The way the SQL management studio counts rows (look at table properties, storage, row count). Very fast, but still an approximate number of rows.</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">4</td>
+      <td style="text-align: center">SELECT SUM (row_count) FROM sys.dm_db_partition_stats WHERE object_id=OBJECT_ID(‘Transactions’) AND (index_id=0 or index_id=1);</td>
+      <td style="text-align: center">Quick (although not as fast as method 2) operation and equally important, reliable.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="join의-종류와-사용법">JOIN의 종류와 사용법</h3>
+<p>두 개 이상의 테이블이나 데이터베이스를 연결하여 데이터를 검색하는 방법
+INNER JOIN</p>
+<ul>
+  <li>교집합</li>
+  <li>기준 테이블과 JOIN한 테이블의 중복된 값</li>
+  <li>결과값은 A의 테이블과 B 테이블이 모두 가지고 있는 데이터만 검색</li>
+  <li>(  A  ( R )  B  )
+```sql
+–문법–
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 기준테이블 별칭
+INNER JOIN 조인테이블 별칭 ON 기준테이블별칭.기준키 = 조인테이블별칭.기준키….</li>
+</ul>
+
+<p>–예제–
+SELECT
+A.NAME, –A테이블의 NAME조회
+B.AGE –B테이블의 AGE조회
+FROM EX_TABLE A
+INNER JOIN JOIN_TABLE B ON A.NO_EMP = B.NO_EMP AND A.DEPT = B.DEPT</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td> --><td class="rouge-code"><pre>LEFT OUTER JOIN
+- 기준 테이블의 값 + 테이블과 기준 테이블의 중복된 값
+- (  A R  ( R )  B  )
+```sql
+--문법--
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 기준테이블 별칭
+LEFT OUTER JOIN 조인테이블 별칭 ON 기준테이블별칭.기준키 = 조인테이블별칭.기준키 .....
+
+--예제--
+SELECT
+A.NAME, --A테이블의 NAME조회
+B.AGE --B테이블의 AGE조회
+FROM EX_TABLE A
+LEFT OUTER JOIN JOIN_TABLE B ON A.NO_EMP = B.NO_EMP AND A.DEPT = B.DEPT
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>RIGHT OUTER JOIN</p>
+<ul>
+  <li>(  A  ( R )  B R  )
+```sql
+–문법–
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 기준테이블 별칭
+RIGHT OUTER JOIN 조인테이블 별칭 ON 기준테이블별칭.기준키 = 조인테이블별칭.기준키 …..</li>
+</ul>
+
+<p>–예제–
+SELECT
+A.NAME, –A테이블의 NAME조회
+B.AGE –B테이블의 AGE조회
+FROM EX_TABLE A
+RIGHT OUTER JOIN JOIN_TABLE B ON A.NO_EMP = B.NO_EMP AND A.DEPT = B.DEPT</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+</pre></td> --><td class="rouge-code"><pre>FULL OUTER JOIN
+- (  A R  ( R )  B R  )
+```sql
+--문법--
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 기준테이블 별칭
+FULL OUTER JOIN 조인테이블 별칭 ON 기준테이블별칭.기준키 = 조인테이블별칭.기준키 .....
+
+--예제--
+SELECT
+A.NAME, --A테이블의 NAME조회
+B.AGE --B테이블의 AGE조회
+FROM EX_TABLE A
+FULL OUTER JOIN JOIN_TABLE B ON A.NO_EMP = B.NO_EMP AND A.DEPT = B.DEPT
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>CROSS JOIN</p>
+<ul>
+  <li>A의 데이터 * B의 데이터
+```sql
+–문법(첫번째방식)–
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 기준테이블 별칭
+CROSS JOIN 조인테이블 별칭</li>
+</ul>
+
+<p>–예제(첫번째방식)–
+SELECT
+A.NAME, –A테이블의 NAME조회
+B.AGE –B테이블의 AGE조회
+FROM EX_TABLE A
+CROSS JOIN JOIN_TABLE B</p>
+
+<p>=====================================================================================</p>
+
+<p>–문법(두번째방식)–
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 기준테이블 별칭,조인테이블 별칭</p>
+
+<p>–예제(두번째방식)–
+SELECT
+A.NAME, –A테이블의 NAME조회
+B.AGE –B테이블의 AGE조회
+FROM EX_TABLE A,JOIN_TABLE B</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td> --><td class="rouge-code"><pre>SELF JOIN
+```sql
+--문법--
+SELECT
+테이블별칭.조회할칼럼,
+테이블별칭.조회할칼럼
+FROM 테이블 별칭,테이블 별칭2
+
+--예제--
+SELECT
+A.NAME, --A테이블의 NAME조회
+B.AGE --B테이블의 AGE조회
+FROM EX_TABLE A,EX_TABLE B
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="pyodbc에서-stored-procedure가-제대로-실행-또는-반영이-안될-경우">pyodbc에서 Stored Procedure가 제대로 실행 또는 반영이 안될 경우</h3>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><!-- <td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td> --><td class="rouge-code"><pre><span class="k">with</span> <span class="n">engine</span><span class="p">.</span><span class="k">connect</span><span class="p">()</span> <span class="k">as</span> <span class="n">con</span><span class="p">:</span>
+    <span class="o">###</span> <span class="err">아래의</span> <span class="err">설정을</span> <span class="err">추가</span>
+    <span class="n">con</span><span class="p">.</span><span class="n">execution_options</span><span class="p">(</span><span class="n">autocommit</span><span class="o">=</span><span class="k">True</span><span class="p">,</span> <span class="n">isolation_level</span><span class="o">=</span><span class="s1">'READ UNCOMMITTED'</span><span class="p">)</span>
+    <span class="o">###</span> <span class="k">SET</span> <span class="n">NOCOUNT</span> <span class="k">ON</span><span class="err">을</span> <span class="err">선으로</span> <span class="err">실행</span>
+    <span class="o">###</span> <span class="err">추가적으로</span> <span class="o">@</span><span class="n">muted</span> <span class="o">=</span> <span class="mi">1</span><span class="err">을</span> <span class="err">넣는지</span> <span class="err">여부는</span> <span class="err">분석</span> <span class="err">중</span>
+    <span class="n">con</span><span class="p">.</span><span class="k">execute</span><span class="p">(</span><span class="s1">'SET NOCOUNT ON; {your procedure code here} @param_1 = '</span><span class="k">variable</span><span class="s1">')
+</span></pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="참조-링크">참조 링크</h3>
+<p><a href="https://paulus78.tistory.com/entry/select-count-를-빠르게-하는-방법">select count(*) 를 빠르게 하는 방법</a></p>
+
+<p><a href="https://roqkffhwk.tistory.com/146">페이징 쿼리</a></p>
+
+<p><a href="https://docs.sqlalchemy.org/en/13/core/connections.html">sqlalchemy - Stored Procedure</a></p>
+
+<p><a href="https://stackoverflow.com/questions/24458430/make-python-wait-for-stored-procedure-to-finish-executing">sqlalchemy - SET NOCOUNT ON</a></p>
+:ET

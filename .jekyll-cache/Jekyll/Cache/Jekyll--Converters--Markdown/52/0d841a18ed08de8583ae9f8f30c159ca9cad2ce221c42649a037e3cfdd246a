@@ -1,0 +1,131 @@
+I"<h3 id="최초-접속-경로-변경법">최초 접속 경로 변경법</h3>
+
+<p>다음의 Command 입력</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="o">(</span>base<span class="o">)</span> C:<span class="se">\U</span>sers<span class="se">\U</span>ser&gt;<span class="p">;</span>jupyter notebook <span class="nt">--generate-config</span>
+Writing default config to: C:<span class="se">\U</span>sers<span class="se">\U</span>ser<span class="se">\.</span>jupyter<span class="se">\j</span>upyter_notebook_config.py
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>위의 결과로, jupyter_notebook_config.py 수정하면 된다</p>
+
+<p>아래의 설정 코드를 입력</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="c">#### The directory to use for notebooks and kernels.</span>
+c.NotebookApp.notebook_dir <span class="o">=</span> <span class="s1">'D:\Python_Project'</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="화면-width-조정">화면 width 조정</h3>
+
+<p>custom.css 직접 수정</p>
+<div class="language-css highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="c">/* 아래 경로 중 한 곳에 custom.css로 파일 생성 후 저장 */</span>
+<span class="c">/* ~/.ipython/profile_default/static/custom/custom.css (IPython) */</span>
+<span class="c">/* ~/.jupyter/custom/custom.css (Jupyter) */</span>
+<span class="nc">.container</span> <span class="p">{</span> <span class="nl">width</span><span class="p">:</span><span class="m">100%</span> <span class="cp">!important</span><span class="p">;</span> <span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>실행 cell에서 수정</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="kn">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">HTML</span>
+<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="s">"&lt;style&gt;.container { width:100% !important; }&lt;/style&gt;"</span><span class="p">))</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="server-설정">Server 설정</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+</pre></td><td class="rouge-code"><pre><span class="c">### Secure notebook server</span>
+jupyter notebook <span class="nt">--generate-config</span>
+
+<span class="c">### Prepare hashed password</span>
+<span class="c">### In IPython mode</span>
+In <span class="o">[</span>1]: from notebook.auth import passwd 
+In <span class="o">[</span>2]: passwd<span class="o">()</span> Enter password: Verify password: 
+Out[2]: <span class="s1">'sha1:f24baff49ac5:863dd2ae747212ede58125302d227f0ca7b12bb3'</span>
+
+<span class="c">### Create OpenSSL certification</span>
+openssl req <span class="nt">-x509</span> <span class="nt">-nodes</span> <span class="nt">-days</span> 365 <span class="nt">-newkey</span> rsa:1024 <span class="nt">-keyout</span> mycert.pem <span class="nt">-out</span> mycert.pem
+
+<span class="c">### Modify configure file</span>
+vi /root/.jupyter/jupyter_notebook_config.py
+<span class="c">### In vi editor</span>
+c.NotebookApp.password <span class="o">=</span> u<span class="s1">'sha1:f24baff....'</span> 
+c.NotebookApp.certfile <span class="o">=</span> u<span class="s1">'/home/사용자/mycert.pem'</span>
+c.NotebookApp.open_browser <span class="o">=</span> False
+c.NotebookApp.notebook_dir <span class="o">=</span> u<span class="s1">'/home/사용자/자료폴더/'</span>
+c.NotebookApp.ip <span class="o">=</span> <span class="s1">'*'</span>
+c.NotebookApp.port_retries <span class="o">=</span> 8888
+
+<span class="c">### Make service for initializing after boot</span>
+<span class="nb">sudo </span>vi /etc/systemd/system/jupyter.service
+<span class="c">### In vi editor</span>
+<span class="o">[</span>Unit] <span class="nv">Description</span><span class="o">=</span>Jupyter Notebook Server
+
+<span class="o">[</span>Service]
+<span class="nv">Type</span><span class="o">=</span>simple
+<span class="nv">PIDFile</span><span class="o">=</span>/run/jupyter.pid
+<span class="nv">User</span><span class="o">=</span>&lt;username&gt;
+<span class="nv">ExecStart</span><span class="o">=</span>/home/&lt;username&gt;/.local/bin/jupyter-notebook
+<span class="nv">WorkingDirectory</span><span class="o">=</span>/your/working/dir
+
+<span class="o">[</span>Install]WantedBy<span class="o">=</span>multi-user.target
+
+<span class="c">### Enable service</span>
+systemctl daemon-reload
+systemctl <span class="nb">enable </span>jupyter.service
+systemctl start jupyter.service
+</pre></td></tr></tbody></table></code></pre></div></div>
+<h3 id="asyncio-사용-시-발생하는-문제-해결법only-in-jupyter-notebook">Asyncio 사용 시 발생하는 문제 해결법(Only in jupyter notebook)</h3>
+<p>https://markhneedham.com/blog/2019/05/10/jupyter-runtimeerror-this-event-loop-is-already-running/</p>
+
+<h3 id="참조-링크">참조 링크</h3>
+
+<p><a href="https://yongbeomkim.github.io/jupyter-server/">Jupyter notebook server 설정 방법-1</a></p>
+
+<p><a href="https://goodtogreate.tistory.com/entry/IPython-Notebook-%EC%84%A4%EC%B9%98%EB%B0%A9%EB%B2%95">Jupyter notebook server 설정 방법-2</a></p>
+
+<p><a href="https://medium.com/@GuruAtWork/jupyter-notebook-adding-certificates-for-ease-of-use-447f476b9112">Jupyter notebook server 설정 방법-3</a></p>
+:ET

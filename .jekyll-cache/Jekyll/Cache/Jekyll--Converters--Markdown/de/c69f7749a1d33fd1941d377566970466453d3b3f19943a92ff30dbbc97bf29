@@ -1,0 +1,6 @@
+I"�<h3 id="파일-크기-확인하는-법">파일 크기 확인하는 법</h3>
+<p>```python</p>
+<h3 id="simple-way">Simple way</h3>
+<p>import os
+b = os.path.getsize(“/path/aaa.txt”)</p>
+:ET
