@@ -1,6 +1,0 @@
-I"<h3 id="ntfs-diskwindows용-format를-mount하여-사용하기">NTFS disk(Windows용 format)를 mount하여 사용하기</h3>
-<p>```bash</p>
-<h3 id="install-package-ntfs-3g">Install package: ntfs-3g</h3>
-<p>sudo apt-get update
-sudo apt-get install ntfs-3g</p>
-:ET
