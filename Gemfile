@@ -1,5 +1,5 @@
 source "https://rubygems.org"
-gem `github-pages`
+gem "github-pages"
 
 gem "jekyll", ">= 4.1.0", "< 5.0"
 
