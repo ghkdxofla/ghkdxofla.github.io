@@ -32,7 +32,7 @@ order: 4
 >
 > `19-01 ~ 21-06` LG전자 BS본부 Cloud 및 Web Application 개발
 >
-> `21-06 ~ 현재` 차이(아임포트) Back-end Microservice 개발
+> `21-06 ~ 현재` 차이(아임포트) Back-end Microservice **(gRPC, Kotlin, Spring, PHP)** 개발
 
 ---
 
