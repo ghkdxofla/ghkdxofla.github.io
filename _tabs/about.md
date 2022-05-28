@@ -30,8 +30,9 @@ order: 4
 >
 > `19-06 ~ 19-12` ES informatics 금융 관련 정보 제공 서비스 Back-end **(Django, MongoDB, SQL Server)**, Front-end **(Vue.js)** 개발
 >
-> `19-01 ~ 현재` LG전자 BS본부 Cloud 및 Web Application 개발
+> `19-01 ~ 21-06` LG전자 BS본부 Cloud 및 Web Application 개발
 >
+> `21-06 ~ 현재` 차이(아임포트) Back-end Microservice 개발
 
 ---
 
@@ -52,9 +53,9 @@ order: 4
 ---
 
 # Tech
-> **Python**, **Typescript**, **HTML5**, **CSS**, **Java**, **C**, **C++**
+> **Kotlin**, **Python**, **Typescript**, **HTML5**, **CSS**, **Java**, **C**, **C++**
 >
-> **Django**, **Flask**, **Node.js**, **Vue.js**, **React**
+> **Spring**, **Django**, **Flask**, **Node.js**, **Vue.js**, **React**
 >
 > **SQL Server**, **MongoDB**, **PostgresQL**, **MySQL**
 >
