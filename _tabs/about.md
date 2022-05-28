@@ -60,7 +60,7 @@ order: 4
 > [신규 Microservice 개발]
 > - 기존 PHP 기반의 Legacy Service에 대한 리펙토링
 > - Kotlin Spring 및 gRPC를 사용한 Microservice 개발
->   - PG사 연동 서비스, Credential 관리 서비스 개발
+>   - PG사 연동 서비스, Credential 관리 서비스 설계 및 개발
 > ```
 
 ---
