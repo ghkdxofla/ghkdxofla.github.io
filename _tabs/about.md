@@ -10,6 +10,9 @@ order: 4
 # MIT License
 ---
 
+# Resume
+[taelim_hwang_software_engineer](/assets/media/taelim_hwang_software_engineer.pdf)
+---
 
 # Education
 > `11-03 ~ 19-02` 고려대학교 생명공학부
