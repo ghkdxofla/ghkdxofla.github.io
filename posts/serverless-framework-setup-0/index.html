@@ -1,0 +1,163 @@
+<!DOCTYPE html><html lang="en" mode="dark" ><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><meta name="theme" content="Chirpy v2.7.2"><meta name="generator" content="Jekyll v4.2.0" /><meta property="og:title" content="Serverless framework를 활용한 서비스 개발 (0)" /><meta name="author" content="Taelim Hwang" /><meta property="og:locale" content="en_US" /><meta name="description" content="설명" /><meta property="og:description" content="설명" /><link rel="canonical" href="https://ghkdxofla.github.io/posts/serverless-framework-setup-0/" /><meta property="og:url" content="https://ghkdxofla.github.io/posts/serverless-framework-setup-0/" /><meta property="og:site_name" content="Taelim’s blog" /><meta property="og:type" content="article" /><meta property="article:published_time" content="2021-03-31T00:00:00+09:00" /><meta name="twitter:card" content="summary" /><meta property="twitter:title" content="Serverless framework를 활용한 서비스 개발 (0)" /><meta name="twitter:site" content="@ghkdxofla" /><meta name="twitter:creator" content="@Taelim Hwang" /><meta name="google-site-verification" content="taelim" /> <script type="application/ld+json"> {"headline":"Serverless framework를 활용한 서비스 개발 (0)","dateModified":"2021-04-01T09:49:42+09:00","datePublished":"2021-03-31T00:00:00+09:00","description":"설명","mainEntityOfPage":{"@type":"WebPage","@id":"https://ghkdxofla.github.io/posts/serverless-framework-setup-0/"},"url":"https://ghkdxofla.github.io/posts/serverless-framework-setup-0/","@type":"BlogPosting","author":{"@type":"Person","name":"Taelim Hwang"},"@context":"https://schema.org"}</script><title>Serverless framework를 활용한 서비스 개발 (0) | Taelim's blog</title><link rel="shortcut icon" href="/assets/img/favicons/favicon.ico" type="image/x-icon"><link rel="icon" href="/assets/img/favicons/favicon.ico" type="image/x-icon"><link rel="apple-touch-icon" href="/assets/img/favicons/apple-icon.png"><link rel="apple-touch-icon" href="/assets/img/favicons/apple-icon-precomposed.png"><link rel="apple-touch-icon" sizes="57x57" href="/assets/img/favicons/apple-icon-57x57.png"><link rel="apple-touch-icon" sizes="60x60" href="/assets/img/favicons/apple-icon-60x60.png"><link rel="apple-touch-icon" sizes="72x72" href="/assets/img/favicons/apple-icon-72x72.png"><link rel="apple-touch-icon" sizes="76x76" href="/assets/img/favicons/apple-icon-76x76.png"><link rel="apple-touch-icon" sizes="114x114" href="/assets/img/favicons/apple-icon-114x114.png"><link rel="apple-touch-icon" sizes="120x120" href="/assets/img/favicons/apple-icon-120x120.png"><link rel="apple-touch-icon" sizes="144x144" href="/assets/img/favicons/apple-icon-144x144.png"><link rel="apple-touch-icon" sizes="152x152" href="/assets/img/favicons/apple-icon-152x152.png"><link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-icon-180x180.png"><link rel="icon" type="image/png" sizes="192x192" href="/assets/img/favicons/android-icon-192x192.png"><link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/assets/img/favicons/favicon-96x96.png"><link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png"><link rel="manifest" href="/assets/img/favicons/manifest.json"><meta name='msapplication-config' content='/assets/img/favicons/browserconfig.xml'><meta name="msapplication-TileColor" content="#ffffff"><meta name="msapplication-TileImage" content="/assets/img/favicons/ms-icon-144x144.png"><meta name="theme-color" content="#ffffff"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://fonts.gstatic.com"><link rel="preconnect" href="https://www.google-analytics.com" crossorigin="use-credentials"><link rel="dns-prefetch" href="https://www.google-analytics.com"><link rel="preconnect" href="https://www.googletagmanager.com" crossorigin="anonymous"><link rel="dns-prefetch" href="https://www.googletagmanager.com"><link rel="preconnect" href="cdn.jsdelivr.net"><link rel="dns-prefetch" href="cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha256-LA89z+k9fjgMKQ/kq4OO2Mrf8VltYml/VES+Rg0fh20=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.11.2/css/all.min.css" integrity="sha256-+N4/V/SbAFiW1MPBCXnfnP9QSN3+Keu+NlB+0ev/YKQ=" crossorigin="anonymous"><link rel="preload" href="/assets/css/post.css" as="style"><link rel="stylesheet" href="/assets/css/post.css"><link rel="preload" as="style" href="/assets/css/lib/bootstrap-toc.min.css"><link rel="stylesheet" href="/assets/css/lib/bootstrap-toc.min.css" /> <script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script> <script defer src="https://cdn.jsdelivr.net/combine/npm/popper.js@1.15.0,npm/bootstrap@4/dist/js/bootstrap.min.js"></script> <script async src="/assets/js/post.min.js"></script> <script defer src="/app.js"></script> <script defer src="https://www.googletagmanager.com/gtag/js?id="></script> <script> document.addEventListener("DOMContentLoaded", function(event) { window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', ''); }); </script><body data-spy="scroll" data-target="#toc"><div id="sidebar" class="d-flex flex-column align-items-end"><div class="profile-wrapper text-center"><div id="avatar"> <a href="/" alt="avatar" class="mx-auto"> <img src="http://www.gravatar.com/avatar/71f7d3fe60f25347506c60bc7f631e7d?s=150" alt="avatar" onerror="this.style.display='none'"> </a></div><div class="site-title mt-3"> <a href="/">Taelim's blog</a></div><div class="site-subtitle font-italic">Normal life</div></div><ul class="w-100"><li class="nav-item"> <a href="/" class="nav-link"> <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i> <span>HOME</span> </a><li class="nav-item"> <a href="/tabs/categories/" class="nav-link"> <i class="fa-fw fas fa-stream ml-xl-3 mr-xl-3 unloaded"></i> <span>CATEGORIES</span> </a><li class="nav-item"> <a href="/tabs/tags/" class="nav-link"> <i class="fa-fw fas fa-tags ml-xl-3 mr-xl-3 unloaded"></i> <span>TAGS</span> </a><li class="nav-item"> <a href="/tabs/archives/" class="nav-link"> <i class="fa-fw fas fa-archive ml-xl-3 mr-xl-3 unloaded"></i> <span>ARCHIVES</span> </a><li class="nav-item"> <a href="/tabs/about/" class="nav-link"> <i class="fa-fw fas fa-info ml-xl-3 mr-xl-3 unloaded"></i> <span>ABOUT</span> </a></ul><div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center"> <a href="https://github.com/ghkdxofla" aria-label="github" target="_blank" rel="noopener"> <i class="fab fa-github-alt"></i> </a> <a href="https://twitter.com/ghkdxofla" aria-label="twitter" target="_blank" rel="noopener"> <i class="fab fa-twitter"></i> </a> <a href=" javascript:location.href = 'mailto:' + ['ghkdxofla','gmail.com'].join('@')" aria-label="email" > <i class="fas fa-envelope"></i> </a> <a href="/feed.xml" aria-label="rss" > <i class="fas fa-rss"></i> </a></div></div><div id="topbar-wrapper" class="row justify-content-center topbar-down"><div id="topbar" class="col-11 d-flex h-100 align-items-center justify-content-between"> <span id="breadcrumb"> <span> <a href="/"> Posts </a> </span> <span>Serverless framework를 활용한 서비스 개발 (0)</span> </span> <i id="sidebar-trigger" class="fas fa-bars fa-fw"></i><div id="topbar-title"> Post</div><i id="search-trigger" class="fas fa-search fa-fw"></i> <span id="search-wrapper" class="align-items-center"> <i class="fas fa-search fa-fw"></i> <input class="form-control" id="search-input" type="search" aria-label="search" placeholder="Search..."> <i class="fa fa-times-circle fa-fw" id="search-cleaner"></i> </span> <span id="search-cancel" >Cancel</span></div></div><div id="main-wrapper"><div id="main"><div class="row"><div id="post-wrapper" class="col-12 col-lg-11 col-xl-8"><div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><h1 data-toc-skip>Serverless framework를 활용한 서비스 개발 (0)</h1><div class="post-meta text-muted d-flex flex-column"><div> <span class="timeago " data-toggle="tooltip" data-placement="bottom" title="Wed, Mar 31, 2021, 12:00 AM +0900" > Mar 31, 2021 <i class="unloaded">2021-03-31T00:00:00+09:00</i> </span> by <span class="author"> Taelim Hwang </span></div><div> <span> Updated <span class="timeago lastmod" data-toggle="tooltip" data-placement="bottom" title="Thu, Apr 1, 2021, 9:49 AM +0900" > Apr 1, 2021 <i class="unloaded">2021-04-01T09:49:42+09:00</i> </span> </span> <span class="readtime" data-toggle="tooltip" data-placement="bottom" title="971 words">5 min</span></div></div><div class="post-content"><h1 id="설명">설명</h1><p>공식 페이지의 설명은 다음과 같다. <br /> Develop, deploy, troubleshoot and secure your serverless applications <br /> with radically less overhead and cost by using the Serverless Framework. <br /> 대략적으로, <strong>Serverless Architecture</strong> 를 개발, 배포, 운영하는걸 편하게 해주는 <br /> 일종의 추상화된 Framework라고 생각된다.</p><blockquote><p>Serverless는 serverless 환경을 배포하고 운영하기 위한 도구다.</p></blockquote><h1 id="중요-개념">중요 개념</h1><h2 id="functions">Functions</h2><p>AWS Lambda, Azure Function 처럼, 각 Cloud provider에서 제공하는 Serverless function을 의미한다.</p><h2 id="events">Events</h2><p>위의 Functions을 실행하는 Trigger 역할을 한다. <br /> Serverless Framework에서 이벤트 정의 시, AWS 기준으로 AWS에 이벤트를 자동 생성 및 Lambda와 연결한다. AWS 기준으로는 다음이 해당한다.</p><blockquote><p>API Gateway, HTTP API, Websocket S3, DynamoDB, SQS Alexa, IoT Cloudwatch, Cloudfront, Cognito</p></blockquote><p>이 외에도 각 Provider 마다 Events 역할을 하는 서비스는 다양하다.</p><h2 id="resources">Resources</h2><p>Lambda가 사용하는 AWS의 Infra 영역이다. <br /> AWS 기준, CloudFormation에서 정의 가능한 영역 모두가 해당한다.</p><blockquote><p>All Resources are other AWS infrastructure resources which the AWS Lambda functions in your Service depend on, like AWS DynamoDB or AWS S3.</p></blockquote><h2 id="services">Services</h2><p>Function의 모음. <br /> Functions = Resources + Events <br /> Services = Functions + Functions + …</p><blockquote><p>A service is like a project. It’s where you define your AWS Lambda Functions, the events that trigger them and any AWS infrastructure resources they require, all in a file called serverless.yml.</p></blockquote><h2 id="plugins">Plugins</h2><p>Serverless의 기능 확장을 할 때 사용한다.</p><blockquote><p>A Plugin is custom Javascript code that creates new or extends existing commands within the Serverless Framework.</p></blockquote><h1 id="installation">Installation</h1><div class="language-bash highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre><td class="rouge-code"><pre><span class="c"># Using npm</span>
+npm i <span class="nt">-g</span> serverless
+
+<span class="c"># Using yarn</span>
+yarn add <span class="nt">-g</span> serverless
+</pre></table></code></div></div><h1 id="create-service-from-template">Create service from template</h1><div class="language-bash highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre><td class="rouge-code"><pre><span class="c"># ./project 하위에 Node.js template로부터 Service 생성</span>
+serverless create <span class="nt">--template</span> aws-nodejs <span class="nt">--path</span> project
+</pre></table></code></div></div><h1 id="프로젝트-구조">프로젝트 구조</h1><div class="language-bash highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre><td class="rouge-code"><pre>project
+  |- serverless.yml
+  |- handler.js
+</pre></table></code></div></div><h2 id="serverlessyml">serverless.yml</h2><p>Service는 하나의 프로젝트 단위라 생각하면 된다. <br /> 이를 구성하기 위한 파일이 serverless.yml이다. <br /> 본 파일에 모든 Function, Resource를 기재하면 된다. <br /> 이 yml파일을 쪼개서 Service 단위로 분할이 가능하다.</p><div class="language-bash highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre><td class="rouge-code"><pre><span class="nb">users</span>
+  |- serverless.yml
+posts
+  |- serverless.yml
+comments
+  |- serverless.yml
+</pre></table></code></div></div><p>본 파일에서 관리되는 설정은 다음과 같다.</p><ul><li>Service 선언<li>Service에 들어가는 Function 정의<li>Provider 정의<ul><li>AWS, GCP, Azure…</ul><li>Plugin 정의<li>Event 정의<li>Resource 정의<li>Event에서 사용하는 Resource 자동 생성<li>Variable을 활용한 설정 정의</ul><p>파일의 기본 양식은 다음과 같다.</p><div class="language-yml highlighter-rouge"><div class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+</pre><td class="rouge-code"><pre><span class="c1"># serverless.yml</span>
+
+<span class="na">service</span><span class="pi">:</span> <span class="s">users</span>
+
+<span class="na">provider</span><span class="pi">:</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s">aws</span>
+  <span class="na">runtime</span><span class="pi">:</span> <span class="s">nodejs12.x</span>
+  <span class="na">stage</span><span class="pi">:</span> <span class="s">dev</span> <span class="c1"># Set the default stage used. Default is dev</span>
+  <span class="na">region</span><span class="pi">:</span> <span class="s">us-east-1</span> <span class="c1"># Overwrite the default region used. Default is us-east-1</span>
+  <span class="na">stackName</span><span class="pi">:</span> <span class="s">my-custom-stack-name-${self:provider.stage}</span> <span class="c1"># Overwrite default CloudFormation stack name. Default is ${self:service}-${self:provider.stage}</span>
+  <span class="na">apiName</span><span class="pi">:</span> <span class="s">my-custom-api-gateway-name-${self:provider.stage}</span> <span class="c1"># Overwrite default API Gateway name. Default is ${self:provider.stage}-${self:service}</span>
+  <span class="na">profile</span><span class="pi">:</span> <span class="s">production</span> <span class="c1"># The default profile to use with this service</span>
+  <span class="na">memorySize</span><span class="pi">:</span> <span class="m">512</span> <span class="c1"># Overwrite the default memory size. Default is 1024</span>
+  <span class="na">deploymentBucket</span><span class="pi">:</span>
+    <span class="na">name</span><span class="pi">:</span> <span class="s">com.serverless.${self:provider.region}.deploys</span> <span class="c1"># Overwrite the default deployment bucket</span>
+    <span class="na">serverSideEncryption</span><span class="pi">:</span> <span class="s">AES256</span> <span class="c1"># when using server-side encryption</span>
+    <span class="na">tags</span><span class="pi">:</span> <span class="c1"># Tags that will be added to each of the deployment resources</span>
+      <span class="na">key1</span><span class="pi">:</span> <span class="s">value1</span>
+      <span class="na">key2</span><span class="pi">:</span> <span class="s">value2</span>
+  <span class="na">deploymentPrefix</span><span class="pi">:</span> <span class="s">serverless</span> <span class="c1"># Overwrite the default S3 prefix under which deployed artifacts should be stored. Default is serverless</span>
+  <span class="na">versionFunctions</span><span class="pi">:</span> <span class="no">false</span> <span class="c1"># Optional function versioning</span>
+  <span class="na">stackTags</span><span class="pi">:</span> <span class="c1"># Optional CF stack tags</span>
+    <span class="na">key</span><span class="pi">:</span> <span class="s">value</span>
+  <span class="na">stackPolicy</span><span class="pi">:</span> <span class="c1"># Optional CF stack policy. The example below allows updates to all resources except deleting/replacing EC2 instances (use with caution!)</span>
+    <span class="pi">-</span> <span class="na">Effect</span><span class="pi">:</span> <span class="s">Allow</span>
+      <span class="na">Principal</span><span class="pi">:</span> <span class="s2">"</span><span class="s">*"</span>
+      <span class="na">Action</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Update:*"</span>
+      <span class="na">Resource</span><span class="pi">:</span> <span class="s2">"</span><span class="s">*"</span>
+    <span class="pi">-</span> <span class="na">Effect</span><span class="pi">:</span> <span class="s">Deny</span>
+      <span class="na">Principal</span><span class="pi">:</span> <span class="s2">"</span><span class="s">*"</span>
+      <span class="na">Action</span><span class="pi">:</span>
+        <span class="pi">-</span> <span class="s">Update:Replace</span>
+        <span class="pi">-</span> <span class="s">Update:Delete</span>
+      <span class="na">Resource</span><span class="pi">:</span> <span class="s2">"</span><span class="s">*"</span>
+      <span class="na">Condition</span><span class="pi">:</span>
+        <span class="na">StringEquals</span><span class="pi">:</span>
+          <span class="na">ResourceType</span><span class="pi">:</span>
+            <span class="pi">-</span> <span class="s">AWS::EC2::Instance</span>
+
+<span class="na">functions</span><span class="pi">:</span>
+  <span class="na">usersCreate</span><span class="pi">:</span> <span class="c1"># A Function</span>
+    <span class="na">handler</span><span class="pi">:</span> <span class="s">users.create</span>
+    <span class="na">events</span><span class="pi">:</span> <span class="c1"># The Events that trigger this Function</span>
+      <span class="pi">-</span> <span class="na">http</span><span class="pi">:</span> <span class="s">post users/create</span>
+  <span class="na">usersDelete</span><span class="pi">:</span> <span class="c1"># A Function</span>
+    <span class="na">handler</span><span class="pi">:</span> <span class="s">users.delete</span>
+    <span class="na">events</span><span class="pi">:</span> <span class="c1"># The Events that trigger this Function</span>
+      <span class="pi">-</span> <span class="na">http</span><span class="pi">:</span> <span class="s">delete users/delete</span>
+
+<span class="c1"># The "Resources" your "Functions" use.  Raw AWS CloudFormation goes in here.</span>
+<span class="na">resources</span><span class="pi">:</span>
+  <span class="na">Resources</span><span class="pi">:</span>
+    <span class="na">usersTable</span><span class="pi">:</span>
+      <span class="na">Type</span><span class="pi">:</span> <span class="s">AWS::DynamoDB::Table</span>
+      <span class="na">Properties</span><span class="pi">:</span>
+        <span class="na">TableName</span><span class="pi">:</span> <span class="s">usersTable</span>
+        <span class="na">AttributeDefinitions</span><span class="pi">:</span>
+          <span class="pi">-</span> <span class="na">AttributeName</span><span class="pi">:</span> <span class="s">email</span>
+            <span class="na">AttributeType</span><span class="pi">:</span> <span class="s">S</span>
+        <span class="na">KeySchema</span><span class="pi">:</span>
+          <span class="pi">-</span> <span class="na">AttributeName</span><span class="pi">:</span> <span class="s">email</span>
+            <span class="na">KeyType</span><span class="pi">:</span> <span class="s">HASH</span>
+        <span class="na">ProvisionedThroughput</span><span class="pi">:</span>
+          <span class="na">ReadCapacityUnits</span><span class="pi">:</span> <span class="m">1</span>
+          <span class="na">WriteCapacityUnits</span><span class="pi">:</span> <span class="m">1</span>
+</pre></table></code></div></div><h2 id="handlerjs">handler.js</h2><p>여러 Function에 대한 코드가 구현되어 있는 부분이다.</p><p>Function 부분 부터는 다음 포스트에서 진행.</p><h1 id="참조">참조</h1><p><a href="https://changhoi.github.io/posts/serverless/serverless-framework-quicklearn-(1)/">Serverless 프레임워크 빠르게 배우기 (1)</a></p></div><div class="post-tail-wrapper text-muted"><div class="post-meta mb-3"> <i class="far fa-folder-open fa-fw mr-1"></i> <a href='/categories/distributed-system/'>Distributed System</a>, <a href='/categories/serverless/'>Serverless</a>, <a href='/categories/cloud/'>Cloud</a></div><div class="post-tags"> <i class="fa fa-tags fa-fw mr-1"></i> <a href="/tags/distributed-system/" class="post-tag no-text-decoration" >Distributed System</a> <a href="/tags/serverless/" class="post-tag no-text-decoration" >Serverless</a> <a href="/tags/framework/" class="post-tag no-text-decoration" >Framework</a> <a href="/tags/cloud/" class="post-tag no-text-decoration" >Cloud</a></div><div class="post-tail-bottom d-flex justify-content-between align-items-center mt-3 pt-5 pb-2"><div class="license-wrapper"> This post is licensed under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> by the author.</div><div class="share-wrapper"> <span class="share-label text-muted mr-1">Share</span> <span class="share-icons"> <a href="https://twitter.com/intent/tweet?text=Serverless framework를 활용한 서비스 개발 (0) - Taelim's blog&url=https://ghkdxofla.github.io/posts/serverless-framework-setup-0/" data-toggle="tooltip" data-placement="top" title="Twitter" target="_blank" rel="noopener" aria-label="Twitter"> <i class="fa-fw fab fa-twitter"></i> </a> <a href="https://www.facebook.com/sharer/sharer.php?title=Serverless framework를 활용한 서비스 개발 (0) - Taelim's blog&u=https://ghkdxofla.github.io/posts/serverless-framework-setup-0/" data-toggle="tooltip" data-placement="top" title="Facebook" target="_blank" rel="noopener" aria-label="Facebook"> <i class="fa-fw fab fa-facebook-square"></i> </a> <a href="https://telegram.me/share?text=Serverless framework를 활용한 서비스 개발 (0) - Taelim's blog&url=https://ghkdxofla.github.io/posts/serverless-framework-setup-0/" data-toggle="tooltip" data-placement="top" title="Telegram" target="_blank" rel="noopener" aria-label="Telegram"> <i class="fa-fw fab fa-telegram"></i> </a> <i class="fa-fw fas fa-link small" onclick="copyLink()" data-toggle="tooltip" data-placement="top" title="Copy link"></i> </span></div></div></div></div></div><div id="panel-wrapper" class="col-xl-3 pl-2 text-muted topbar-down"><div class="access"><div id="access-lastmod" class="post"> <span>Recent Update</span><ul class="post-content pl-0 pb-1 ml-1 mt-2"><li><a href="/posts/serverless-framework-setup-0/">Serverless framework를 활용한 서비스 개발 (0)</a><li><a href="/posts/mongodb(1)/">MongoDB 설치 및 사용법</a><li><a href="/posts/jupyter_notebook/">Jupyter notebook 설치 및 사용법</a><li><a href="/posts/bokeh/">Bokeh 사용법</a><li><a href="/posts/python/">Python</a></ul></div><div id="access-tags"> <span>Trending Tags</span><div class="d-flex flex-wrap mt-3 mb-1 mr-3"> <a class="post-tag" href="/tags/%EA%B0%9C%EB%B0%9C/">개발</a> <a class="post-tag" href="/tags/python/">Python</a> <a class="post-tag" href="/tags/database/">Database</a> <a class="post-tag" href="/tags/%ED%99%98%EA%B2%BD-%EA%B5%AC%EC%B6%95/">환경 구축</a> <a class="post-tag" href="/tags/network/">Network</a> <a class="post-tag" href="/tags/programming-language/">Programming Language</a> <a class="post-tag" href="/tags/data-analysis/">Data Analysis</a> <a class="post-tag" href="/tags/data-science/">Data Science</a> <a class="post-tag" href="/tags/server/">Server</a> <a class="post-tag" href="/tags/distributed-system/">Distributed System</a></div></div></div><div id="toc-wrapper" class="pl-0 pr-4 mb-5"> <span class="pl-3 pt-2 mb-2">Contents</span><nav id="toc" data-toggle="toc"></nav></div></div></div><div class="row"><div class="col-12 col-lg-11 col-xl-8"><div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4"><div id="related-posts" class="mt-5 mb-2 mb-sm-4"><h3 class="pt-2 mt-1 mb-4 ml-1" data-toc-skip>Further Reading</h3><div class="card-deck mb-4"><div class="card"> <a href="/posts/serverless-framework-setup-1/"><div class="card-body"> <span class="timeago small" > Apr 1, 2021 <i class="unloaded">2021-04-01T00:00:00+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Serverless framework를 활용한 서비스 개발 (1)</h3><div class="text-muted small"><p> Function? serverless.yml 파일에는 functions 속성이 존재한다. 현재 개발 중인 프로젝트에서 일부 발췌하면 다음과 같다. 참고로, 아래의 설정값은 function.yml에 기입되어 있고, 해당 파일을 serverless.yml에서 참조하는 형태로 구성하였다. 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15...</p></div></div></a></div><div class="card"> <a href="/posts/kubernetes-local-setup-0/"><div class="card-body"> <span class="timeago small" > Mar 26, 2021 <i class="unloaded">2021-03-26T00:00:00+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Local Server에 Kubernetes Cluster 구축하기 (0)</h3><div class="text-muted small"><p> 마스터 노드에서 필요한 필수 포트 6443 포트 : Kubernetes API Server / Used By All 2379~2380 포트 : etcd server client API / Used By kube-apiserver, etcd 10250 포트 : Kubelet API / Used By Self, Control plane 10251 ...</p></div></div></a></div><div class="card"> <a href="/posts/docker/"><div class="card-body"> <span class="timeago small" > Jul 21, 2020 <i class="unloaded">2020-07-21T00:00:00+09:00</i> </span><h3 class="pt-0 mt-1 mb-3" data-toc-skip>Docker란?</h3><div class="text-muted small"><p> Docker란? 설치 ### Update repository $ sudo apt-get update ### Install requirements $ sudo apt-get install \ apt-transport-https \ ca-certificates \ curl \ gnupg-agent \ software...</p></div></div></a></div></div></div><div class="post-navigation d-flex justify-content-between"> <a href="/posts/kubernetes-local-setup-0/" class="btn btn-outline-primary"><p>Local Server에 Kubernetes Cluster 구축하기 (0)</p></a> <a href="/posts/serverless-framework-setup-1/" class="btn btn-outline-primary"><p>Serverless framework를 활용한 서비스 개발 (1)</p></a></div></div></div></div><footer class="d-flex w-100 justify-content-center"><div class="d-flex justify-content-between align-items-center"><div class="footer-left"><p class="mb-0"> © 2022 <a href="https://twitter.com/ghkdxofla">Taelim Hwang</a>. <span data-toggle="tooltip" data-placement="top" title="Except where otherwise noted, the blog posts on this site are licensed under the Creative Commons Attribution 4.0 International (CC BY 4.0) License by the author.">Some rights reserved.</span></p></div><div class="footer-right"><p class="mb-0"> Powered by <a href="https://jekyllrb.com" target="_blank" rel="noopener">Jekyll</a> with <a href="https://github.com/cotes2020/jekyll-theme-chirpy/" target="_blank" rel="noopener">Chirpy</a> theme.</p></div></div></footer></div><div id="search-result-wrapper" class="d-flex justify-content-center unloaded"><div class="col-12 col-xl-11 post-content"><div id="search-hints"><h4 class="text-muted mb-4">Trending Tags</h4><a class="post-tag" href="/tags/%EA%B0%9C%EB%B0%9C/">개발</a> <a class="post-tag" href="/tags/python/">Python</a> <a class="post-tag" href="/tags/database/">Database</a> <a class="post-tag" href="/tags/%ED%99%98%EA%B2%BD-%EA%B5%AC%EC%B6%95/">환경 구축</a> <a class="post-tag" href="/tags/network/">Network</a> <a class="post-tag" href="/tags/programming-language/">Programming Language</a> <a class="post-tag" href="/tags/data-analysis/">Data Analysis</a> <a class="post-tag" href="/tags/data-science/">Data Science</a> <a class="post-tag" href="/tags/server/">Server</a> <a class="post-tag" href="/tags/distributed-system/">Distributed System</a></div><div id="search-results" class="d-flex flex-wrap justify-content-center text-muted mt-3"></div></div></div></div><div id="mask"></div><a id="back-to-top" href="#" aria-label="back-to-top" class="btn btn-lg btn-box-shadow" role="button"> <i class="fas fa-angle-up"></i> </a> <script src="https://cdn.jsdelivr.net/npm/simple-jekyll-search@1.7.3/dest/simple-jekyll-search.min.js"></script> <script> SimpleJekyllSearch({ searchInput: document.getElementById('search-input'), resultsContainer: document.getElementById('search-results'), json: '/assets/js/data/search.json', searchResultTemplate: '<div class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-lg-4 pr-lg-4 pl-xl-0 pr-xl-0"> <a href="https://ghkdxofla.github.io{url}">{title}</a><div class="post-meta d-flex flex-column flex-sm-row text-muted mt-1 mb-1"><div class="mr-sm-4"><i class="far fa-folder fa-fw"></i>{categories}</div><div><i class="fa fa-tag fa-fw"></i>{tags}</div></div><p>{snippet}</p></div>', noResultsText: '<p class="mt-5">Oops! No result founds.</p>' }); </script>
