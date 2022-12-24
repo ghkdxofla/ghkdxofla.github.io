@@ -65,7 +65,6 @@ comments:
   utterances:
     repo: 'ghkdxofla/ghkdxofla.github.io'        # <gh-username>/<repo>
     issue_term: 'pathname'  # < url | pathname | title | ...>
-    theme: 'github-dark'
   # Giscus options › https://giscus.app
   giscus:
     repo:              # <gh-username>/<repo>
