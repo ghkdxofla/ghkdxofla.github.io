@@ -9,6 +9,7 @@
   {% else %}
     {% assign prev_url = "#" %}
   {% endif %}
+
   <li class="page-item {% unless paginator.previous_page %}disabled{% endunless %}">
     <a class="page-link btn-box-shadow" href="{{ prev_url }}" aria-label="previous-page">
       <i class="fas fa-angle-left"></i>
@@ -77,6 +78,7 @@
   {% else %}
     {% assign next_url = "#" %}
   {% endif %}
+
   <li class="page-item {% unless paginator.next_page_path %}disabled{% endunless %}">
     <a class="page-link btn-box-shadow" href="{{ next_url }}" aria-label="next-page">
       <i class="fas fa-angle-right"></i>
