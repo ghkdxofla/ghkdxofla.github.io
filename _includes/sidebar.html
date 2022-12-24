@@ -1,35 +1,30 @@
 <!--
   The Side Bar
-  v2.0
-  https://github.com/cotes2020/jekyll-theme-chirpy
-  © 2017-2019 Cotes Chung
-  MIT License
 -->
 
 <div id="sidebar" class="d-flex flex-column align-items-end">
-
   <div class="profile-wrapper text-center">
     <div id="avatar">
-      <a href="{{ site.baseurl }}/" alt="avatar" class="mx-auto">
-        {% assign avatar_url = site.avatar %}
-
-        {% unless avatar_url contains '://' %}
-          {% if site.img_cdn %}
-            {% assign avatar_url = avatar_url | prepend: site.img_cdn %}
-          {% else %}
-            {% assign avatar_url = avatar_url | relative_url %}
-          {% endif %}
-        {% endunless %}
-
-        <img src="{{ avatar_url }}" alt="avatar" onerror="this.style.display='none'">
+      <a href="{{ '/' | relative_url }}" class="mx-auto">
+        {% if site.avatar != empty and site.avatar %}
+          {% capture avatar_url %}
+            {% if site.avatar contains '://' %}
+              {{ site.avatar }}
+            {% elsif site.img_cdn != empty and site.img_cdn %}
+              {{ site.avatar | prepend: site.img_cdn }}
+            {% else %}
+              {{ site.avatar | relative_url }}
+            {% endif %}
+          {% endcapture %}
+          <img src="{{ avatar_url | strip }}" alt="avatar" onerror="this.style.display='none'">
+        {% endif %}
       </a>
     </div>
 
-    <div class="site-title mt-3">
-      <a href="{{ '/' | relative_url }}">{{- site.title -}}</a>
+    <div class="site-title">
+      <a href="{{ '/' | relative_url }}">{{ site.title }}</a>
     </div>
-
-    <div class="site-subtitle font-italic">{{- site.tagline -}}</div>
+    <div class="site-subtitle font-italic">{{ site.tagline }}</div>
 
   </div><!-- .profile-wrapper -->
 
@@ -38,7 +33,7 @@
     <li class="nav-item{% if page.layout == 'home' %}{{ " active" }}{% endif %}">
       <a href="{{ '/' | relative_url }}" class="nav-link">
         <i class="fa-fw fas fa-home ml-xl-3 mr-xl-3 unloaded"></i>
-        <span>{{ "HOME" }}</span>
+        <span>{{ site.data.locales[site.lang].tabs.home | upcase }}</span>
       </a>
     </li>
     <!-- the real tabs -->
@@ -46,14 +41,26 @@
     <li class="nav-item{% if tab.url == page.url %}{{ " active" }}{% endif %}">
       <a href="{{ tab.url | relative_url }}" class="nav-link">
         <i class="fa-fw {{ tab.icon }} ml-xl-3 mr-xl-3 unloaded"></i>
-        <span>{{ tab.title | upcase }}</span>
+        {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
+
+        <span>{{ site.data.locales[site.lang].tabs.[tab_name] | default: tab.title | upcase }}</span>
       </a>
     </li> <!-- .nav-item -->
     {% endfor %}
 
   </ul> <!-- ul.nav.flex-column -->
 
-  <div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center">
+  <div class="sidebar-bottom mt-auto d-flex flex-wrap justify-content-center align-items-center">
+
+    {% unless site.theme_mode %}
+      <button class="mode-toggle btn" aria-label="Switch Mode">
+        <i class="fas fa-adjust"></i>
+      </button>
+
+      {% if site.data.contact.size > 0 %}
+        <span class="icon-border"></span>
+      {% endif %}
+    {% endunless %}
 
     {% for entry in site.data.contact %}
       {% capture url %}
@@ -73,23 +80,12 @@
 
       {% if url %}
       <a href="{{ url }}" aria-label="{{ entry.type }}"
-        {% unless site.theme_mode %}class="order-{{ forloop.index | plus: 2 }}"{% endunless %}
         {% unless entry.noblank %}target="_blank" rel="noopener"{% endunless %}>
         <i class="{{ entry.icon }}"></i>
       </a>
       {% endif %}
 
     {% endfor %}
-
-    {% unless site.theme_mode %}
-      {% if site.data.contact.size > 0 %}
-        <span class="icon-border order-2"></span>
-      {% endif %}
-
-      <span id="mode-toggle-wrapper" class="order-1">
-        {% include mode-toggle.html %}
-      </span>
-    {% endunless %}
 
   </div> <!-- .sidebar-bottom -->
 

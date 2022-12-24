@@ -1,134 +1,150 @@
 ---
-layout: default
-# The posts' layout
-# v2.0
-# https://github.com/cotes2020/jekyll-theme-chirpy
-# © 2017-2019 Cotes Chung
-# MIT Licensed
+layout: page
+refactor: true
+panel_includes:
+  - toc
+tail_includes:
+  - related-posts
+  - post-nav
+  - comments
 ---
 
-<div class="row">
+<h1 data-toc-skip>{{ page.title }}</h1>
 
-  <div id="post-wrapper" class="col-12 col-lg-11 col-xl-8">
+<div class="post-meta text-muted">
+    <!-- published date -->
+    <span>
+      {{ site.data.locales[site.lang].post.posted }}
+      {% include datetime.html date=page.date tooltip=true %}
+    </span>
 
-    <div class="post pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4">
-
-      <h1 data-toc-skip>{{ page.title }}</h1>
-
-      <div class="post-meta text-muted d-flex flex-column">
-        <!-- Published date and author -->
-        <div>
-          {% include timeago.html date=page.date tooltip=true %}
-          by
-          <span class="author">
-            {{ page.author | default: site.author }}
-          </span>
-        </div>
-
-        <div>
-          <!-- lastmod -->
-          {% if page.last_modified_at %}
-          <span>
-            Updated
-            {% include timeago.html date=page.last_modified_at class="lastmod" tooltip=true %}
-          </span>
-          {% endif %}
-
-          <!-- read time -->
-          {% include read-time.html content=content %}
-
-          <!-- page views -->
-          {% if site.google_analytics.pv.enabled %}
-          <span id="pv" class="pageviews"><i class="fas fa-spinner fa-spin fa-fw"></i></span>
-          {% endif %}
-
-        </div>
-
-      </div> <!-- .post-meta -->
-
-      <div class="post-content">
-
-        {% if page.image %}
-          <img src="{{ page.image }}" class="preview-img" alt="Preview Image">
-        {% endif %}
-
-        {{ content }}
-
-      </div>
-
-      <div class="post-tail-wrapper text-muted">
-
-        <!-- categories -->
-        {% if page.categories.size > 0 %}
-        <div class="post-meta mb-3">
-          <i class="far fa-folder-open fa-fw mr-1"></i>
-          {% for category in page.categories %}
-            <a href='{{ site.baseurl }}/categories/{{ category | slugify | url_encode }}/'>{{ category }}</a>
-            {%- unless forloop.last -%}, {%- endunless -%}
-          {% endfor %}
-        </div>
-        {% endif %}
-
-        <!-- tags -->
-        {% if page.tags.size > 0 %}
-        <div class="post-tags">
-          <i class="fa fa-tags fa-fw mr-1"></i>
-          {% for tag in page.tags %}
-          <a href="{{ site.baseurl }}/tags/{{ tag | slugify | url_encode }}/"
-            class="post-tag no-text-decoration" >
-            {{- tag -}}
-          </a>
-          {% endfor %}
-          </div>
-        {% endif %}
-
-        <div class="post-tail-bottom
-          d-flex justify-content-between align-items-center mt-3 pt-5 pb-2">
-          {% if site.data.rights.license %}
-          <div class="license-wrapper">
-            This post is licensed under
-            <a href="{{ site.data.rights.license.link }}">{{ site.data.rights.license.name }}</a>
-            by the author.
-          </div>
-          {% endif %}
-
-          {% include post-sharing.html %}
-
-        </div><!-- .post-tail-bottom -->
-
-      </div><!-- div.post-tail -->
-
-    </div> <!-- .post -->
-
-
-  </div> <!-- #post-wrapper -->
-
-  {% assign enable_toc = false %}
-
-  {% if site.toc and page.toc %}
-    {% if content contains '<h2' or content contains '<h3' %}
-      {% assign enable_toc = true %}
+    <!-- lastmod date -->
+    {% if page.last_modified_at %}
+    <span>
+      {{ site.data.locales[site.lang].post.updated }}
+      {% include datetime.html date=page.last_modified_at tooltip=true %}
+    </span>
     {% endif %}
+
+  {% if page.image %}
+    {% capture bg %}
+      {% unless page.image.no_bg %}{{ 'bg' }}{% endunless %}
+    {% endcapture %}
+
+    <div class="mt-3 mb-3">
+      <img src="{{ page.image.path | default: page.image }}" class="preview-img {{ bg | strip }}"
+        alt="{{ page.image.alt | default: "Preview Image" }}"
+
+      {% if page.image.width %}
+        width="{{ page.image.width }}"
+      {% elsif page.image.w %}
+        width="{{ page.image.w }}"
+      {% endif %}
+
+      {% if page.image.height %}
+        height="{{ page.image.height }}"
+      {% elsif page.image.h %}
+        height="{{ page.image.h }}"
+      {% endif %}>
+
+      {% if page.image.alt %}
+        <figcaption class="text-center pt-2 pb-2">{{ page.image.alt }}</figcaption>
+      {% endif %}
+
+    </div>
   {% endif %}
 
-  {% include panel.html toc=enable_toc %}
+  <div class="d-flex justify-content-between">
+    <!-- author(s) -->
+    <span>
+      {% if page.author %}
+        {% assign authors = page.author %}
+      {% elsif page.authors %}
+        {% assign authors = page.authors %}
+      {% endif %}
 
-</div> <!-- .row -->
+      {{ site.data.locales[site.lang].post.written_by }}
 
-<div class="row">
-  <div class="col-12 col-lg-11 col-xl-8">
-    <div id="post-extend-wrapper" class="pl-1 pr-1 pl-sm-2 pr-sm-2 pl-md-4 pr-md-4">
+      <em>
+      {% if authors %}
+        {% for author in authors %}
+          <a href="{{ site.data.authors[author].url }}">{{ site.data.authors[author].name }}</a>
+          {% unless forloop.last %}</em>, <em>{% endunless %}
+        {% endfor %}
+      {% else %}
+        <a href="{{ site.social.links[0] }}">{{ site.social.name }}</a>
+      {% endif %}
+      </em>
+    </span>
 
-    {% include related-posts.html %}
+    <div>
+      <!-- page views -->
+      {% if site.google_analytics.pv.proxy_endpoint or site.google_analytics.pv.cache_path %}
+      <span>
+        <em id="pv" class="pageviews">
+          <i class="fas fa-spinner fa-spin fa-fw"></i>
+        </em>
+        {{ site.data.locales[site.lang].post.pageview_measure }}
+      </span>
+      {% endif %}
 
-    {% include post-nav.html %}
+      <!-- read time -->
+      {% include read-time.html content=content prompt=true %}
+    </div>
 
-    {% if site.disqus.comments and page.comments %}
-      {% include disqus.html %}
-    {% endif %}
+  </div> <!-- .d-flex -->
 
-    </div> <!-- #post-extend-wrapper -->
+</div> <!-- .post-meta -->
 
-  </div> <!-- .col-* -->
+<div class="post-content">
+  {{ content }}
+</div>
 
-</div> <!-- .row -->
+<div class="post-tail-wrapper text-muted">
+
+  <!-- categories -->
+  {% if page.categories.size > 0 %}
+  <div class="post-meta mb-3">
+    <i class="far fa-folder-open fa-fw mr-1"></i>
+    {% for category in page.categories %}
+      <a href='{{ site.baseurl }}/categories/{{ category | slugify | url_encode }}/'>{{ category }}</a>
+      {%- unless forloop.last -%}, {%- endunless -%}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- tags -->
+  {% if page.tags.size > 0 %}
+  <div class="post-tags">
+    <i class="fa fa-tags fa-fw mr-1"></i>
+      {% for tag in page.tags %}
+      <a href="{{ site.baseurl }}/tags/{{ tag | slugify | url_encode }}/"
+          class="post-tag no-text-decoration" >
+        {{- tag -}}
+      </a>
+      {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="post-tail-bottom
+    d-flex justify-content-between align-items-center mt-3 pt-5 pb-2">
+    <div class="license-wrapper">
+
+      {% if site.data.locales[site.lang].copyright.license.template %}
+
+        {% capture _replacement %}
+        <a href="{{ site.data.locales[site.lang].copyright.license.link }}">
+          {{ site.data.locales[site.lang].copyright.license.name }}
+        </a>
+        {% endcapture %}
+
+        {{ site.data.locales[site.lang].copyright.license.template | replace: ':LICENSE_NAME', _replacement }}
+
+      {% endif %}
+    </div>
+
+    {% include post-sharing.html %}
+
+  </div><!-- .post-tail-bottom -->
+
+</div><!-- div.post-tail-wrapper -->
