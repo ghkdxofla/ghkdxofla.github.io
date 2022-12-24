@@ -12,6 +12,7 @@ order: 4
 
 # Resume
 [taelim_hwang_software_engineer](/assets/media/taelim_hwang_software_engineer.pdf)
+
 ---
 
 # Education
