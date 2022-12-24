@@ -1,5 +1,4 @@
 ---
-<<<<<<< HEAD
 title: About
 icon: fas fa-info
 order: 4
@@ -95,12 +94,3 @@ order: 4
 > **Nginx**
 >
 > **AWS CDK**, **AWS ECS**, **Azure App Service**, **Azure Function**
-=======
-# the default layout is 'page'
-icon: fas fa-info-circle
-order: 4
----
-
-> Add Markdown syntax content to file `_tabs/about.md`{: .filepath } and it will show up on this page.
-{: .prompt-tip }
->>>>>>> ca41c7ebffc6372447f7db245488d48c2344814c
