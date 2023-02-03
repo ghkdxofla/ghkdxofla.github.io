@@ -6,6 +6,7 @@ on:
 
 jobs:
   auto_close_issues:
+    if: github.actor != 'utterances-bot' && github.actor != 'ghkdxofla'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
