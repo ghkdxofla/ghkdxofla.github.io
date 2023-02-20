@@ -43,8 +43,8 @@ ChatGPT가 뜨겁다. 기술이야 나온지는 좀 됐지만,
 
 ### 서비스 설명을 통해 간단한 ERD 그리기
 
-<details>
-    <summary>1. 일단 Mermaid는 아는지 물어보기</summary>
+<details>   
+    <summary>1. 일단 Mermaid는 아는지 물어보기</summary>   
 
 > prompt
 ```
@@ -57,8 +57,8 @@ Yes, I am aware of Mermaid, a popular markdown-based language for generating dia
 ```
 </details>
 
-<details>
-    <summary>2. E-Commerce Service에 대한 예시 구조 부탁하기</summary>
+<details>   
+    <summary>2. E-Commerce Service에 대한 예시 구조 부탁하기</summary>   
 
 > prompt
 ```
@@ -82,8 +82,8 @@ This diagram shows that the E-commerce Service provides several components, incl
 ```
 </details>
 
-<details>
-    <summary>3. 출력된 결과에 대한 Detail 요구하기</summary>
+<details>   
+    <summary>3. 출력된 결과에 대한 Detail 요구하기</summary>   
 
 > prompt
 ```
@@ -151,8 +151,8 @@ sequenceDiagram
 This sequence diagram shows the interaction between the web application (participant B), the payment processing system (participant E), the payment gateway (participant F), and the payment processor (participant G) when the customer initiates a payment. The web application communicates with the payment processing system to initiate the payment, which then communicates with the payment gateway to process the payment request. The payment gateway forwards the payment request to the payment processor, which then returns the payment result to the payment gateway, which returns it to the payment processing system, and finally to the web application.
 ```
 </details>
-<details>
-    <summary>4. 출력된 결과를 Event-driven system 구조로 변경하기</summary>
+<details>   
+    <summary>4. 출력된 결과를 Event-driven system 구조로 변경하기</summary>   
 
 > prompt
 ```
@@ -189,8 +189,8 @@ In this event-driven architecture, the E-commerce Service publishes an "Order Re
 The Customer-facing Web Application consumes the "Order Received Event," and the Payment Gateway and Payment Processor consume the "Payment Completed Event." This event-driven architecture allows the different components of the E-commerce Service to communicate with each other in a decoupled and scalable manner.
 ```
 </details>
-<details>
-    <summary>5. Event-driven system 구조 detail 요청하기</summary>
+<details>   
+    <summary>5. Event-driven system 구조 detail 요청하기</summary>   
 
 > prompt
 ```
