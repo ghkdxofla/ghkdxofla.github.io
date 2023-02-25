@@ -46,15 +46,16 @@ ChatGPT가 뜨겁다. 기술이야 나온지는 좀 됐지만,
 <details>
     <summary>1. 일단 Mermaid는 아는지 물어보기</summary>
 
-> prompt
-```
-Did you hear about Mermaid for markdown drawing language?
-```
-> result
-```
-Yes, I am aware of Mermaid, a popular markdown-based language for generating diagrams and flowcharts.
-...
-```
+    > prompt
+    ```
+    Did you hear about Mermaid for markdown drawing language?
+    ```
+    > result
+    ```
+    Yes, I am aware of Mermaid, a popular markdown-based language for generating diagrams and flowcharts.
+    ...
+    ```
+
 </details>
 
 <details>
