@@ -19,7 +19,7 @@ mermaid: true
 
 한참 걸리기는 했지만, 위 사이트의 `184 steps`를 잘 따라서(사실상 보면서 옮겨 쓰는...)   
 동작하는 Editor를 만들었다!   
-![Tiny Editor 실행 화면](assets/media/20231125_rust_tiny_editor_0_0.png)   
+![Tiny Editor 실행 화면](/assets/media/20231125_rust_tiny_editor_0_0.png)   
 
 C로 작성한 `Tiny Editor`는 이 [Repository](https://github.com/ghkdxofla/tiny-editor/tree/main/c/src)에서 확인할 수 있다.   
 Rust로 작성한 Version도 위 Repo에서 작성해나갈 예정이다.   
