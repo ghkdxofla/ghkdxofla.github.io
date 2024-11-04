@@ -56,7 +56,7 @@ order: 4
 > - Node.ts 서버 개발
 >   - IoT Device 간 연계를 위한 middleware 통신 서버 개발
 > ```
-> `21-06 ~ 현재` 차이(아임포트) Back-end Microservice **(gRPC, Kotlin, Spring, PHP)** 개발
+> `21-06 ~ 22-09` 차이(아임포트) Back-end Microservice **(gRPC, Kotlin, Spring, PHP)** 개발
 > ```
 > [결제 서비스 개발]
 > - CakePHP Server의 신규 기능 추가 및 유지보수
@@ -65,6 +65,15 @@ order: 4
 > - 기존 PHP 기반의 Legacy Service에 대한 리펙토링
 > - Kotlin Spring 및 gRPC를 사용한 Microservice 개발
 >   - PG사 연동 서비스, Credential 관리 서비스 설계 및 개발
+> ```
+> `22-10 ~ 현재` 레몬베이스 back-end **(Django, FastAPI)** 개발
+> ```
+> [HR SaaS service platform 개발]
+> - 전반적인 기능 개발 및 유지보수
+> - SSO SAML integration을 통한 대규모 고객 보안 문제 해결
+> - OpenSearch를 통한 키워드 기반 검색 서비스 구축
+> - LLM(Bedrock)을 활용한 마이크로서비스 구축
+> - CI/CD 최적화를 통한 배포 경험 개선
 > ```
 
 ---
@@ -82,16 +91,19 @@ order: 4
 >
 > `18-06 ~ 18-10` IoT Innovation Challenge 우수상 수상
 >
-
+> `24-03` Mina Protocol w/ Prize $5,000: Best overall Mina application or library built using Protokit framework
+>
+> `24-05` AWS Summit Seoul 2024 - Gen AI GameDay 33팀 중 최고 점수로 1등 수상
+>
 ---
 
 # Tech
-> **Kotlin**, **Python**, **Typescript**, **HTML5**, **CSS**, **Java**, **C**, **C++**
+> **Python**, **Golang**, **Rust**, **Kotlin**, **Typescript**, **Java**, **C**, **C++**, **HTML5**, **CSS**
 >
-> **Spring**, **Django**, **Flask**, **Node.js**, **Vue.js**, **React**
+> **FastAPI**, **Django**, **Spring**, **Flask**, **Node.ts**, **Vue.js**, **React**
 >
-> **SQL Server**, **MongoDB**, **PostgresQL**, **MySQL**
+> **MySQL**, **OpenSearch**, **Kafka**, **SQL Server**, **MongoDB**, **PostgresQL**
 >
-> **Nginx**
+> **Nginx**, **Uvicorn**, **Gunicorn**
 >
-> **AWS CDK**, **AWS ECS**, **Azure App Service**, **Azure Function**
+> **AWS CDK**, **AWS ECS**, **GCP App Engine**, **Azure App Service**, **Azure Function**
