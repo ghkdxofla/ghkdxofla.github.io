@@ -11,7 +11,8 @@ order: 4
 ---
 
 # Resume
-[taelim_hwang_software_engineer](/assets/media/taelim_hwang_software_engineer.pdf)
+[taelim_hwang_software_engineer(KR)](/assets/media/taelim_hwang_software_engineer_kr.pdf)
+[taelim_hwang_software_engineer(ENG)](/assets/media/taelim_hwang_software_engineer_eng.pdf)
 
 ---
 
