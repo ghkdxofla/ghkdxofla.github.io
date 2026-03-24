@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Code 마스터하기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --navy: #0f172a;
+  --navy-mid: #1e293b;
+  --blue: #3b82f6;
+  --blue-light: #dbeafe;
+  --blue-glow: #60a5fa;
+  --green: #10b981;
+  --green-light: #d1fae5;
+  --green-dark: #059669;
+  --purple: #8b5cf6;
+  --purple-light: #ede9fe;
+  --orange: #f59e0b;
+  --orange-light: #fef3c7;
+  --red: #ef4444;
+  --red-light: #fee2e2;
+  --teal: #14b8a6;
+  --yellow: #ecc94b;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-sub: #475569;
+  --muted: #94a3b8;
+  --border: #e2e8f0;
+  --font-display: 'Outfit', 'Noto Sans KR', sans-serif;
+  --font-body: 'Noto Sans KR', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--text);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+.deck {
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  padding: 40px;
+}
+
+.slide.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+
+.slide-inner {
+  width: 100%;
+  max-width: 1100px;
+  height: 100%;
+  max-height: 680px;
+  position: relative;
+}
+
+.slide--dark { background: var(--navy); }
+.slide--dark .slide-inner { color: #fff; }
+.slide--light { background: var(--bg); }
+.slide--white { background: #fff; }
+.slide--warm { background: #fffbf0; }
+
+.nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(20px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  z-index: 100;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.nav-progress {
+  flex: 1;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  margin: 0 24px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.nav-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue), var(--green));
+  border-radius: 2px;
+  transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-btn {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.7);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.nav-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border-color: rgba(255,255,255,0.3);
+}
+
+.nav-counter {
+  color: rgba(255,255,255,0.5);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  min-width: 60px;
+  text-align: center;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.active .reveal { opacity: 1; transform: translateY(0); }
+.active .reveal:nth-child(1) { transition-delay: 0.1s; }
+.active .reveal:nth-child(2) { transition-delay: 0.2s; }
+.active .reveal:nth-child(3) { transition-delay: 0.3s; }
+.active .reveal:nth-child(4) { transition-delay: 0.4s; }
+.active .reveal:nth-child(5) { transition-delay: 0.5s; }
+.active .reveal:nth-child(6) { transition-delay: 0.6s; }
+.active .reveal:nth-child(7) { transition-delay: 0.7s; }
+.active .reveal:nth-child(8) { transition-delay: 0.8s; }
+.active .reveal:nth-child(9) { transition-delay: 0.9s; }
+.active .reveal:nth-child(10) { transition-delay: 1.0s; }
+
+.deco-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.deco-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+.section-tag--blue { background: var(--blue-light); color: var(--blue); }
+.section-tag--green { background: var(--green-light); color: var(--green-dark); }
+.section-tag--purple { background: var(--purple-light); color: var(--purple); }
+.section-tag--orange { background: var(--orange-light); color: var(--orange); }
+.section-tag--teal { background: #ccfbf1; color: var(--teal); }
+
+.slide-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.slide-title--xl { font-size: clamp(36px, 5vw, 56px); }
+.slide-title--lg { font-size: clamp(28px, 3.5vw, 40px); }
+.slide-title--md { font-size: clamp(24px, 3vw, 34px); }
+
+.slide-subtitle {
+  font-size: clamp(15px, 1.8vw, 18px);
+  line-height: 1.7;
+  color: var(--text-sub);
+  font-weight: 400;
+}
+
+.slide--dark .slide-subtitle { color: rgba(255,255,255,0.6); }
+
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+}
+
+.card--accent {
+  border-left: 4px solid;
+  border-radius: 4px 16px 16px 4px;
+}
+
+.card--blue { border-left-color: var(--blue); }
+.card--green { border-left-color: var(--green); }
+.card--purple { border-left-color: var(--purple); }
+.card--orange { border-left-color: var(--orange); }
+.card--teal { border-left-color: var(--teal); }
+.card--red { border-left-color: var(--red); }
+
+.card--glass {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(20px);
+}
+
+.card--glass:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.2);
+}
+
+.code-block {
+  background: var(--navy);
+  color: #e2e8f0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 16px 20px;
+  border-radius: 10px;
+  line-height: 1.8;
+  overflow-x: auto;
+}
+
+.code-block .cmd { color: var(--blue-glow); }
+.code-block .str { color: var(--green); }
+.code-block .cmt { color: var(--muted); }
+.code-block .kw { color: var(--purple); }
+.code-block .fn { color: var(--orange); }
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.compare-card {
+  border-radius: 16px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.compare-card--bad {
+  background: var(--red-light);
+  border: 1px solid #fecaca;
+}
+
+.compare-card--good {
+  background: var(--green-light);
+  border: 1px solid #a7f3d0;
+}
+
+.compare-label {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.compare-label--bad { background: var(--red); color: #fff; }
+.compare-label--good { background: var(--green); color: #fff; }
+
+.flow-track {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.flow-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 22px;
+  color: #fff;
+  transition: transform 0.3s ease;
+}
+
+.flow-circle:hover { transform: scale(1.15); }
+
+.flow-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: center;
+}
+
+.flow-sublabel {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  margin-top: -6px;
+}
+
+.flow-arrow {
+  color: var(--muted);
+  font-size: 18px;
+  margin: 0 2px;
+  margin-bottom: 36px;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.styled-table th {
+  background: var(--navy);
+  color: #fff;
+  padding: 14px 20px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.styled-table td {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.styled-table tr:nth-child(even) td { background: var(--bg); }
+.styled-table tr:hover td { background: var(--blue-light); }
+
+.styled-table .mono {
+  font-family: var(--font-mono);
+  color: var(--blue);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.callout {
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.callout--warn {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+
+.callout--info {
+  background: var(--blue-light);
+  border: 1px solid #93c5fd;
+  color: var(--navy-mid);
+}
+
+.callout--success {
+  background: var(--green-light);
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+}
+
+.skill-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.skill-column h3 {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+}
+
+.skill-item {
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  transition: background 0.2s;
+}
+
+.skill-item:hover { background: var(--bg); }
+
+.skill-name {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.skill-desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.key-hint {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  color: rgba(255,255,255,0.6);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  z-index: 100;
+  opacity: 1;
+  transition: opacity 1s ease;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.key-hint.hidden { opacity: 0; pointer-events: none; }
+
+/* Extra: icon badge */
+.icon-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+/* Extra: mini code inline */
+.inline-code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: var(--blue);
+  font-weight: 600;
+}
+
+/* Extra: hierarchy tree */
+.tree {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 2;
+  color: var(--text-sub);
+}
+.tree .highlight {
+  background: var(--blue-light);
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: var(--blue);
+  font-weight: 600;
+}
+.tree .highlight--green {
+  background: var(--green-light);
+  color: var(--green-dark);
+}
+.tree .highlight--purple {
+  background: var(--purple-light);
+  color: var(--purple);
+}
+
+/* Extra: stat number */
+.stat-number {
+  font-family: var(--font-display);
+  font-weight: 900;
+  line-height: 1;
+}
+
+/* Extra: tag pills */
+.tag-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .slide { padding: 24px; }
+  .slide-inner { max-height: none; }
+  .compare-grid, .skill-grid { grid-template-columns: 1fr; }
+  .flow-track { gap: 4px; }
+  .flow-circle { width: 42px; height: 42px; font-size: 16px; }
+  .nav-bar { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="key-hint" id="keyHint">Arrow keys / Space to navigate</div>
+
+<div class="deck" id="deck">
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 1: TITLE
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--dark active" data-bg="dark">
+  <div class="deco-grid"></div>
+  <div class="deco-blob" style="width:500px;height:500px;background:var(--blue);top:-100px;right:-100px;"></div>
+  <div class="deco-blob" style="width:400px;height:400px;background:var(--purple);bottom:-80px;left:-80px;"></div>
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="reveal" style="margin-bottom:20px;">
+      <span style="font-family:var(--font-mono);font-size:14px;color:var(--green);letter-spacing:2px;">TECH TALK / 2026.03</span>
+    </div>
+    <h1 class="slide-title slide-title--xl reveal" style="color:#fff;margin-bottom:16px;">
+      Claude Code<br>
+      <span style="background:linear-gradient(135deg,var(--blue-glow),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">마스터하기</span>
+    </h1>
+    <p class="slide-subtitle reveal" style="color:rgba(255,255,255,0.5);max-width:560px;font-size:20px;">
+      세션 관리부터 MCP 고도화까지,<br>Claude Code를 200% 활용하는 실전 가이드
+    </p>
+    <div class="reveal" style="margin-top:40px;display:flex;gap:12px;">
+      <span style="padding:6px 16px;border-radius:100px;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-size:13px;">Context Engineering</span>
+      <span style="padding:6px 16px;border-radius:100px;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-size:13px;">Skills &amp; Plugins</span>
+      <span style="padding:6px 16px;border-radius:100px;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-size:13px;">Best Practices</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 2: AGENDA
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--light" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:36px;">오늘 다룰 내용</h2>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="card card--accent card--blue reveal" style="display:flex;align-items:center;gap:24px;padding:20px 28px;">
+        <span style="font-family:var(--font-display);font-size:36px;font-weight:900;color:var(--blue);opacity:0.3;">01</span>
+        <div>
+          <div style="font-size:17px;font-weight:700;margin-bottom:2px;">Core Concepts</div>
+          <div style="font-size:13px;color:var(--muted);">세션, 컨텍스트 윈도우, 토큰의 핵심 개념</div>
+        </div>
+      </div>
+      <div class="card card--accent card--green reveal" style="display:flex;align-items:center;gap:24px;padding:20px 28px;">
+        <span style="font-family:var(--font-display);font-size:36px;font-weight:900;color:var(--green);opacity:0.3;">02</span>
+        <div>
+          <div style="font-size:17px;font-weight:700;margin-bottom:2px;">Context Engineering</div>
+          <div style="font-size:13px;color:var(--muted);">CLAUDE.md, 프롬프팅, Plan Mode로 효과적인 컨텍스트 관리</div>
+        </div>
+      </div>
+      <div class="card card--accent card--purple reveal" style="display:flex;align-items:center;gap:24px;padding:20px 28px;">
+        <span style="font-family:var(--font-display);font-size:36px;font-weight:900;color:var(--purple);opacity:0.3;">03</span>
+        <div>
+          <div style="font-size:17px;font-weight:700;margin-bottom:2px;">Skills, Plugins &amp; MCP</div>
+          <div style="font-size:13px;color:var(--muted);">확장 시스템으로 Claude Code 고도화하기</div>
+        </div>
+      </div>
+      <div class="card card--accent card--orange reveal" style="display:flex;align-items:center;gap:24px;padding:20px 28px;">
+        <span style="font-family:var(--font-display);font-size:36px;font-weight:900;color:var(--orange);opacity:0.3;">04</span>
+        <div>
+          <div style="font-size:17px;font-weight:700;margin-bottom:2px;">Good vs Bad Cases</div>
+          <div style="font-size:13px;color:var(--muted);">잘 쓰는 사례와 못 쓰는 사례 비교</div>
+        </div>
+      </div>
+      <div class="card card--accent card--teal reveal" style="display:flex;align-items:center;gap:24px;padding:20px 28px;">
+        <span style="font-family:var(--font-display);font-size:36px;font-weight:900;color:var(--teal);opacity:0.3;">05</span>
+        <div>
+          <div style="font-size:17px;font-weight:700;margin-bottom:2px;">비용 관리 &amp; 실전 팁</div>
+          <div style="font-size:13px;color:var(--muted);">토큰 절약 전략과 생산성 극대화 팁</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 3: WHAT IS CLAUDE CODE?
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--white" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--blue reveal">PART 01 &mdash; Core Concepts</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:12px;">Claude Code란?</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:28px;max-width:700px;">Anthropic이 만든 Agentic Coding Tool. 터미널에서 코드를 읽고, 편집하고, 실행합니다.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="card card--accent card--blue reveal">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <span class="icon-badge" style="background:var(--blue-light);font-size:20px;">&#9000;</span>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:16px;">Built-in Tools</div>
+            <div style="font-size:12px;color:var(--blue);font-weight:600;">9가지 핵심 도구</div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">
+          Bash, Read, Edit, Write, Glob, Grep, WebFetch, WebSearch, Agent (서브에이전트)
+        </div>
+      </div>
+      <div class="card card--accent card--green reveal">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <span class="icon-badge" style="background:var(--green-light);font-size:20px;">&#128640;</span>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:16px;">Multi-Platform</div>
+            <div style="font-size:12px;color:var(--green-dark);font-weight:600;">어디서나 사용</div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">
+          Terminal, VS Code, JetBrains, Desktop App, Web, Mobile에서 동일한 경험
+        </div>
+      </div>
+      <div class="card card--accent card--purple reveal">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <span class="icon-badge" style="background:var(--purple-light);font-size:20px;">&#129504;</span>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:16px;">Agentic Workflow</div>
+            <div style="font-size:12px;color:var(--purple);font-weight:600;">자율적 코딩</div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">
+          파일 탐색 &rarr; 코드 분석 &rarr; 수정 &rarr; 테스트까지 자동 수행
+        </div>
+      </div>
+      <div class="card card--accent card--orange reveal">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+          <span class="icon-badge" style="background:var(--orange-light);font-size:20px;">&#128274;</span>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:16px;">Permission System</div>
+            <div style="font-size:12px;color:var(--orange);font-weight:600;">안전한 실행</div>
+          </div>
+        </div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">
+          도구별 허용/거부 규칙으로 위험한 작업을 사전 차단
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 4: SESSION & TOKEN CONCEPTS
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--light" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--blue reveal">PART 01 &mdash; Core Concepts</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:8px;">세션과 토큰 이해하기</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:28px;">Claude Code의 핵심 작동 원리</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div class="card reveal" style="border-top:3px solid var(--blue);">
+        <div style="font-weight:700;color:var(--navy-mid);margin-bottom:12px;font-size:16px;">Session (세션)</div>
+        <div style="font-size:13px;color:var(--text-sub);line-height:1.8;">
+          &#8226; 대화 기록 전체를 담는 <strong>컨테이너</strong><br>
+          &#8226; 프롬프트 + 도구 호출 + 결과 + 응답 포함<br>
+          &#8226; <span class="inline-code">~/.claude/projects/</span> 에 자동 저장<br>
+          &#8226; <span class="inline-code">--continue</span> 로 이전 세션 이어가기<br>
+          &#8226; <span class="inline-code">/rename</span> 으로 세션에 이름 부여
+        </div>
+      </div>
+      <div class="card reveal" style="border-top:3px solid var(--green);">
+        <div style="font-weight:700;color:var(--navy-mid);margin-bottom:12px;font-size:16px;">Context Window (컨텍스트 윈도우)</div>
+        <div style="font-size:13px;color:var(--text-sub);line-height:1.8;">
+          &#8226; Claude가 한 번에 볼 수 있는 <strong>200K 토큰</strong><br>
+          &#8226; 시스템 프롬프트 + CLAUDE.md + 대화 기록<br>
+          &#8226; 가득 차면 <strong>Auto-Compaction</strong> 발동<br>
+          &#8226; 오래된 기록을 요약하여 공간 확보<br>
+          &#8226; 무한히 작업 가능하지만 요약 시 정보 손실 가능
+        </div>
+      </div>
+    </div>
+    <div class="card reveal" style="margin-top:16px;border-top:3px solid var(--purple);padding:20px 28px;">
+      <div style="display:flex;align-items:center;gap:32px;">
+        <div style="text-align:center;">
+          <div class="stat-number" style="font-size:36px;color:var(--blue);">200K</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Context Window</div>
+        </div>
+        <div style="width:1px;height:40px;background:var(--border);"></div>
+        <div style="flex:1;font-size:13px;color:var(--text-sub);line-height:1.7;">
+          <strong>Input Token</strong> = 보내는 것 (프롬프트, 파일 내용, 도구 결과) &nbsp;|&nbsp;
+          <strong>Output Token</strong> = 받는 것 (응답, 도구 호출, 사고 과정)<br>
+          <span style="color:var(--muted);">&#8594; <span class="inline-code">/cost</span> 명령으로 현재 세션의 토큰 사용량 확인</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 5: CONTEXT WINDOW LIFECYCLE
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--white" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--blue reveal">PART 01 &mdash; Core Concepts</div>
+    <h2 class="slide-title slide-title--md reveal" style="margin-bottom:8px;">컨텍스트 윈도우 생애주기</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:32px;">세션이 진행되면서 컨텍스트 윈도우는 이렇게 변합니다</p>
+    <div class="flow-track reveal">
+      <div class="flow-step">
+        <div class="flow-circle" style="background:var(--blue);">1</div>
+        <div class="flow-label">세션 시작</div>
+        <div class="flow-sublabel">CLAUDE.md 로드</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step">
+        <div class="flow-circle" style="background:var(--green);">2</div>
+        <div class="flow-label">작업 진행</div>
+        <div class="flow-sublabel">토큰 누적</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step">
+        <div class="flow-circle" style="background:var(--orange);">3</div>
+        <div class="flow-label">한계 도달</div>
+        <div class="flow-sublabel">~200K 접근</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step">
+        <div class="flow-circle" style="background:var(--purple);">4</div>
+        <div class="flow-label">Auto-Compact</div>
+        <div class="flow-sublabel">이전 기록 요약</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step">
+        <div class="flow-circle" style="background:var(--teal);">5</div>
+        <div class="flow-label">작업 계속</div>
+        <div class="flow-sublabel">공간 확보됨</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:28px;">
+      <div class="callout callout--info reveal" style="padding:12px 16px;">
+        <div style="font-weight:700;font-size:13px;margin-bottom:4px;">/clear</div>
+        <div style="font-size:12px;">작업 전환 시 대화 초기화.<br>불필요한 토큰 낭비 방지</div>
+      </div>
+      <div class="callout callout--success reveal" style="padding:12px 16px;">
+        <div style="font-weight:700;font-size:13px;margin-bottom:4px;">/compact</div>
+        <div style="font-size:12px;">수동으로 컨텍스트 압축.<br>핵심 정보만 남기고 정리</div>
+      </div>
+      <div class="callout callout--warn reveal" style="padding:12px 16px;">
+        <div style="font-weight:700;font-size:13px;margin-bottom:4px;">/cost</div>
+        <div style="font-size:12px;">현재 세션 토큰 사용량과<br>비용을 실시간 확인</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 6: TRANSITION - CONTEXT ENGINEERING
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--dark" data-bg="dark">
+  <div class="deco-grid"></div>
+  <div class="deco-blob" style="width:400px;height:400px;background:var(--green);top:-50px;left:-50px;"></div>
+  <div class="deco-blob" style="width:350px;height:350px;background:var(--blue);bottom:-50px;right:-50px;"></div>
+  <div class="slide-inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <h2 class="slide-title reveal" style="font-size:clamp(32px,5vw,52px);color:rgba(255,255,255,0.9);margin-bottom:20px;">
+      Claude Code를<br>잘 쓰는 핵심은?
+    </h2>
+    <div class="reveal" style="width:120px;height:3px;background:var(--green);border-radius:2px;margin:20px auto;"></div>
+    <h2 class="slide-title reveal" style="font-size:clamp(28px,4vw,44px);margin-bottom:16px;">
+      <span style="background:linear-gradient(135deg,var(--green),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Context Engineering</span>
+    </h2>
+    <p class="reveal" style="font-size:18px;color:rgba(255,255,255,0.5);max-width:500px;">올바른 컨텍스트를 올바른 시점에 제공하는 것이 핵심입니다</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 7: CLAUDE.MD
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--light" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--green reveal">PART 02 &mdash; Context Engineering</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:8px;">CLAUDE.md &mdash; 프로젝트의 두뇌</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:24px;">모든 세션 시작 시 자동 로드되는 프로젝트 컨텍스트 파일</p>
+    <div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:20px;">
+      <div class="reveal">
+        <div class="code-block" style="font-size:12px;line-height:1.9;">
+          <div><span class="cmt"># CLAUDE.md</span></div>
+          <div>&nbsp;</div>
+          <div><span class="cmt">## 프로젝트 구조</span></div>
+          <div><span class="str">Python 3.12+ / FastAPI / PostgreSQL</span></div>
+          <div>&nbsp;</div>
+          <div><span class="cmt">## 공통 명령어</span></div>
+          <div><span class="cmd">npm run test</span>  <span class="cmt"># 테스트 실행</span></div>
+          <div><span class="cmd">npm run lint</span>  <span class="cmt"># 린트 체크</span></div>
+          <div>&nbsp;</div>
+          <div><span class="cmt">## 코딩 규칙</span></div>
+          <div><span class="str">- ES Modules 사용 (CommonJS X)</span></div>
+          <div><span class="str">- 함수형 컴포넌트만 사용</span></div>
+          <div><span class="str">- 테스트 파일 필수</span></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card card--accent card--green reveal" style="padding:16px 20px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">담을 것</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7;">
+            &#10003; 빌드/테스트 명령어<br>
+            &#10003; 코딩 컨벤션<br>
+            &#10003; 아키텍처 개요<br>
+            &#10003; 파일 구조 설명
+          </div>
+        </div>
+        <div class="card card--accent card--red reveal" style="padding:16px 20px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:4px;">담지 말 것</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.7;">
+            &#10007; 특정 작업용 상세 지시<br>
+            &#10007; 자주 바뀌는 임시 정보<br>
+            &#10007; 너무 긴 문서 (토큰 낭비)<br>
+            <span style="color:var(--blue);font-weight:600;">&#8594; Skills로 분리!</span>
+          </div>
+        </div>
+        <div class="callout callout--info reveal" style="font-size:12px;padding:10px 14px;">
+          <strong>Progressive Disclosure:</strong><br>
+          "모든 정보를 넣지 말고,<br>정보를 <em>찾는 방법</em>을 알려주세요"
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 8: CLAUDE.MD HIERARCHY
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--white" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--green reveal">PART 02 &mdash; Context Engineering</div>
+    <h2 class="slide-title slide-title--md reveal" style="margin-bottom:8px;">CLAUDE.md 계층 구조</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:28px;">여러 위치에 CLAUDE.md를 두어 스코프별 컨텍스트를 제공할 수 있습니다</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
+      <div class="reveal">
+        <div class="tree" style="background:var(--bg);padding:20px 24px;border-radius:12px;border:1px solid var(--border);">
+          <div><span class="highlight">~/.claude/CLAUDE.md</span> &larr; 전역 (모든 프로젝트)</div>
+          <div style="padding-left:16px;">&#9492;&#9472; 개인 설정, 선호 스타일</div>
+          <div style="margin-top:8px;"><span class="highlight--green">project/CLAUDE.md</span> &larr; 프로젝트 공통</div>
+          <div style="padding-left:16px;">&#9492;&#9472; 빌드 명령, 아키텍처, 팀 규칙</div>
+          <div style="margin-top:8px;"><span class="highlight--purple">project/.claude/CLAUDE.md</span></div>
+          <div style="padding-left:16px;">&#9492;&#9472; 프로젝트 내부 설정</div>
+          <div style="margin-top:8px;"><span class="highlight">project/src/CLAUDE.md</span> &larr; 하위 디렉토리</div>
+          <div style="padding-left:16px;">&#9492;&#9472; 해당 폴더 진입 시 on-demand 로드</div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card reveal" style="border-top:3px solid var(--blue);padding:18px 22px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">로딩 규칙</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8;">
+            &#8226; 상위 디렉토리: <strong>세션 시작 시</strong> 전체 로드<br>
+            &#8226; 하위 디렉토리: <strong>파일 접근 시</strong> on-demand 로드<br>
+            &#8226; 구체적 위치가 우선순위 높음
+          </div>
+        </div>
+        <div class="card reveal" style="border-top:3px solid var(--green);padding:18px 22px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">우선순위</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8;">
+            Enterprise &gt; User (개인) &gt; Project (공유)<br>
+            <span style="color:var(--muted);">&#8594; 같은 규칙이 충돌하면 상위가 이김</span>
+          </div>
+        </div>
+        <div class="card reveal" style="border-top:3px solid var(--purple);padding:18px 22px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">팀 활용 팁</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8;">
+            프로젝트 CLAUDE.md는 <strong>git에 커밋</strong>하여<br>
+            팀 전체가 동일한 컨텍스트를 공유!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 9: EFFECTIVE PROMPTING (COMPARISON)
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--light" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--green reveal">PART 02 &mdash; Context Engineering</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:12px;">효과적인 프롬프팅</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:24px;max-width:700px;">좋은 프롬프트의 5가지 요소: 목표, 컨텍스트, 제약, 검증, 다음 액션</p>
+    <div class="compare-grid reveal">
+      <div class="compare-card compare-card--bad">
+        <span class="compare-label compare-label--bad">BAD</span>
+        <div class="code-block" style="margin-top:8px;font-size:12px;">
+          <div><span class="cmt"># 모호한 프롬프트</span></div>
+          <div>&nbsp;</div>
+          <div>버그 고쳐줘</div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:#991b1b;line-height:1.6;">
+          &#10007; 어떤 버그인지 모름<br>
+          &#10007; 파일 위치 불명<br>
+          &#10007; Claude가 전체 코드베이스를 스캔<br>
+          &#10007; <strong>토큰 대량 낭비</strong>
+        </div>
+      </div>
+      <div class="compare-card compare-card--good">
+        <span class="compare-label compare-label--good">GOOD</span>
+        <div class="code-block" style="background:#0a2e1a;margin-top:8px;font-size:12px;">
+          <div><span class="cmt"># 구체적인 프롬프트</span></div>
+          <div>&nbsp;</div>
+          <div>src/components/LoginForm.tsx에서</div>
+          <div>빈 이메일 제출 시 null reference 에러 발생.</div>
+          <div>&nbsp;</div>
+          <div><span class="str">유효성 검증 로직을 수정</span>해서</div>
+          <div>인라인 에러 메시지를 표시해줘.</div>
+          <div>&nbsp;</div>
+          <div>API 계약 변경 금지. 새 의존성 추가 금지.</div>
+          <div><span class="cmd">npm test -- --grep login</span> 으로 검증.</div>
+        </div>
+      </div>
+    </div>
+    <div class="callout callout--info reveal" style="margin-top:16px;font-size:13px;">
+      <strong>Pro Tip:</strong> 프롬프트에 파일 경로를 <strong>탭 자동완성</strong>으로 입력하면 Claude가 정확한 파일을 바로 찾습니다.
+      URL을 직접 붙여넣으면 Claude가 읽고 참고합니다.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 10: PLAN MODE
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--white" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--green reveal">PART 02 &mdash; Context Engineering</div>
+    <h2 class="slide-title slide-title--md reveal" style="margin-bottom:8px;">Plan Mode &mdash; 먼저 생각하고 실행하기</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:32px;">Shift+Tab 두 번으로 Plan Mode 진입. 코드 수정 없이 분석만 수행합니다.</p>
+    <div class="flow-track reveal">
+      <div class="flow-step">
+        <div class="flow-circle" style="background:var(--blue);">1</div>
+        <div class="flow-label">Plan Mode 진입</div>
+        <div class="flow-sublabel">Shift+Tab x2</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step">
+        <div class="flow-circle" style="background:var(--green);">2</div>
+        <div class="flow-label">분석 &amp; 계획</div>
+        <div class="flow-sublabel">코드 읽기 전용</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step">
+        <div class="flow-circle" style="background:var(--purple);">3</div>
+        <div class="flow-label">계획 검토</div>
+        <div class="flow-sublabel">사용자 확인</div>
+      </div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-step">
+        <div class="flow-circle" style="background:var(--orange);">4</div>
+        <div class="flow-label">실행</div>
+        <div class="flow-sublabel">Plan Mode 해제</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px;">
+      <div class="card card--accent card--green reveal" style="padding:18px 22px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:6px;">왜 써야 할까?</div>
+        <div style="font-size:12px;color:var(--text-sub);line-height:1.8;">
+          &#8226; 잘못된 방향으로 코드 수정 방지<br>
+          &#8226; 아키텍처 결정을 미리 검토<br>
+          &#8226; <strong>재작업 토큰 절약</strong> (가장 큰 이점!)
+        </div>
+      </div>
+      <div class="card card--accent card--blue reveal" style="padding:18px 22px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:6px;">언제 써야 할까?</div>
+        <div style="font-size:12px;color:var(--text-sub);line-height:1.8;">
+          &#8226; 멀티 파일 리팩토링<br>
+          &#8226; 새로운 기능 설계<br>
+          &#8226; 복잡한 버그 디버깅<br>
+          &#8226; <em>확신이 없을 때는 항상!</em>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 11: TRANSITION - EXTENSION
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--dark" data-bg="dark">
+  <div class="deco-grid"></div>
+  <div class="deco-blob" style="width:400px;height:400px;background:var(--purple);top:-50px;right:-50px;"></div>
+  <div class="deco-blob" style="width:350px;height:350px;background:var(--orange);bottom:-50px;left:-50px;"></div>
+  <div class="slide-inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <h2 class="slide-title reveal" style="font-size:clamp(32px,5vw,52px);color:rgba(255,255,255,0.9);margin-bottom:20px;">
+      기본기를 넘어서<br>고도화하기
+    </h2>
+    <div class="reveal" style="width:120px;height:3px;background:var(--purple);border-radius:2px;margin:20px auto;"></div>
+    <h2 class="slide-title reveal" style="font-size:clamp(28px,4vw,44px);margin-bottom:16px;">
+      <span style="background:linear-gradient(135deg,var(--purple),var(--blue-glow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Skills, Plugins &amp; MCP</span>
+    </h2>
+    <p class="reveal" style="font-size:18px;color:rgba(255,255,255,0.5);max-width:500px;">Claude Code의 능력을 확장하는 세 가지 메커니즘</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 12: SKILLS SYSTEM
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--light" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--purple reveal">PART 03 &mdash; 확장 시스템</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:8px;">Skills &mdash; 재사용 가능한 지시서</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:24px;">CLAUDE.md에 넣기 부담스러운 상세 지시를 슬래시 명령으로 분리</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div class="reveal">
+        <div class="code-block" style="font-size:12px;line-height:1.9;">
+          <div><span class="cmt"># .claude/skills/review/SKILL.md</span></div>
+          <div><span class="kw">---</span></div>
+          <div><span class="fn">name</span>: <span class="str">review</span></div>
+          <div><span class="fn">description</span>: <span class="str">"코드 리뷰 + 보안 체크"</span></div>
+          <div><span class="kw">---</span></div>
+          <div>&nbsp;</div>
+          <div><span class="cmt"># Code Review Skill</span></div>
+          <div>&nbsp;</div>
+          <div><span class="str">1. OWASP Top 10 체크</span></div>
+          <div><span class="str">2. 타입 안전성 검증</span></div>
+          <div><span class="str">3. 테스트 커버리지 확인</span></div>
+          <div><span class="str">4. 성능 이슈 리뷰</span></div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted);">
+          &#8594; <span class="inline-code">/review</span> 로 호출
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card card--accent card--purple reveal" style="padding:16px 20px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">Skills 위치</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8;">
+            <span class="inline-code">~/.claude/skills/</span> 개인용<br>
+            <span class="inline-code">.claude/skills/</span> 프로젝트용 (팀 공유)<br>
+            <span class="inline-code">packages/*/skills/</span> 모노레포용
+          </div>
+        </div>
+        <div class="card card--accent card--blue reveal" style="padding:16px 20px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">CLAUDE.md vs Skills</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8;">
+            <strong>CLAUDE.md</strong>: 매 세션마다 항상 로드<br>
+            <strong>Skills</strong>: 호출할 때만 로드 (on-demand)<br>
+            <span style="color:var(--green);font-weight:600;">&#8594; 토큰 절약의 핵심!</span>
+          </div>
+        </div>
+        <div class="card card--accent card--orange reveal" style="padding:16px 20px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">주요 내장 명령어</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8;">
+            <span class="inline-code">/clear</span> <span class="inline-code">/compact</span> <span class="inline-code">/cost</span> <span class="inline-code">/model</span><br>
+            <span class="inline-code">/effort</span> <span class="inline-code">/init</span> <span class="inline-code">/batch</span> <span class="inline-code">/voice</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 13: MCP (MODEL CONTEXT PROTOCOL)
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--white" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--purple reveal">PART 03 &mdash; 확장 시스템</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:8px;">MCP &mdash; AI를 위한 USB 포트</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:24px;max-width:700px;">Model Context Protocol: 외부 도구와 데이터를 Claude에 연결하는 표준 인터페이스</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div class="reveal">
+        <div class="code-block" style="font-size:11px;line-height:1.8;">
+          <div><span class="cmt">// .mcp.json (프로젝트 루트)</span></div>
+          <div>{</div>
+          <div>&nbsp;&nbsp;<span class="str">"mcpServers"</span>: {</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="fn">"filesystem"</span>: {</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"command"</span>: <span class="str">"npx"</span>,</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"args"</span>: [<span class="str">"-y"</span>, <span class="str">"@mcp/server-fs"</span>],</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"env"</span>: {</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="str">"API_KEY"</span>: <span class="str">"..."</span></div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</div>
+          <div>&nbsp;&nbsp;&nbsp;&nbsp;}</div>
+          <div>&nbsp;&nbsp;}</div>
+          <div>}</div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted);">
+          <span class="inline-code">claude mcp add &lt;name&gt; -- &lt;cmd&gt;</span> 으로 추가 가능
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card card--accent card--purple reveal" style="padding:16px 20px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">Transport 방식</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8;">
+            <strong>stdio</strong>: 로컬 프로세스 (가장 일반적)<br>
+            <strong>SSE</strong>: Server-Sent Events<br>
+            <strong>HTTP</strong>: URL 기반 원격 서버
+          </div>
+        </div>
+        <div class="card card--accent card--teal reveal" style="padding:16px 20px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">스코프</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8;">
+            <strong>Project</strong>: <span class="inline-code">.mcp.json</span> (팀 공유)<br>
+            <strong>User</strong>: 개인 설정<br>
+            <strong>Local</strong>: 머신별 오버라이드
+          </div>
+        </div>
+        <div class="card card--accent card--blue reveal" style="padding:16px 20px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">핵심 특징</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8;">
+            <strong>Tool Search</strong>: MCP 도구는 지연 로딩<br>
+            &#8594; 필요할 때만 컨텍스트에 로드<br>
+            &#8594; 컨텍스트 윈도우 절약!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 14: RECOMMENDED MCP TOOLS
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--light" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--purple reveal">PART 03 &mdash; 확장 시스템</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:8px;">추천 MCP 서버 &amp; 플러그인</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:24px;">실제로 사용해보고 효과적이었던 도구들</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="card card--accent card--blue reveal" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span class="icon-badge" style="background:var(--blue-light);font-size:16px;">C7</span>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:15px;">Context7</div>
+            <div style="font-size:11px;color:var(--blue);font-weight:600;">라이브러리 문서 검색</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">
+          npm, PyPI 등의 라이브러리 최신 문서를 실시간 검색. Claude의 학습 데이터 한계를 극복하여 <strong>최신 API</strong>를 정확하게 참조.
+        </div>
+      </div>
+      <div class="card card--accent card--green reveal" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span class="icon-badge" style="background:var(--green-light);font-size:16px;">Sr</span>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:15px;">Serena</div>
+            <div style="font-size:11px;color:var(--green-dark);font-weight:600;">시맨틱 코드 분석</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">
+          LSP 기반 심볼 분석, 참조 추적, 리팩토링. 파일 전체를 읽지 않고 <strong>심볼 단위</strong>로 코드를 탐색하여 토큰 절약.
+        </div>
+      </div>
+      <div class="card card--accent card--purple reveal" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span class="icon-badge" style="background:var(--purple-light);font-size:16px;">Ob</span>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:15px;">Obsidian MCP</div>
+            <div style="font-size:11px;color:var(--purple);font-weight:600;">PKM 통합</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">
+          Obsidian 볼트의 노트를 읽고 쓰고 검색. 세션 기록을 PKM에 자동 저장하여 <strong>지식 축적</strong> 워크플로우 구축.
+        </div>
+      </div>
+      <div class="card card--accent card--orange reveal" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span class="icon-badge" style="background:var(--orange-light);font-size:16px;">Fs</span>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:15px;">Filesystem MCP</div>
+            <div style="font-size:11px;color:var(--orange);font-weight:600;">파일 시스템 확장</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">
+          프로젝트 외부 디렉토리 접근, 파일 관리. Playwright, Chrome DevTools MCP 등도 <strong>테스트 자동화</strong>에 유용.
+        </div>
+      </div>
+    </div>
+    <div class="callout callout--info reveal" style="margin-top:16px;font-size:12px;">
+      <strong>Plugins</strong>: 커뮤니티가 만든 확장 패키지. VS Code에서 <span class="inline-code">/plugins</span> 로 관리. CLI와 IDE가 상태를 공유합니다.
+      <strong>oh-my-claudecode</strong>, <strong>superpowers</strong> 같은 멀티에이전트 오케스트레이션 플러그인도 활용해보세요!
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 15: HOOKS
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--white" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--purple reveal">PART 03 &mdash; 확장 시스템</div>
+    <h2 class="slide-title slide-title--md reveal" style="margin-bottom:8px;">Hooks &mdash; 이벤트 기반 자동화</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:24px;">Claude Code의 생애주기 이벤트에 커스텀 스크립트를 연결</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div class="reveal">
+        <table class="styled-table" style="font-size:12px;">
+          <thead>
+            <tr><th>이벤트</th><th>시점</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono">PreToolUse</td><td>도구 실행 전 (허용/거부 결정)</td></tr>
+            <tr><td class="mono">PostToolUse</td><td>도구 실행 후 (후처리)</td></tr>
+            <tr><td class="mono">SessionStart</td><td>세션 시작 시</td></tr>
+            <tr><td class="mono">SessionEnd</td><td>세션 종료 시</td></tr>
+            <tr><td class="mono">UserPromptSubmit</td><td>사용자 입력 시</td></tr>
+            <tr><td class="mono">Stop</td><td>Claude 응답 완료 시</td></tr>
+            <tr><td class="mono">Notification</td><td>알림 발생 시</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card card--accent card--purple reveal" style="padding:16px 20px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">활용 예시</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8;">
+            &#8226; 코드 저장 시 자동 포맷팅 (Prettier)<br>
+            &#8226; 위험한 명령 차단 (rm -rf 등)<br>
+            &#8226; 세션 종료 시 Slack 알림<br>
+            &#8226; 코드 변경 후 자동 테스트 실행
+          </div>
+        </div>
+        <div class="card card--accent card--blue reveal" style="padding:16px 20px;">
+          <div style="font-weight:700;font-size:14px;margin-bottom:6px;">PreToolUse 특수 능력</div>
+          <div style="font-size:12px;color:var(--text-sub);line-height:1.8;">
+            <span class="tag-pill" style="background:var(--green-light);color:var(--green-dark);">allow</span>
+            <span class="tag-pill" style="background:var(--red-light);color:var(--red);">deny</span>
+            <span class="tag-pill" style="background:var(--orange-light);color:var(--orange);">escalate</span><br>
+            도구 입력을 수정하거나<br>
+            추가 컨텍스트를 주입 가능
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 16: TRANSITION - CASES
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--dark" data-bg="dark">
+  <div class="deco-grid"></div>
+  <div class="deco-blob" style="width:400px;height:400px;background:var(--orange);top:-50px;left:-50px;"></div>
+  <div class="deco-blob" style="width:350px;height:350px;background:var(--red);bottom:-50px;right:-50px;"></div>
+  <div class="slide-inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <h2 class="slide-title reveal" style="font-size:clamp(32px,5vw,52px);color:rgba(255,255,255,0.9);margin-bottom:20px;">
+      실전에서는<br>어떻게 다를까?
+    </h2>
+    <div class="reveal" style="width:120px;height:3px;background:var(--orange);border-radius:2px;margin:20px auto;"></div>
+    <h2 class="slide-title reveal" style="font-size:clamp(28px,4vw,44px);margin-bottom:16px;">
+      <span style="background:linear-gradient(135deg,var(--orange),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Good vs Bad Cases</span>
+    </h2>
+    <p class="reveal" style="font-size:18px;color:rgba(255,255,255,0.5);">같은 도구, 다른 결과 &mdash; 사용법이 차이를 만듭니다</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 17: BAD CASES
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--light" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--orange reveal">PART 04 &mdash; Good vs Bad Cases</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:8px;color:var(--red);">못 쓰는 패턴 Top 6</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:24px;">이런 습관이 토큰을 낭비하고 결과 품질을 떨어뜨립니다</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="card card--accent card--red reveal" style="padding:16px 20px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">1. 모호한 프롬프트</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">"리팩토링 해줘" &rarr; Claude가 전체 코드를 스캔하며 토큰 대량 소비</div>
+      </div>
+      <div class="card card--accent card--red reveal" style="padding:16px 20px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">2. /clear 안 하기</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">작업 전환 시 이전 컨텍스트가 매 메시지마다 토큰 차지</div>
+      </div>
+      <div class="card card--accent card--red reveal" style="padding:16px 20px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">3. Plan Mode 무시</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">복잡한 작업을 바로 실행 &rarr; 잘못된 방향 &rarr; 되돌리기 &rarr; 2배 비용</div>
+      </div>
+      <div class="card card--accent card--red reveal" style="padding:16px 20px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">4. CLAUDE.md 과부하</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">너무 긴 CLAUDE.md = 매 세션마다 불필요한 토큰 소비</div>
+      </div>
+      <div class="card card--accent card--red reveal" style="padding:16px 20px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">5. 출력 검증 안 하기</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">AI 응답을 무비판적 수용 &rarr; 버그/보안 이슈 놓침</div>
+      </div>
+      <div class="card card--accent card--red reveal" style="padding:16px 20px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">6. Permission 설정 안 하기</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">매번 허가 프롬프트 클릭 &rarr; 작업 흐름 중단, 생산성 하락</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 18: GOOD CASES
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--white" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--orange reveal">PART 04 &mdash; Good vs Bad Cases</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:8px;color:var(--green-dark);">잘 쓰는 패턴 Top 6</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:24px;">이렇게 하면 같은 비용으로 3-5배 더 많은 결과를 얻습니다</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="card card--accent card--green reveal" style="padding:16px 20px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">1. 구체적 프롬프트</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">파일 경로 + 기대 동작 + 제약 + 검증 명령을 한 프롬프트에</div>
+      </div>
+      <div class="card card--accent card--green reveal" style="padding:16px 20px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">2. 작업별 /clear</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">30-45분 집중 세션 후 /clear. 관련 없는 컨텍스트 제거</div>
+      </div>
+      <div class="card card--accent card--green reveal" style="padding:16px 20px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">3. Plan First, Code Later</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">Plan Mode로 분석 &rarr; 계획 확인 &rarr; 그다음 실행. 재작업 방지</div>
+      </div>
+      <div class="card card--accent card--green reveal" style="padding:16px 20px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">4. Skills로 분리</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">반복 워크플로우를 Skill로 만들면 DRY + on-demand 로딩</div>
+      </div>
+      <div class="card card--accent card--green reveal" style="padding:16px 20px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">5. Git Worktree 병렬 작업</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">독립적인 작업을 별도 worktree에서 병렬 실행 &rarr; 시간 단축</div>
+      </div>
+      <div class="card card--accent card--green reveal" style="padding:16px 20px;">
+        <div style="font-weight:700;font-size:14px;margin-bottom:4px;">6. MCP로 도구 확장</div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">Context7으로 최신 문서, Serena로 코드 분석. Claude의 한계 극복</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 19: GOOD VS BAD COMPARISON
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--light" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--orange reveal">PART 04 &mdash; Good vs Bad Cases</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:12px;">실전 비교: 리팩토링 요청</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:24px;">같은 요청이지만 결과가 완전히 달라집니다</p>
+    <div class="compare-grid reveal">
+      <div class="compare-card compare-card--bad">
+        <span class="compare-label compare-label--bad">BAD CASE</span>
+        <div class="code-block" style="margin-top:8px;font-size:12px;">
+          <div>데이터베이스 코드 리팩토링 해줘</div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:#991b1b;line-height:1.7;">
+          &#10007; 어떤 파일? 어떤 패턴?<br>
+          &#10007; Claude가 추측하며 전체 탐색<br>
+          &#10007; 기존 인터페이스 깨질 위험<br>
+          &#10007; 예상 소요: <strong>~$2-5 토큰</strong>
+        </div>
+      </div>
+      <div class="compare-card compare-card--good">
+        <span class="compare-label compare-label--good">GOOD CASE</span>
+        <div class="code-block" style="background:#0a2e1a;margin-top:8px;font-size:12px;">
+          <div>src/db/queries.ts를 repository 패턴으로</div>
+          <div>리팩토링해줘.</div>
+          <div>&nbsp;</div>
+          <div>src/db/repositories/user.ts를</div>
+          <div>스타일 가이드로 참고해.</div>
+          <div>&nbsp;</div>
+          <div>public 메서드 시그니처 유지 필수.</div>
+          <div><span class="cmd">npm test</span> 로 검증.</div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:#065f46;line-height:1.7;">
+          &#10003; 정확한 파일 &amp; 패턴 지정<br>
+          &#10003; 참조 예시 제공<br>
+          &#10003; 제약 조건 명시<br>
+          &#10003; 예상 소요: <strong>~$0.3-0.5 토큰</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 20: TRANSITION - COST & TIPS
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--dark" data-bg="dark">
+  <div class="deco-grid"></div>
+  <div class="deco-blob" style="width:400px;height:400px;background:var(--teal);top:-50px;left:-50px;"></div>
+  <div class="deco-blob" style="width:350px;height:350px;background:var(--green);bottom:-50px;right:-50px;"></div>
+  <div class="slide-inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <h2 class="slide-title reveal" style="font-size:clamp(32px,5vw,52px);color:rgba(255,255,255,0.9);margin-bottom:20px;">
+      비용을 줄이고<br>생산성을 높이기
+    </h2>
+    <div class="reveal" style="width:120px;height:3px;background:var(--teal);border-radius:2px;margin:20px auto;"></div>
+    <h2 class="slide-title reveal" style="font-size:clamp(28px,4vw,44px);margin-bottom:16px;">
+      <span style="background:linear-gradient(135deg,var(--teal),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">실전 팁 &amp; 비용 관리</span>
+    </h2>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 21: COST MANAGEMENT
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--white" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--teal reveal">PART 05 &mdash; 비용 &amp; 팁</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:8px;">비용 관리 전략</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:24px;">평균 ~$6/일, 90th percentile ~$12/일. 최적화하면 절반 이하로 줄일 수 있습니다.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="card card--accent card--teal reveal" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <span class="icon-badge" style="background:#ccfbf1;">&#9889;</span>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:15px;">Prompt Caching</div>
+            <div style="font-size:12px;color:var(--teal);font-weight:600;">자동 적용, 최대 90% 절약</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">
+          시스템 프롬프트, CLAUDE.md 등 반복 콘텐츠를 캐시. 캐시 히트 시 <strong>입력 가격의 10%</strong>만 청구.
+        </div>
+      </div>
+      <div class="card card--accent card--blue reveal" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <span class="icon-badge" style="background:var(--blue-light);">&#128200;</span>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:15px;">/effort 조절</div>
+            <div style="font-size:12px;color:var(--blue);font-weight:600;">작업 복잡도에 맞게</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">
+          간단한 작업은 <span class="inline-code">/effort low</span>. 복잡한 분석은 <span class="inline-code">/effort high</span>. Thinking 토큰 비용 절감.
+        </div>
+      </div>
+      <div class="card card--accent card--green reveal" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <span class="icon-badge" style="background:var(--green-light);">&#128336;</span>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:15px;">세션 위생</div>
+            <div style="font-size:12px;color:var(--green-dark);font-weight:600;">30-45분 집중 세션</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">
+          하나의 작업에 집중 &rarr; <span class="inline-code">/clear</span> &rarr; 다음 작업. 마라톤 세션 지양.
+        </div>
+      </div>
+      <div class="card card--accent card--orange reveal" style="padding:20px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+          <span class="icon-badge" style="background:var(--orange-light);">&#128176;</span>
+          <div>
+            <div style="font-family:var(--font-display);font-weight:700;font-size:15px;">모니터링</div>
+            <div style="font-size:12px;color:var(--orange);font-weight:600;">실시간 추적</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--muted);line-height:1.6;">
+          <span class="inline-code">/cost</span> 로 세션 비용, <span class="inline-code">/stats</span> 로 사용 패턴 확인. 상태줄에 토큰 카운트 표시 가능.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 22: PRODUCTIVITY TIPS
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--light" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--teal reveal">PART 05 &mdash; 비용 &amp; 팁</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:8px;">생산성 극대화 치트시트</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:24px;">바로 적용할 수 있는 실전 팁</p>
+    <div class="skill-grid">
+      <div class="skill-column">
+        <h3 class="reveal" style="background:var(--blue);">일상 워크플로우</h3>
+        <div class="skill-item reveal">
+          <div class="skill-name" style="color:var(--blue);">Tab 자동완성</div>
+          <div class="skill-desc">파일 경로를 탭으로 입력하여 정확한 컨텍스트 제공</div>
+        </div>
+        <div class="skill-item reveal">
+          <div class="skill-name" style="color:var(--blue);">URL 직접 붙여넣기</div>
+          <div class="skill-desc">문서 URL을 채팅에 붙이면 Claude가 직접 읽고 참조</div>
+        </div>
+        <div class="skill-item reveal">
+          <div class="skill-name" style="color:var(--blue);">/rename으로 세션 이름 지정</div>
+          <div class="skill-desc">나중에 --continue로 쉽게 찾아 이어가기</div>
+        </div>
+        <div class="skill-item reveal">
+          <div class="skill-name" style="color:var(--blue);">Few-shot 예시 제공</div>
+          <div class="skill-desc">원하는 스타일의 코드 예시를 주면 일관성 ~65% 향상</div>
+        </div>
+      </div>
+      <div class="skill-column">
+        <h3 class="reveal" style="background:var(--green);">고급 워크플로우</h3>
+        <div class="skill-item reveal">
+          <div class="skill-name" style="color:var(--green-dark);">/batch 대량 변환</div>
+          <div class="skill-desc">수백 파일 동시 변환. 워크트리 격리, 10x 속도 향상</div>
+        </div>
+        <div class="skill-item reveal">
+          <div class="skill-name" style="color:var(--green-dark);">Git Worktree 병렬 개발</div>
+          <div class="skill-desc">각 Claude가 독립 브랜치에서 작업. 서로 간섭 없음</div>
+        </div>
+        <div class="skill-item reveal">
+          <div class="skill-name" style="color:var(--green-dark);">Headless Mode (CI/CD)</div>
+          <div class="skill-desc">claude -p "..." 로 자동 PR 리뷰, 코드 생성, 마이그레이션</div>
+        </div>
+        <div class="skill-item reveal">
+          <div class="skill-name" style="color:var(--green-dark);">Cross-Platform 세션</div>
+          <div class="skill-desc">/teleport로 웹/모바일 세션을 터미널로, /desktop으로 앱으로</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 23: SUMMARY & Q&A
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--dark" data-bg="dark">
+  <div class="deco-grid"></div>
+  <div class="deco-blob" style="width:400px;height:400px;background:var(--blue);top:-100px;left:-100px;"></div>
+  <div class="deco-blob" style="width:300px;height:300px;background:var(--green);bottom:-50px;right:-50px;"></div>
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <h2 class="slide-title slide-title--lg reveal" style="color:#fff;margin-bottom:32px;">핵심 정리</h2>
+    <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:36px;">
+      <div class="reveal" style="display:flex;align-items:center;gap:20px;">
+        <span style="width:48px;height:48px;border-radius:50%;background:var(--blue-glow);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:20px;color:var(--navy);flex-shrink:0;">1</span>
+        <div style="font-size:16px;color:rgba(255,255,255,0.85);line-height:1.7;">
+          <strong>Context Engineering이 핵심</strong> &mdash; CLAUDE.md로 프로젝트 컨텍스트를 관리하고, /clear와 /compact로 토큰을 절약하세요.
+        </div>
+      </div>
+      <div class="reveal" style="display:flex;align-items:center;gap:20px;">
+        <span style="width:48px;height:48px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:20px;color:#fff;flex-shrink:0;">2</span>
+        <div style="font-size:16px;color:rgba(255,255,255,0.85);line-height:1.7;">
+          <strong>Skills + MCP로 고도화</strong> &mdash; 반복 작업은 Skills로, 외부 도구는 MCP로 연결. Context7, Serena 추천!
+        </div>
+      </div>
+      <div class="reveal" style="display:flex;align-items:center;gap:20px;">
+        <span style="width:48px;height:48px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:20px;color:#fff;flex-shrink:0;">3</span>
+        <div style="font-size:16px;color:rgba(255,255,255,0.85);line-height:1.7;">
+          <strong>구체적으로, 계획적으로</strong> &mdash; 모호한 프롬프트 대신 파일+목표+제약+검증을 담고, Plan Mode를 활용하세요.
+        </div>
+      </div>
+      <div class="reveal" style="display:flex;align-items:center;gap:20px;">
+        <span style="width:48px;height:48px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:20px;color:#fff;flex-shrink:0;">4</span>
+        <div style="font-size:16px;color:rgba(255,255,255,0.85);line-height:1.7;">
+          <strong>비용 관리는 습관</strong> &mdash; /cost로 모니터링, /effort로 조절, 30-45분 집중 세션 유지.
+        </div>
+      </div>
+    </div>
+    <div class="reveal" style="text-align:center;">
+      <div style="width:120px;height:2px;background:rgba(255,255,255,0.15);margin:0 auto 24px;"></div>
+      <h2 style="font-family:var(--font-display);font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--green),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Q &amp; A</h2>
+      <p style="color:rgba(255,255,255,0.4);font-size:14px;margin-top:8px;">궁금한 점이 있으시면 질문해주세요!</p>
+    </div>
+  </div>
+</div>
+
+
+</div><!-- end deck -->
+
+<!-- Navigation Bar -->
+<nav class="nav-bar">
+  <button class="nav-btn" onclick="goTo(currentSlide - 1)" aria-label="Previous">&#8592;</button>
+  <div class="nav-progress"><div class="nav-progress-fill" id="progressFill"></div></div>
+  <span class="nav-counter" id="counter">01 / --</span>
+  <div class="nav-progress"><div class="nav-progress-fill" id="progressFill2"></div></div>
+  <button class="nav-btn" onclick="goTo(currentSlide + 1)" aria-label="Next">&#8594;</button>
+</nav>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let currentSlide = 0;
+let transitioning = false;
+
+function goTo(index) {
+  if (transitioning || index < 0 || index >= total) return;
+  transitioning = true;
+  slides[currentSlide].classList.remove('active');
+  currentSlide = index;
+  slides[currentSlide].classList.add('active');
+  const pct = (currentSlide / (total - 1)) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressFill2').style.width = pct + '%';
+  document.getElementById('counter').textContent =
+    String(currentSlide + 1).padStart(2, '0') + ' / ' + String(total).padStart(2, '0');
+  document.body.style.background =
+    slides[currentSlide].dataset.bg === 'dark' ? '#0f172a' : '#f8fafc';
+  setTimeout(() => { transitioning = false; }, 400);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (['ArrowRight','ArrowDown',' '].includes(e.key)) { e.preventDefault(); goTo(currentSlide + 1); }
+  else if (['ArrowLeft','ArrowUp'].includes(e.key)) { e.preventDefault(); goTo(currentSlide - 1); }
+  else if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+  else if (e.key === 'End') { e.preventDefault(); goTo(total - 1); }
+});
+
+let touchX = 0, touchY = 0;
+document.addEventListener('touchstart', (e) => {
+  touchX = e.changedTouches[0].screenX;
+  touchY = e.changedTouches[0].screenY;
+});
+document.addEventListener('touchend', (e) => {
+  const dx = e.changedTouches[0].screenX - touchX;
+  const dy = e.changedTouches[0].screenY - touchY;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+    dx < 0 ? goTo(currentSlide + 1) : goTo(currentSlide - 1);
+  }
+});
+
+let wheelTimer;
+document.addEventListener('wheel', (e) => {
+  e.preventDefault();
+  clearTimeout(wheelTimer);
+  wheelTimer = setTimeout(() => {
+    e.deltaY > 0 ? goTo(currentSlide + 1) : goTo(currentSlide - 1);
+  }, 80);
+}, { passive: false });
+
+document.addEventListener('keydown', () => {
+  document.getElementById('keyHint').classList.add('hidden');
+}, { once: true });
+
+// Progress bar click-to-navigate
+document.querySelectorAll('.nav-progress').forEach(bar => {
+  bar.addEventListener('click', (e) => {
+    const rect = bar.getBoundingClientRect();
+    const ratio = (e.clientX - rect.left) / rect.width;
+    const index = Math.round(ratio * (total - 1));
+    goTo(index);
+  });
+});
+
+// Counter click-to-navigate
+document.getElementById('counter').addEventListener('click', () => {
+  const input = prompt('Go to slide (1–' + total + '):', String(currentSlide + 1));
+  if (input === null) return;
+  const num = parseInt(input, 10);
+  if (num >= 1 && num <= total) goTo(num - 1);
+});
+
+goTo(0);
+</script>
+</body>
+</html>

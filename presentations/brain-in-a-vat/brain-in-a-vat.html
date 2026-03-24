@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>통속의 뇌 - Brain in a Vat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;900&family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --navy: #0f172a;
+  --navy-mid: #1e293b;
+  --blue: #3b82f6;
+  --blue-light: #dbeafe;
+  --blue-glow: #60a5fa;
+  --green: #10b981;
+  --green-light: #d1fae5;
+  --green-dark: #059669;
+  --purple: #8b5cf6;
+  --purple-light: #ede9fe;
+  --orange: #f59e0b;
+  --orange-light: #fef3c7;
+  --red: #ef4444;
+  --red-light: #fee2e2;
+  --teal: #14b8a6;
+  --yellow: #ecc94b;
+  --cyan: #06b6d4;
+  --cyan-light: #cffafe;
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --text: #1e293b;
+  --text-sub: #475569;
+  --muted: #94a3b8;
+  --border: #e2e8f0;
+  --font-display: 'Outfit', 'Noto Sans KR', sans-serif;
+  --font-body: 'Noto Sans KR', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--text);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+.deck { height: 100vh; width: 100vw; overflow: hidden; position: relative; }
+
+.slide {
+  position: absolute; top: 0; left: 0; width: 100vw; height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: translateY(30px);
+  transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1);
+  pointer-events: none; padding: 40px;
+}
+.slide.active { opacity: 1; transform: translateY(0); pointer-events: all; }
+
+.slide-inner { width: 100%; max-width: 1100px; height: 100%; max-height: 680px; position: relative; }
+
+.slide--dark { background: var(--navy); }
+.slide--dark .slide-inner { color: #fff; }
+.slide--light { background: var(--bg); }
+.slide--white { background: #fff; }
+
+.nav-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 56px;
+  background: rgba(15,23,42,0.95); backdrop-filter: blur(20px);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; z-index: 100; border-top: 1px solid rgba(255,255,255,0.06);
+}
+.nav-progress { flex: 1; height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; margin: 0 24px; overflow: hidden; cursor: pointer; }
+.nav-progress-fill { height: 100%; background: linear-gradient(90deg, var(--purple), var(--cyan)); border-radius: 2px; transition: width 0.5s cubic-bezier(0.16,1,0.3,1); }
+.nav-btn { background: none; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.7); width: 36px; height: 36px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.2s; }
+.nav-btn:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.3); }
+.nav-counter { color: rgba(255,255,255,0.5); font-family: var(--font-mono); font-size: 13px; min-width: 60px; text-align: center; letter-spacing: 1px; cursor: pointer; }
+
+.reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.active .reveal { opacity: 1; transform: translateY(0); }
+.active .reveal:nth-child(1) { transition-delay: 0.1s; }
+.active .reveal:nth-child(2) { transition-delay: 0.2s; }
+.active .reveal:nth-child(3) { transition-delay: 0.3s; }
+.active .reveal:nth-child(4) { transition-delay: 0.4s; }
+.active .reveal:nth-child(5) { transition-delay: 0.5s; }
+.active .reveal:nth-child(6) { transition-delay: 0.6s; }
+.active .reveal:nth-child(7) { transition-delay: 0.7s; }
+.active .reveal:nth-child(8) { transition-delay: 0.8s; }
+.active .reveal:nth-child(9) { transition-delay: 0.9s; }
+.active .reveal:nth-child(10) { transition-delay: 1.0s; }
+
+.deco-blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.15; pointer-events: none; }
+.deco-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; }
+
+.section-tag { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 16px; }
+.section-tag--purple { background: var(--purple-light); color: var(--purple); }
+.section-tag--cyan { background: var(--cyan-light); color: var(--cyan); }
+.section-tag--orange { background: var(--orange-light); color: var(--orange); }
+.section-tag--blue { background: var(--blue-light); color: var(--blue); }
+.section-tag--green { background: var(--green-light); color: var(--green-dark); }
+
+.slide-title { font-family: var(--font-display); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; }
+.slide-title--xl { font-size: clamp(36px,5vw,56px); }
+.slide-title--lg { font-size: clamp(28px,3.5vw,40px); }
+.slide-title--md { font-size: clamp(24px,3vw,34px); }
+.slide-subtitle { font-size: clamp(15px,1.8vw,18px); line-height: 1.7; color: var(--text-sub); font-weight: 400; }
+.slide--dark .slide-subtitle { color: rgba(255,255,255,0.6); }
+
+.card { background: var(--card); border-radius: 16px; padding: 28px; border: 1px solid var(--border); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,0,0,0.06); }
+.card--accent { border-left: 4px solid; border-radius: 4px 16px 16px 4px; }
+.card--blue { border-left-color: var(--blue); }
+.card--green { border-left-color: var(--green); }
+.card--purple { border-left-color: var(--purple); }
+.card--orange { border-left-color: var(--orange); }
+.card--teal { border-left-color: var(--teal); }
+.card--cyan { border-left-color: var(--cyan); }
+.card--glass { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(20px); }
+.card--glass:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.compare-card { border-radius: 16px; padding: 28px; position: relative; overflow: hidden; }
+.compare-card--bad { background: var(--red-light); border: 1px solid #fecaca; }
+.compare-card--good { background: var(--green-light); border: 1px solid #a7f3d0; }
+.compare-label { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+.compare-label--bad { background: var(--red); color: #fff; }
+.compare-label--good { background: var(--green); color: #fff; }
+
+.flow-track { display: flex; align-items: center; gap: 8px; justify-content: center; flex-wrap: wrap; }
+.flow-step { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.flow-circle { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 800; font-size: 22px; color: #fff; transition: transform 0.3s ease; }
+.flow-circle:hover { transform: scale(1.15); }
+.flow-label { font-size: 13px; font-weight: 600; color: var(--text); text-align: center; }
+.flow-sublabel { font-size: 11px; color: var(--muted); text-align: center; margin-top: -6px; }
+.flow-arrow { color: var(--muted); font-size: 18px; margin: 0 2px; margin-bottom: 36px; }
+
+.styled-table { width: 100%; border-collapse: collapse; font-size: 14px; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.styled-table th { background: var(--navy); color: #fff; padding: 14px 20px; text-align: left; font-weight: 600; font-size: 13px; letter-spacing: 0.5px; }
+.styled-table td { padding: 12px 20px; border-bottom: 1px solid var(--border); }
+.styled-table tr:nth-child(even) td { background: var(--bg); }
+.styled-table tr:hover td { background: var(--blue-light); }
+
+.callout { padding: 14px 20px; border-radius: 10px; font-size: 14px; line-height: 1.6; }
+.callout--warn { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+.callout--info { background: var(--blue-light); border: 1px solid #93c5fd; color: var(--navy-mid); }
+
+.icon-badge { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+
+/* Quote block */
+.quote-block {
+  position: relative;
+  padding: 24px 32px;
+  border-left: 4px solid var(--purple);
+  background: var(--purple-light);
+  border-radius: 4px 16px 16px 4px;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--navy-mid);
+  font-style: italic;
+}
+.quote-block::before {
+  content: '\201C';
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  font-size: 48px;
+  color: var(--purple);
+  opacity: 0.3;
+  font-style: normal;
+}
+.quote-author {
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  font-style: normal;
+  color: var(--purple);
+}
+
+/* Dark quote */
+.quote-block--dark {
+  background: rgba(255,255,255,0.06);
+  border-left-color: var(--cyan);
+  color: rgba(255,255,255,0.85);
+}
+.quote-block--dark::before { color: var(--cyan); }
+.quote-block--dark .quote-author { color: var(--cyan); }
+
+.stat-number { font-family: var(--font-display); font-weight: 900; line-height: 1; }
+.inline-code { font-family: var(--font-mono); font-size: 12px; background: var(--bg); padding: 2px 8px; border-radius: 4px; color: var(--purple); font-weight: 600; }
+
+.key-hint { position: fixed; top: 16px; right: 16px; background: rgba(15,23,42,0.8); backdrop-filter: blur(10px); color: rgba(255,255,255,0.6); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-family: var(--font-mono); z-index: 100; opacity: 1; transition: opacity 1s ease; border: 1px solid rgba(255,255,255,0.08); }
+.key-hint.hidden { opacity: 0; pointer-events: none; }
+
+/* Slide images */
+.slide-img {
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+.slide-img--round { border-radius: 50%; }
+.slide-img--border { border: 3px solid var(--border); }
+.slide-img--glow { box-shadow: 0 0 40px rgba(139,92,246,0.3); }
+.slide-img-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (max-width: 768px) {
+  .slide { padding: 24px; }
+  .slide-inner { max-height: none; }
+  .compare-grid { grid-template-columns: 1fr; }
+  .flow-track { gap: 4px; }
+  .flow-circle { width: 42px; height: 42px; font-size: 16px; }
+  .nav-bar { padding: 0 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="key-hint" id="keyHint">Arrow keys / Space to navigate</div>
+
+<div class="deck" id="deck">
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 1: TITLE
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--dark active" data-bg="dark">
+  <div class="deco-grid"></div>
+  <div class="deco-blob" style="width:500px;height:500px;background:var(--purple);top:-100px;right:-100px;"></div>
+  <div class="deco-blob" style="width:400px;height:400px;background:var(--cyan);bottom:-80px;left:-80px;"></div>
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="reveal" style="margin-bottom:20px;">
+      <span style="font-family:var(--font-mono);font-size:14px;color:var(--cyan);letter-spacing:2px;">PHILOSOPHY &amp; TECHNOLOGY / 2026</span>
+    </div>
+    <h1 class="slide-title slide-title--xl reveal" style="color:#fff;margin-bottom:16px;">
+      통속의 뇌<br>
+      <span style="background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Brain in a Vat</span>
+    </h1>
+    <p class="slide-subtitle reveal" style="color:rgba(255,255,255,0.5);max-width:580px;font-size:20px;">
+      뇌세포 서버부터 시뮬라시옹까지,<br>현실의 경계를 묻는 철학 여행
+    </p>
+    <div class="reveal" style="margin-top:40px;display:flex;gap:12px;">
+      <span style="padding:6px 16px;border-radius:100px;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-size:13px;">Biocomputing</span>
+      <span style="padding:6px 16px;border-radius:100px;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-size:13px;">Baudrillard</span>
+      <span style="padding:6px 16px;border-radius:100px;border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.5);font-size:13px;">AI &amp; Simulation</span>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 2: NEWS HOOK
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--white" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--purple reveal">OPENING &mdash; 2026년 3월의 뉴스</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:16px;">뇌세포로 서버를 만든다고?</h2>
+    <div class="reveal" style="float:right;margin-left:20px;margin-bottom:12px;">
+      <img src="images/cl1-biocomputer.jpg" class="slide-img slide-img--border" style="width:260px;height:150px;" alt="Cortical Labs CL1 Biocomputer">
+      <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px;">Cortical Labs CL1 내부 &copy; IEEE Spectrum</div>
+    </div>
+    <div class="quote-block reveal" style="margin-bottom:24px;">
+      "호주 멜버른에 인간 뇌세포로 구동되는 세계 최초의 바이오 데이터센터가 문을 열었다.<br>직원들은 매일 뇌척수액을 교체한다."
+      <div class="quote-author">&mdash; Bloomberg, 2026.03.09</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+      <div class="card card--accent card--purple reveal" style="padding:18px 20px;text-align:center;">
+        <div class="stat-number" style="font-size:32px;color:var(--purple);">120</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;">CL1 유닛 (멜버른)</div>
+        <div style="font-size:11px;color:var(--text-sub);margin-top:8px;">각 유닛에 ~200,000개 뉴런</div>
+      </div>
+      <div class="card card--accent card--cyan reveal" style="padding:18px 20px;text-align:center;">
+        <div class="stat-number" style="font-size:32px;color:var(--cyan);">$35K</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;">CL1 한 대 가격</div>
+        <div style="font-size:11px;color:var(--text-sub);margin-top:8px;">계산기보다 낮은 전력 소비</div>
+      </div>
+      <div class="card card--accent card--green reveal" style="padding:18px 20px;text-align:center;">
+        <div class="stat-number" style="font-size:32px;color:var(--green);">1M<span style="font-size:16px;">x</span></div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;">에너지 효율 (vs 실리콘)</div>
+        <div style="font-size:11px;color:var(--text-sub);margin-top:8px;">FinalSpark 바이오컴퓨팅</div>
+      </div>
+    </div>
+    <div class="callout callout--warn reveal" style="margin-top:16px;font-size:13px;">
+      Cortical Labs의 뉴런들은 <strong>Pong</strong>과 <strong>DOOM</strong>을 플레이하도록 학습되었습니다.
+      헌혈된 혈액 &rarr; 줄기세포 &rarr; 뉴런으로 배양 &rarr; 실리콘 칩 위에서 성장.
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 4: TRANSITION - THOUGHT EXPERIMENT
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--dark" data-bg="dark">
+  <div class="deco-grid"></div>
+  <div class="deco-blob" style="width:400px;height:400px;background:var(--purple);top:-50px;left:-50px;"></div>
+  <div class="deco-blob" style="width:350px;height:350px;background:var(--cyan);bottom:-50px;right:-50px;"></div>
+  <div class="slide-inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <h2 class="slide-title reveal" style="font-size:clamp(28px,4vw,44px);color:rgba(255,255,255,0.9);margin-bottom:20px;">
+      1981년, 한 철학자가<br>물었습니다
+    </h2>
+    <div class="reveal" style="width:120px;height:3px;background:var(--purple);border-radius:2px;margin:20px auto;"></div>
+    <h2 class="slide-title reveal" style="font-size:clamp(28px,4vw,44px);margin-bottom:16px;">
+      <span style="background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">"당신이 통속의 뇌라면,<br>그걸 알 수 있는가?"</span>
+    </h2>
+    <p class="reveal" style="font-size:16px;color:rgba(255,255,255,0.4);">Hilary Putnam, <em>Reason, Truth, and History</em> (1981)</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 5: BRAIN IN A VAT
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--white" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--purple reveal">CHAPTER 1 &mdash; 통속의 뇌</div>
+    <div style="display:flex;align-items:center;gap:24px;margin-bottom:12px;">
+      <div style="flex:1;">
+        <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:12px;">사고실험: Brain in a Vat</h2>
+        <p class="slide-subtitle reveal" style="margin-bottom:24px;max-width:800px;">미친 과학자가 당신의 뇌를 꺼내 영양액 통에 넣고, 슈퍼컴퓨터에 연결합니다.</p>
+      </div>
+      <div class="reveal" style="flex-shrink:0;">
+        <img src="images/brain-in-a-vat.png" class="slide-img" style="width:180px;height:180px;object-fit:contain;background:var(--purple-light);padding:12px;border-radius:16px;" alt="Brain in a Vat Illustration">
+        <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px;">Wikimedia Commons (PD)</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+      <div class="reveal" style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card card--accent card--purple" style="padding:18px 22px;">
+          <div style="font-weight:700;font-size:15px;margin-bottom:8px;">시나리오</div>
+          <div style="font-size:13px;color:var(--text-sub);line-height:1.8;">
+            컴퓨터가 뇌에 <strong>완벽한 감각 신호</strong>를 전송합니다.<br>
+            당신은 걷고, 먹고, 대화합니다.<br>
+            하지만 그 어느 것도 "실재"하지 않습니다.
+          </div>
+        </div>
+        <div class="card card--accent card--cyan" style="padding:18px 22px;">
+          <div style="font-weight:700;font-size:15px;margin-bottom:8px;">핵심 질문</div>
+          <div style="font-size:13px;color:var(--text-sub);line-height:1.8;">
+            감각 입력이 <strong>완벽히 시뮬레이션</strong>된다면,<br>
+            당신은 진짜와 가짜를<br>
+            <strong>구분할 수 있는가?</strong>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card" style="border-top:3px solid var(--orange);padding:18px 22px;">
+          <div style="font-weight:700;font-size:15px;margin-bottom:8px;">데카르트의 악마 (1641)</div>
+          <div style="font-size:13px;color:var(--text-sub);line-height:1.8;">
+            전능한 악마가 당신의 모든 경험을 조작.<br>
+            통속의 뇌는 이것의 <strong>현대 과학 버전</strong>.<br>
+            초자연적 악마 &rarr; 슈퍼컴퓨터로 교체.
+          </div>
+        </div>
+        <div class="card" style="border-top:3px solid var(--green);padding:18px 22px;">
+          <div style="font-weight:700;font-size:15px;margin-bottom:8px;">퍼트넘의 반론</div>
+          <div style="font-size:13px;color:var(--text-sub);line-height:1.8;">
+            "통속의 뇌는 '나는 통속의 뇌다'라는<br>
+            생각을 할 수 <strong>없다</strong>."<br>
+            <span style="color:var(--muted);font-size:12px;">&mdash; 의미적 외재주의: "뇌"라는 단어가 시뮬레이션 내부의 뇌만 지칭하므로</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 6: TRANSITION - BAUDRILLARD
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--dark" data-bg="dark">
+  <div class="deco-grid"></div>
+  <div class="deco-blob" style="width:400px;height:400px;background:var(--orange);top:-50px;right:-50px;"></div>
+  <div class="deco-blob" style="width:350px;height:350px;background:var(--purple);bottom:-50px;left:-50px;"></div>
+  <div class="slide-inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <h2 class="slide-title reveal" style="font-size:clamp(28px,4vw,44px);color:rgba(255,255,255,0.9);margin-bottom:20px;">
+      같은 해, 또 다른 철학자가<br>더 급진적인 주장을 했습니다
+    </h2>
+    <div class="reveal" style="width:120px;height:3px;background:var(--orange);border-radius:2px;margin:20px auto;"></div>
+    <h2 class="slide-title reveal" style="font-size:clamp(28px,4vw,44px);margin-bottom:16px;">
+      <span style="background:linear-gradient(135deg,var(--orange),var(--yellow));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">"현실은 이미 사라졌다"</span>
+    </h2>
+    <p class="reveal" style="font-size:16px;color:rgba(255,255,255,0.4);">Jean Baudrillard, <em>시뮬라크르와 시뮬라시옹</em> (1981)</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 7: SIMULACRA & SIMULATION
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--light" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--orange reveal">CHAPTER 2 &mdash; 시뮬라크르와 시뮬라시옹</div>
+    <div style="display:flex;align-items:flex-start;gap:28px;">
+      <div style="flex:1;">
+        <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:8px;">보드리야르의 4단계</h2>
+        <p class="slide-subtitle reveal" style="margin-bottom:20px;">시뮬레이션은 어떻게 현실을 대체하는가?</p>
+      </div>
+      <div class="reveal" style="flex-shrink:0;">
+        <img src="images/simulacra-book-cover.jpg" class="slide-img slide-img--border" style="width:130px;height:195px;" alt="Simulacra and Simulation book cover">
+        <div style="font-size:10px;color:var(--muted);text-align:center;margin-top:4px;">U of Michigan Press, 1994</div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div class="card card--accent card--blue reveal" style="padding:16px 20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <div class="flow-circle" style="background:var(--blue);width:32px;height:32px;font-size:15px;">1</div>
+          <div style="font-weight:700;font-size:15px;">충실한 복사</div>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);line-height:1.7;">
+          현실을 <strong>있는 그대로</strong> 반영하는 이미지.<br>
+          <span style="color:var(--blue);font-weight:600;">예: 왕의 초상화, 다큐멘터리 사진</span>
+        </div>
+      </div>
+      <div class="card card--accent card--orange reveal" style="padding:16px 20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <div class="flow-circle" style="background:var(--orange);width:32px;height:32px;font-size:15px;">2</div>
+          <div style="font-weight:700;font-size:15px;">왜곡된 복사</div>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);line-height:1.7;">
+          현실에 기반하지만 <strong>의도적으로 변형</strong>.<br>
+          <span style="color:var(--orange);font-weight:600;">예: 선전 포스터, 미화된 광고</span>
+        </div>
+      </div>
+      <div class="card card--accent reveal" style="border-left-color:var(--red);padding:16px 20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <div class="flow-circle" style="background:var(--red);width:32px;height:32px;font-size:15px;">3</div>
+          <div style="font-weight:700;font-size:15px;">원본 없는 복사</div>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);line-height:1.7;">
+          원본이 없으면서 <strong>원본이 있는 척</strong> 하는 이미지.<br>
+          <span style="color:var(--red);font-weight:600;">예: 디즈니랜드, 리얼리티 TV쇼</span>
+        </div>
+      </div>
+      <div class="card card--accent card--purple reveal" style="padding:16px 20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+          <div class="flow-circle" style="background:var(--purple);width:32px;height:32px;font-size:15px;">4</div>
+          <div style="font-weight:700;font-size:15px;">순수 시뮬라크르</div>
+        </div>
+        <div style="font-size:12px;color:var(--text-sub);line-height:1.7;">
+          현실과 <strong>아무 관계도 없는</strong> 자기 완결적 이미지.<br>
+          <span style="color:var(--purple);font-weight:600;">예: AI 생성 콘텐츠, SNS 페르소나, 딥페이크</span>
+        </div>
+      </div>
+    </div>
+    <div class="callout callout--warn reveal" style="margin-top:12px;font-size:12px;">
+      <strong>"지도가 영토를 앞선다"</strong> &mdash; 보르헤스의 우화처럼, 시뮬레이션이 현실보다 더 "진짜"가 되는 상태를 <strong>초현실(Hyperreality)</strong>이라 부릅니다. 우리는 이미 그 안에 있습니다.
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 8: THE MATRIX
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--dark" data-bg="dark">
+  <div class="slide-img-bg" style="background-image:url('images/matrix-digital-rain.png');opacity:0.08;"></div>
+  <div class="deco-blob" style="width:500px;height:500px;background:var(--green);top:-120px;right:-120px;opacity:0.1;"></div>
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="reveal" style="margin-bottom:16px;">
+      <span style="font-family:var(--font-mono);font-size:13px;color:var(--green);letter-spacing:2px;">CHAPTER 3 &mdash; THE MATRIX (1999)</span>
+    </div>
+    <div class="quote-block quote-block--dark reveal" style="margin-bottom:28px;font-size:20px;">
+      What is real? How do you define 'real'?<br>
+      If you're talking about what you can feel, what you can smell, what you can taste and see,
+      then 'real' is simply <strong>electrical signals interpreted by your brain</strong>.
+      <div class="quote-author">&mdash; Morpheus</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="card card--glass reveal" style="padding:18px 22px;">
+        <div style="font-weight:700;font-size:15px;margin-bottom:8px;color:var(--green);">영화 속 철학</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.8;">
+          &#8226; 인간은 포드 안에서 <strong>통속의 뇌</strong> 상태<br>
+          &#8226; 네오의 방에 <em>시뮬라크르와 시뮬라시옹</em> 책<br>
+          &#8226; "사막의 현실에 오신 걸 환영한다" &mdash; 보드리야르 인용<br>
+          &#8226; 플라톤의 동굴 비유: 그림자만 보는 죄수들
+        </div>
+      </div>
+      <div class="card card--glass reveal" style="padding:18px 22px;">
+        <div style="font-weight:700;font-size:15px;margin-bottom:8px;color:var(--red);">빨간 약 vs 파란 약</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.8;">
+          <span style="color:var(--blue-glow);">&#9679; 파란 약</span>: 편안한 시뮬레이션에 머물기<br>
+          <span style="color:var(--red);">&#9679; 빨간 약</span>: 고통스러운 현실 직면하기<br><br>
+          <span style="color:rgba(255,255,255,0.5);">이 선택지는 "진짜 현실"이 존재한다고 전제합니다.<br>
+          하지만 보드리야르는...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 9: BAUDRILLARD HATED THE MATRIX
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--white" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--orange reveal">CHAPTER 3 &mdash; 가장 큰 아이러니</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:12px;">보드리야르는 매트릭스를 <span style="color:var(--red);">싫어했다</span></h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:28px;max-width:700px;">자신의 책이 영화에 등장했지만, "내 작업과 아무 관계가 없다"고 말했습니다.</p>
+    <div class="compare-grid reveal">
+      <div class="compare-card" style="background:var(--blue-light);border:1px solid #93c5fd;">
+        <span class="compare-label" style="background:var(--blue);color:#fff;">THE MATRIX</span>
+        <div style="font-size:14px;color:var(--navy-mid);line-height:1.8;margin-top:8px;">
+          빨간 약을 먹으면 <strong>"진짜 현실"</strong>을 볼 수 있다.<br><br>
+          시뮬레이션 뒤에는 실재하는 세계가 있다.<br><br>
+          <strong>희망적</strong>: 현실은 회복 가능하다.<br><br>
+          <span style="color:var(--muted);font-size:12px;">= 플라톤의 동굴 (고전적 환상 문제)</span>
+        </div>
+      </div>
+      <div class="compare-card" style="background:var(--purple-light);border:1px solid #c4b5fd;">
+        <span class="compare-label" style="background:var(--purple);color:#fff;">BAUDRILLARD</span>
+        <div style="font-size:14px;color:var(--navy-mid);line-height:1.8;margin-top:8px;">
+          <strong>빨간 약 같은 건 없다.</strong><br><br>
+          시뮬레이션 "뒤에" 아무것도 없다.<br><br>
+          <strong>절망적</strong>: 현실 자체가 사라졌다.<br><br>
+          <span style="color:var(--muted);font-size:12px;">= 포스트모던 시뮬라시옹 (더 이상 "진짜"가 없음)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 10: TRANSITION - AI
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--dark" data-bg="dark">
+  <div class="slide-img-bg" style="background-image:url('images/ai-neural-brain.jpg');opacity:0.1;"></div>
+  <div class="deco-blob" style="width:400px;height:400px;background:var(--cyan);top:-50px;left:-50px;"></div>
+  <div class="deco-blob" style="width:350px;height:350px;background:var(--purple);bottom:-50px;right:-50px;"></div>
+  <div class="slide-inner" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+    <h2 class="slide-title reveal" style="font-size:clamp(28px,4vw,44px);color:rgba(255,255,255,0.9);margin-bottom:20px;">
+      그렇다면 우리가 만드는<br>AI는 무엇인가?
+    </h2>
+    <div class="reveal" style="width:120px;height:3px;background:var(--cyan);border-radius:2px;margin:20px auto;"></div>
+    <h2 class="slide-title reveal" style="font-size:clamp(28px,4vw,44px);margin-bottom:16px;">
+      <span style="background:linear-gradient(135deg,var(--cyan),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">실리콘 기반의<br>통속의 뇌</span>
+    </h2>
+    <p class="reveal" style="font-size:18px;color:rgba(255,255,255,0.5);max-width:500px;">스스로 환경을 탐색하고, 판단하고, 행동한다.<br>하지만 그 세계는 우리가 만들어준 시뮬레이션이다.</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 11: AI AS BRAIN IN A VAT
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--light" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--cyan reveal">CHAPTER 4 &mdash; AI와 통속의 뇌</div>
+    <div style="display:flex;align-items:flex-start;gap:20px;">
+      <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:8px;flex:1;">AI Agent = 실리콘 통속의 뇌</h2>
+      <div class="reveal" style="flex-shrink:0;">
+        <img src="images/ai-digital-brain.jpg" class="slide-img slide-img--glow" style="width:140px;height:140px;border-radius:16px;" alt="AI Digital Brain">
+      </div>
+    </div>
+    <p class="slide-subtitle reveal" style="margin-bottom:24px;">LLM은 반사신경, AI Agent는 진짜 통속의 뇌 &mdash; 스스로 목표를 갖고 환경을 탐색합니다.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="card card--accent card--cyan reveal" style="padding:18px 22px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span class="icon-badge" style="background:var(--cyan-light);font-size:16px;">&#129504;</span>
+          <div style="font-weight:700;font-size:15px;">LLM vs AI Agent</div>
+        </div>
+        <div style="font-size:13px;color:var(--text-sub);line-height:1.7;">
+          <strong>LLM</strong>: 입력&rarr;출력 (수동적 반응)<br>
+          <strong>Agent</strong>: 인식&rarr;판단&rarr;행동 (자율적 탐색)<br>
+          통속의 뇌에 더 가까운 건 <strong>Agent</strong>
+        </div>
+      </div>
+      <div class="card card--accent card--purple reveal" style="padding:18px 22px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span class="icon-badge" style="background:var(--purple-light);font-size:16px;">&#127758;</span>
+          <div style="font-weight:700;font-size:15px;">체화된 인지의 부재</div>
+        </div>
+        <div style="font-size:13px;color:var(--text-sub);line-height:1.7;">
+          몸도 감각도 없지만, 환경을 관찰하고 도구를 사용하고 목표를 추구합니다.
+          <strong>이것이 "사고"가 아니라면 무엇인가?</strong>
+        </div>
+      </div>
+      <div class="card card--accent card--orange reveal" style="padding:18px 22px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span class="icon-badge" style="background:var(--orange-light);font-size:16px;">&#128172;</span>
+          <div style="font-weight:700;font-size:15px;">퍼트넘의 질문 재현</div>
+        </div>
+        <div style="font-size:13px;color:var(--text-sub);line-height:1.7;">
+          AI Agent가 "나는 이 문제를 해결했다"고 할 때,<br>
+          <strong>"나"는 무엇</strong>을 가리키는가?<br>
+          그 "해결"은 무엇에 <strong>접지</strong>되어 있는가?
+        </div>
+      </div>
+      <div class="card card--accent card--green reveal" style="padding:18px 22px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span class="icon-badge" style="background:var(--green-light);font-size:16px;">&#9889;</span>
+          <div style="font-weight:700;font-size:15px;">물리법칙을 주면 소우주?</div>
+        </div>
+        <div style="font-size:13px;color:var(--text-sub);line-height:1.7;">
+          Agent에게 물리 엔진 + 감각 시뮬레이션을 주면, 우리는 <strong>뇌를 통에 넣는 과학자</strong> 역할.
+          그 Agent가 또 Agent를 만든다면? <strong>거북이 위의 거북이.</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE: NPC MODE vs PROMPT MODE
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--white" data-bg="light">
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <div class="section-tag section-tag--cyan reveal">CHAPTER 4 &mdash; 두 가지 모드</div>
+    <h2 class="slide-title slide-title--lg reveal" style="margin-bottom:8px;">NPC인가, 플레이어인가?</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:24px;">AI Agent에게 시뮬레이션을 주는 방법은 두 가지다</p>
+    <div class="compare-grid reveal">
+      <div class="compare-card" style="background:var(--blue-light);border:1px solid #93c5fd;">
+        <span class="compare-label" style="background:var(--blue);color:#fff;">NPC MODE</span>
+        <div style="font-size:14px;color:var(--navy-mid);line-height:1.8;margin-top:8px;">
+          월드 모델에 풀어놓고 <strong>자율 행동</strong><br><br>
+          시뮬레이션 = 전부. <strong>자각 불가</strong><br><br>
+          게임 NPC처럼 목표를 추구하며 돌아다님<br><br>
+          <span style="color:var(--muted);font-size:12px;">= 우리가 평소에 "사는" 상태?</span>
+        </div>
+      </div>
+      <div class="compare-card" style="background:var(--purple-light);border:1px solid #c4b5fd;">
+        <span class="compare-label" style="background:var(--purple);color:#fff;">PROMPT MODE</span>
+        <div style="font-size:14px;color:var(--navy-mid);line-height:1.8;margin-top:8px;">
+          자율 행동 중 <strong>외부에서 개입</strong><br><br>
+          창조자가 직접 목표/신호를 주입<br><br>
+          Agent의 행동 방향이 바뀜<br><br>
+          <span style="color:var(--muted);font-size:12px;">= <strong>상위 창조자와의 커넥션?</strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="card card--accent card--purple reveal" style="margin-top:16px;padding:16px 22px;">
+      <div style="font-size:13px;color:var(--text-sub);line-height:1.7;">
+        시뮬레이션 가설 하에서, 우리가 "영감", "직관", "계시"라고 부르는 것은
+        <strong>상위 창조자로부터의 프롬프트</strong>일 수 있다.
+        Agent가 사용자 지시를 받듯, 통속의 뇌가 외부 과학자에게 신호를 받듯.
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 14: THE CIRCLE COMPLETES
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--dark" data-bg="dark">
+  <div class="deco-grid"></div>
+  <div class="deco-blob" style="width:500px;height:500px;background:var(--purple);top:-100px;right:-100px;opacity:0.12;"></div>
+  <div class="deco-blob" style="width:400px;height:400px;background:var(--cyan);bottom:-80px;left:-80px;opacity:0.12;"></div>
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <h2 class="slide-title slide-title--lg reveal" style="color:#fff;margin-bottom:8px;">원은 완성된다</h2>
+    <p class="slide-subtitle reveal" style="margin-bottom:28px;">사고실험 &rarr; 영화 &rarr; 현실 &rarr; 그리고 다시 질문으로</p>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="card card--glass reveal" style="display:flex;align-items:center;gap:20px;padding:18px 24px;">
+        <span style="width:44px;height:44px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:18px;color:#fff;flex-shrink:0;">1981</span>
+        <div style="font-size:15px;color:rgba(255,255,255,0.85);line-height:1.6;">
+          퍼트넘과 보드리야르가 <strong>사고실험</strong>으로 "통속의 뇌"와 "시뮬라시옹"을 이야기했다.
+        </div>
+      </div>
+      <div class="card card--glass reveal" style="display:flex;align-items:center;gap:20px;padding:18px 24px;">
+        <span style="width:44px;height:44px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:18px;color:#fff;flex-shrink:0;">1999</span>
+        <div style="font-size:15px;color:rgba(255,255,255,0.85);line-height:1.6;">
+          워쇼스키 감독이 <strong>영화 매트릭스</strong>로 이 철학을 대중에게 보여줬다.
+        </div>
+      </div>
+      <div class="card card--glass reveal" style="display:flex;align-items:center;gap:20px;padding:18px 24px;">
+        <span style="width:44px;height:44px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:18px;color:#fff;flex-shrink:0;">2003</span>
+        <div style="font-size:15px;color:rgba(255,255,255,0.85);line-height:1.6;">
+          닉 보스트롬의 <strong>시뮬레이션 논증</strong>: 멸종하거나, 관심 없거나, 우리가 시뮬레이션 안에 있거나. 셋 중 하나는 참.
+        </div>
+      </div>
+      <div class="card card--glass reveal" style="display:flex;align-items:center;gap:20px;padding:18px 24px;">
+        <span style="width:44px;height:44px;border-radius:50%;background:var(--cyan);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:18px;color:#fff;flex-shrink:0;">2026</span>
+        <div style="font-size:15px;color:rgba(255,255,255,0.85);line-height:1.6;">
+          우리는 <strong>실제로 뇌세포를 통에 넣고</strong>, 실리콘 위에서 텍스트만으로 "사고"하는 AI를 만들었다.
+        </div>
+      </div>
+      <div class="card card--glass reveal" style="display:flex;align-items:center;gap:20px;padding:18px 24px;">
+        <span style="width:44px;height:44px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:18px;color:#fff;flex-shrink:0;">?</span>
+        <div style="font-size:15px;color:rgba(255,255,255,0.85);line-height:1.6;">
+          사고실험이 <strong>공학이 되었다.</strong> 남은 질문: <em>우리 자신은?</em>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDE 15: SUMMARY & Q&A
+     ══════════════════════════════════════════════════════════════ -->
+<div class="slide slide--dark" data-bg="dark">
+  <div class="deco-grid"></div>
+  <div class="deco-blob" style="width:400px;height:400px;background:var(--purple);top:-100px;left:-100px;"></div>
+  <div class="deco-blob" style="width:300px;height:300px;background:var(--cyan);bottom:-50px;right:-50px;"></div>
+  <div class="slide-inner" style="display:flex;flex-direction:column;justify-content:center;">
+    <h2 class="slide-title slide-title--lg reveal" style="color:#fff;margin-bottom:32px;">생각해볼 것들</h2>
+    <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:36px;">
+      <div class="reveal" style="display:flex;align-items:center;gap:20px;">
+        <span style="width:48px;height:48px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:20px;color:#fff;flex-shrink:0;">1</span>
+        <div style="font-size:16px;color:rgba(255,255,255,0.85);line-height:1.7;">
+          <strong>"통속의 뇌"는 더 이상 사고실험이 아니다</strong> &mdash; 뇌세포 서버는 이미 상용화되었고, 우리는 매일 뇌척수액을 교체하고 있다.
+        </div>
+      </div>
+      <div class="reveal" style="display:flex;align-items:center;gap:20px;">
+        <span style="width:48px;height:48px;border-radius:50%;background:var(--cyan);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:20px;color:#fff;flex-shrink:0;">2</span>
+        <div style="font-size:16px;color:rgba(255,255,255,0.85);line-height:1.7;">
+          <strong>현실은 전기 신호일 뿐</strong> &mdash; 모피어스의 말처럼, 감각이 완벽하면 구분할 방법이 없다. 보드리야르는 한 발 더: 구분 자체가 무의미하다.
+        </div>
+      </div>
+      <div class="reveal" style="display:flex;align-items:center;gap:20px;">
+        <span style="width:48px;height:48px;border-radius:50%;background:var(--orange);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:20px;color:#fff;flex-shrink:0;">3</span>
+        <div style="font-size:16px;color:rgba(255,255,255,0.85);line-height:1.7;">
+          <strong>AI는 실리콘 통속의 뇌</strong> &mdash; 그리고 우리가 물리법칙을 부여하면 소우주가 된다. 우리는 이미 미친 과학자 역할을 하고 있다.
+        </div>
+      </div>
+    </div>
+    <div class="reveal" style="text-align:center;">
+      <div style="width:120px;height:2px;background:rgba(255,255,255,0.15);margin:0 auto 24px;"></div>
+      <h2 style="font-family:var(--font-display);font-size:36px;font-weight:900;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Q &amp; A</h2>
+      <p style="color:rgba(255,255,255,0.4);font-size:14px;margin-top:8px;">당신은 통속의 뇌가 아니라고 확신하시나요?</p>
+    </div>
+  </div>
+</div>
+
+
+</div><!-- end deck -->
+
+<nav class="nav-bar">
+  <button class="nav-btn" onclick="goTo(currentSlide-1)" aria-label="Previous">&#8592;</button>
+  <div class="nav-progress"><div class="nav-progress-fill" id="progressFill"></div></div>
+  <span class="nav-counter" id="counter">01 / --</span>
+  <div class="nav-progress"><div class="nav-progress-fill" id="progressFill2"></div></div>
+  <button class="nav-btn" onclick="goTo(currentSlide+1)" aria-label="Next">&#8594;</button>
+</nav>
+
+<script>
+const slides=document.querySelectorAll('.slide'),total=slides.length;let currentSlide=0,transitioning=false;
+function goTo(i){if(transitioning||i<0||i>=total)return;transitioning=true;slides[currentSlide].classList.remove('active');currentSlide=i;slides[currentSlide].classList.add('active');const p=(currentSlide/(total-1))*100;document.getElementById('progressFill').style.width=p+'%';document.getElementById('progressFill2').style.width=p+'%';document.getElementById('counter').textContent=String(currentSlide+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');document.body.style.background=slides[currentSlide].dataset.bg==='dark'?'#0f172a':'#f8fafc';setTimeout(()=>{transitioning=false},400)}
+document.addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' '].includes(e.key)){e.preventDefault();goTo(currentSlide+1)}else if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();goTo(currentSlide-1)}else if(e.key==='Home'){e.preventDefault();goTo(0)}else if(e.key==='End'){e.preventDefault();goTo(total-1)}});
+let tX=0,tY=0;document.addEventListener('touchstart',e=>{tX=e.changedTouches[0].screenX;tY=e.changedTouches[0].screenY});document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].screenX-tX,dy=e.changedTouches[0].screenY-tY;if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>50){dx<0?goTo(currentSlide+1):goTo(currentSlide-1)}});
+let wt;document.addEventListener('wheel',e=>{e.preventDefault();clearTimeout(wt);wt=setTimeout(()=>{e.deltaY>0?goTo(currentSlide+1):goTo(currentSlide-1)},80)},{passive:false});
+document.addEventListener('keydown',()=>{document.getElementById('keyHint').classList.add('hidden')},{once:true});
+document.querySelectorAll('.nav-progress').forEach(bar=>{bar.addEventListener('click',e=>{const rect=bar.getBoundingClientRect();const ratio=(e.clientX-rect.left)/rect.width;const index=Math.round(ratio*(total-1));goTo(index)})});
+document.getElementById('counter').addEventListener('click',()=>{const input=prompt('Go to slide (1–'+total+'):',String(currentSlide+1));if(input===null)return;const num=parseInt(input,10);if(num>=1&&num<=total)goTo(num-1)});
+goTo(0);
+</script>
+</body>
+</html>
