@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/jetbrains-mono@5.0.18/index.min.css">
+<style>
+/* ===== dark+blue shared design system (auto-injected into every slide) ===== */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  width: 720pt; height: 405pt; overflow: hidden; word-break: keep-all;
+  font-family: 'Pretendard', sans-serif;
+  background: radial-gradient(900pt 380pt at 82% -12%, rgba(79,143,247,0.12), transparent 62%), #0E1117;
+  color: #EDF1F7;
+  padding: 30pt 42pt; display: flex; flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+.mono { font-family: 'JetBrains Mono', monospace; }
+.sub { color: #9AA7B6; }
+.muted { color: #5B6675; }
+.wt { color: #EDF1F7; }
+.accent { color: #6BA5FF; }
+b, strong { font-weight: 700; }
+
+/* header / footer */
+.s-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18pt; flex-shrink: 0; }
+.s-tag { font-family: 'JetBrains Mono', monospace; font-size: 8pt; letter-spacing: 1.5pt; color: #6BA5FF; text-transform: uppercase; border: 1px solid rgba(79,143,247,0.38); background: rgba(79,143,247,0.08); border-radius: 100pt; padding: 3pt 11pt; }
+.s-num { font-family: 'JetBrains Mono', monospace; font-size: 9pt; color: #4A5563; letter-spacing: 1pt; }
+.s-foot { display: flex; justify-content: space-between; align-items: center; padding-top: 10pt; margin-top: auto; border-top: 1px solid #1C232E; font-size: 7.5pt; color: #4A5563; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.5pt; flex-shrink: 0; }
+.body-wrap { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+
+/* typography */
+.h-xl { font-size: 52pt; font-weight: 800; letter-spacing: -0.03em; line-height: 1.16; padding-bottom: 7pt; }
+.h-lg { font-size: 33pt; font-weight: 800; letter-spacing: -0.02em; line-height: 1.26; padding-bottom: 7pt; }
+.h-md { font-size: 23pt; font-weight: 700; letter-spacing: -0.01em; line-height: 1.34; padding-bottom: 7pt; }
+.h-sm { font-size: 15pt; font-weight: 700; line-height: 1.3; }
+.lead { font-size: 12.5pt; color: #9AA7B6; line-height: 1.65; font-weight: 400; }
+.tiny { font-size: 10pt; color: #7E8A99; line-height: 1.5; }
+.uline { border-bottom: 3pt solid #4F8FF7; padding-bottom: 2pt; }
+
+/* cards / surfaces */
+.card { background: #161B22; border: 1px solid #262E3A; border-radius: 10pt; padding: 16pt 18pt; }
+.card-hi { background: #17202E; border: 1px solid rgba(79,143,247,0.45); border-radius: 10pt; padding: 16pt 18pt; }
+.card-ghost { background: transparent; border: 1px solid #232B36; border-radius: 10pt; padding: 16pt 18pt; }
+.bar { border-left: 3pt solid #4F8FF7; padding-left: 13pt; }
+.bar-mut { border-left: 3pt solid #39424F; padding-left: 13pt; }
+.chip { display: inline-block; background: #4F8FF7; color: #0B1220; font-weight: 800; font-size: 8pt; letter-spacing: 1pt; padding: 3pt 9pt; border-radius: 4pt; }
+.chip-o { display: inline-block; border: 1px solid #3A4655; color: #9AA7B6; font-weight: 600; font-size: 8pt; letter-spacing: 1pt; padding: 3pt 9pt; border-radius: 4pt; }
+
+/* grids */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16pt; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14pt; }
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 22pt; align-items: center; }
+.stack { display: flex; flex-direction: column; gap: 11pt; }
+
+/* capture placeholder (no live demo) */
+.cap { border: 1.5pt dashed #33404F; border-radius: 10pt; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5pt; color: #5B6675; text-align: center; min-height: 150pt; background: repeating-linear-gradient(45deg, transparent, transparent 7pt, rgba(79,143,247,0.045) 7pt, rgba(79,143,247,0.045) 14pt); }
+.cap .ci { font-size: 20pt; opacity: 0.7; color: #6BA5FF; }
+.cap b { color: #9AA7B6; font-size: 10pt; font-weight: 700; }
+.cap span { font-family: 'JetBrains Mono', monospace; font-size: 7.5pt; color: #5B6675; }
+
+/* timeline steps */
+.steps { display: flex; align-items: flex-start; gap: 0; }
+.step { flex: 1; padding-right: 12pt; position: relative; }
+.step + .step::before { content: ''; position: absolute; left: -6pt; top: 11pt; width: 12pt; height: 1px; background: #313B49; }
+.step-n { font-family: 'JetBrains Mono', monospace; font-size: 10pt; color: #6BA5FF; border: 1px solid rgba(79,143,247,0.5); border-radius: 100pt; width: 24pt; height: 24pt; display: flex; align-items: center; justify-content: center; margin-bottom: 10pt; }
+.step-t { font-size: 12pt; font-weight: 700; margin-bottom: 3pt; }
+.step-d { font-size: 9.5pt; color: #8492A2; line-height: 1.45; }
+
+/* terminal */
+.term { background: #0C1017; border: 1px solid #262E3A; border-radius: 8pt; overflow: hidden; }
+.term-bar { background: #161B22; padding: 6pt 10pt; display: flex; align-items: center; gap: 5pt; }
+.term-dot { width: 7pt; height: 7pt; border-radius: 50%; background: #39424F; }
+.term-title { font-family: 'JetBrains Mono', monospace; font-size: 7.5pt; color: #5B6675; margin-left: 8pt; }
+.term-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+.term-col { padding: 10pt 11pt; border-right: 1px solid #1E2530; font-family: 'JetBrains Mono', monospace; font-size: 8pt; line-height: 1.65; color: #9AA7B6; }
+.term-col:last-child { border-right: none; }
+.term-col .pt { color: #6BA5FF; font-weight: 700; margin-bottom: 5pt; }
+.term-col .pd { color: #6E7A88; }
+
+/* code block */
+.code { background: #0C1017; border: 1px solid #232B36; border-radius: 8pt; padding: 12pt 14pt; font-family: 'JetBrains Mono', monospace; font-size: 9.5pt; line-height: 1.75; color: #B8C4D2; }
+.code .c { color: #6BA5FF; }
+.code .g { color: #5B6675; }
+
+/* bars */
+.bar-row { margin-bottom: 12pt; }
+.bar-lab { font-size: 9pt; color: #8492A2; margin-bottom: 5pt; font-family: 'JetBrains Mono', monospace; }
+.bar-track { height: 20pt; background: #161B22; border: 1px solid #262E3A; border-radius: 5pt; overflow: hidden; }
+.bar-fill { height: 100%; display: flex; align-items: center; padding-left: 10pt; font-size: 8.5pt; font-weight: 700; }
+.bar-lo { background: #39424F; color: #EDF1F7; }
+.bar-hi { background: #4F8FF7; color: #0B1220; }
+
+/* table */
+.tbl { width: 100%; border-collapse: collapse; font-size: 11pt; }
+.tbl th { text-align: left; padding: 9pt 12pt; background: #4F8FF7; color: #0B1220; font-weight: 700; font-size: 10pt; }
+.tbl td { padding: 9pt 12pt; border-bottom: 1px solid #232B36; color: #C4CEDA; }
+.tbl td.k { color: #EDF1F7; font-weight: 600; }
+.tbl .mono { color: #9AA7B6; }
+
+/* callout note */
+.note { background: #161B22; border: 1px solid #262E3A; border-left: 3pt solid #4F8FF7; border-radius: 6pt; padding: 11pt 15pt; font-size: 11pt; color: #C4CEDA; line-height: 1.55; }
+
+/* speech bubble */
+.bubble { display: inline-block; background: #4F8FF7; color: #0B1220; padding: 12pt 16pt; border-radius: 12pt 12pt 12pt 3pt; font-size: 13pt; font-weight: 700; line-height: 1.4; }
+.bubble-o { display: inline-block; background: #161B22; border: 1px solid #262E3A; color: #C4CEDA; padding: 11pt 15pt; border-radius: 12pt 12pt 3pt 12pt; font-size: 11pt; line-height: 1.45; }
+.arrow { color: #4F8FF7; font-size: 18pt; text-align: center; }
+
+/* icon */
+.ic { width: 20pt; height: 20pt; stroke: #6BA5FF; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.ic-s { width: 15pt; height: 15pt; stroke: #9AA7B6; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+</style>
+</head>
+<body>
+  <!-- header -->
+  <div class="s-head">
+    <span class="s-tag">PART 2 · 확장</span>
+    <span class="s-num">25 / 32</span>
+  </div>
+
+  <!-- body -->
+  <div class="body-wrap">
+    <h2 class="h-md" style="margin-bottom:18pt;">이제 비개발자도 직접 만든다</h2>
+
+    <div class="split">
+      <div style="display:flex;flex-direction:column;gap:12pt;">
+        <div class="bubble">"신규 상품 소개 영상 3개 만들어줘"</div>
+        <div class="arrow">↓</div>
+        <div class="bubble-o">파이프라인 실행 → 3개 생성 → 품질검증 통과 → 게시 완료</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0;padding:2pt 0;">
+        <div class="card" style="padding:11pt 14pt;display:flex;align-items:center;gap:10pt;"><span class="mono accent" style="font-size:9pt;">01</span><div><div class="h-sm" style="font-size:12pt;">기획자 (비개발자)</div><div class="tiny">자연어로 요청</div></div></div>
+        <div style="height:13pt;width:1px;background:#313B49;margin-left:22pt;"></div>
+        <div class="card-hi" style="padding:11pt 14pt;display:flex;align-items:center;gap:10pt;"><span class="mono accent" style="font-size:9pt;">02</span><div><div class="h-sm" style="font-size:12pt;">AI 파이프라인</div><div class="tiny">생성 · 품질 검증 자동</div></div></div>
+        <div style="height:13pt;width:1px;background:#313B49;margin-left:22pt;"></div>
+        <div class="card" style="padding:11pt 14pt;display:flex;align-items:center;gap:10pt;"><span class="mono accent" style="font-size:9pt;">03</span><div><div class="h-sm" style="font-size:12pt;">자동 게시</div><div class="tiny">사람 개입 없이</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- footer -->
+  <div class="s-foot">
+    <span>AI로 바꾸는 개발자의 일</span>
+    <span>25 / 32</span>
+  </div>
+</body>
+</html>
